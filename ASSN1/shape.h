@@ -17,9 +17,10 @@ namespace shape {
 
 	class Line : public Shape {
 	public:
-		float width, length;
-		pair<float, float> line_origin;
+		float width, length, position;
+		pair<float, float> line_position;
 		void draw_line();
+		void setPosition(float new_position);
 	};
 
 	class Rectangle : public Shape {

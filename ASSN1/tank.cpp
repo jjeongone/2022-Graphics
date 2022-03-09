@@ -16,7 +16,7 @@ void Tank::draw_tank()
 	}
 
 	barrel.height = 0.05 * size;
-	barrel.rotation_angle_radian = (20. / 360) * 2 * 3.142;
+	barrel.rotation_angle_radian = angle_radian;
 	barrel.colorRGB = make_tuple(0.1, 0.5, 0.1);
 	barrel.width = 0.8 * size;
 	float coordY = coordinate.second + 0.26 * size * 0.95;
@@ -36,4 +36,23 @@ void Tank::draw_tank()
 	body.coordinate2D = coordinate;
 	body.colorRGB = make_tuple(0.3, 0.7, 0.3);
 	body.draw_rectangle();
+}
+
+void Tank::move(float dx, float dy) {
+	coordinate.first += dx;
+	coordinate.second += dy;
+}
+
+pair<float, float> Tank::getBarrelPosition() {
+	return make_pair(barrel.coordinate2D.first + barrel.width * cos(angle_radian), barrel.coordinate2D.second + barrel.width * sin(angle_radian));
+}
+
+void Tank::setBarrel(float new_angle_radian)
+{
+
+}
+
+float Tank::getBottom()
+{
+	return coordinate.second - 1.7 * size / 12;
 }
