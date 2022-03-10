@@ -5,6 +5,7 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <glm/vec3.hpp>
+#include <cmath>
 #include <vector>
 #include <utility>
 
@@ -14,9 +15,9 @@ class Bullet {
 private:
 	float x;
 	float y;
-	float radious = 0.05;
-	float x_speed = 0.005;
-	float y_speed = 0.001;
+	float radius = 0.05;
+	float x_speed = 0.006 * std::cos(30. * 3.142 / 180);
+	float y_speed = 0.006 * std::sin(30. * 3.142 / 180);
 public:
 	Bullet();
 	Bullet(float init_x, float init_y);

@@ -23,9 +23,9 @@ void Bullet::draw() {
 	glColor3f(1.0, 1.0, 1.0);
 	glBegin(GL_POLYGON);
 	glVertex2f(x, y);
-	glVertex2f(x, y + radious);
-	glVertex2f(x + radious, y + radious);
-	glVertex2f(x + radious, y);
+	glVertex2f(x, y + radius);
+	glVertex2f(x + radius, y + radius);
+	glVertex2f(x + radius, y);
 	glEnd();
 }
 
