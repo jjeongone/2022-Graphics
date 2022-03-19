@@ -157,12 +157,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="bullet.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="shape.cpp" />
     <ClCompile Include="tank.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bullet.h" />
+    <ClInclude Include="game.h" />
     <ClInclude Include="shape.h" />
     <ClInclude Include="tank.h" />
   </ItemGroup>
