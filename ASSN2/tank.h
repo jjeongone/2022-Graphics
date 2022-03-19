@@ -13,13 +13,15 @@ private:
 	float angle_radian = 30 / 180 * 3.142;
 	int health = 3;
 	tuple<float, float, float> color_weight = make_tuple(1.f, 1.f, 1.f);
+	bool shootability;
+	bool is_reflect;
 
 public: 
 	float size;
 	float speed;
 
 	Tank();
-	Tank(pair<float, float> init_coordinate, float init_size, tuple<float, float, float> init_color_weight, float init_angle_radian, int init_health);
+	Tank(pair<float, float> init_coordinate, float init_size, tuple<float, float, float> init_color_weight, float init_angle_radian, int init_health, float init_bullet_speed, bool reflect);
 
 	pair<float, float> coordinate;
 	void draw_tank();
@@ -32,4 +34,6 @@ public:
 	float getBottom();
 	int getHealth();
 	void setHealth(int new_health);
+	bool getShootability();
+	void setShootability(bool shoot);
 };

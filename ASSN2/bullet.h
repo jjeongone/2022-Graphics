@@ -2,6 +2,7 @@
 #define BULLET_H
 
 #include <iostream>
+#include <cmath>
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <glm/vec3.hpp>

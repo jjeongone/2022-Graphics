@@ -24,8 +24,9 @@ Game::Game()
 {
 	mode = NORMAL;
 	status = MENU;
-	player = new Tank(make_pair(-3.f, GROUND), 0.7f, make_tuple(1.f, 1.f, 1.f), 30. / 180 * 3.142, 3);
-	enemy = new Tank(make_pair(3.0f, GROUND), 0.7f, make_tuple(2.2f, 0.2f, 2.0f), 30. / 180 * 3.142, 3);
+	player = new Tank(make_pair(-3.f, GROUND), 0.7f, make_tuple(1.f, 1.f, 1.f), 30. / 180 * 3.142, 3, 0.006, false);
+	enemy = new Tank(make_pair(3.0f, GROUND), 0.7f, make_tuple(2.2f, 0.2f, 2.0f), 30. / 180 * 3.142, 3, -0.006, true);
+	enemyList.push_back(*enemy);
 	ground.width = 5;
 	ground.setPosition(player->getBottom());
 }
@@ -34,6 +35,27 @@ void Game::changeMode(enum mode m)
 {
 	mode = m;
 	std::cout << getModeName(m) + " mode";
+
+	switch (mode) {
+	case NORMAL:
+		player->setHealth(3);
+		player->setShootability(true);
+		enemy->setHealth(3);
+		enemy->setShootability(true);
+		break;
+	case ALLPASS:
+		player->setHealth(3);
+		player->setShootability(false);
+		enemy->setHealth(3);
+		enemy->setShootability(false);
+		break;
+	case ALLFAIL:
+		player->setHealth(1);
+		player->setShootability(false);
+		enemy->setHealth(3);
+		enemy->setShootability(true);
+		break;
+	}
 }
 
 void Game::printTitle()
@@ -48,7 +70,7 @@ void Game::printTitle()
 
 void Game::printGameOver()
 {
-	float x = 0.0;
+	float x = -0.5;
 	float y = 0.0;
 
 	printText(0.9, 0.0, 0.0, x, y, "GAME OVER...");
@@ -56,10 +78,10 @@ void Game::printGameOver()
 
 void Game::printWin()
 {
-	float x = 0.0;
+	float x = -0.1;
 	float y = 0.0;
 
-	printText(0.9, 0.0, 0.0, x, y, "WIN!!!");
+	printText(0.9, 0.9, 0.0, x, y, "WIN!!!");
 }
 
 void Game::printStatus()
@@ -68,7 +90,7 @@ void Game::printStatus()
 	float y = 1.8;
 
 	printText(0.9, 0.9, 0.9, x, y, "Player");
-	printText(0.9, 0.9, 0.9, x, y-0.1, "HP: ");
+	printText(0.9, 0.9, 0.9, x, y-0.1, "HP: " + std::to_string(player->getHealth()));
 
 	printText(0.9, 0.9, 0.9, 2.3, y, "Mode: " + getModeName(mode));
 }

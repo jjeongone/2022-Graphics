@@ -26,7 +26,7 @@ GLfloat HeightFactor;
 bool isBegin = false;
 
 
-static std::vector<Bullet> playerBullet;
+static std::vector<Bullet> bulletList;
 
 typedef struct world {
 	float width;
@@ -62,7 +62,7 @@ void display(void) {
 		game->display();
 
 		// draw bullet
-		for (auto &elem : playerBullet) {
+		for (auto &elem : bulletList) {
 			elem.draw();
 		}
 		break;
@@ -87,11 +87,11 @@ void reshape(int w, int h) {
 }
 
 void moveBullets() {
-	std::vector<Bullet>::iterator iter = playerBullet.begin();
-	while (iter != playerBullet.end()) {
+	std::vector<Bullet>::iterator iter = bulletList.begin();
+	while (iter != bulletList.end()) {
 		(*iter).changeSpeed();
 		if ((*iter).isExplode(game->getEnemy()->coordinate.first, game->getPlayer()->getBottom())) {
-			iter = playerBullet.erase(iter);
+			iter = bulletList.erase(iter);
 		}
 		else {
 			(*iter).move();
@@ -99,6 +99,12 @@ void moveBullets() {
 		}
 	}
 	glutPostRedisplay();
+}
+
+void timer(int value) {
+	Bullet new_bullet(game->getEnemy()->getBarrelPosition().first, game->getEnemy()->getBarrelPosition().second, game->getEnemy()->getBulletSpeed(), game->getEnemy()->getBarrelAngle());
+	bulletList.push_back(new_bullet);
+	glutTimerFunc(1000, timer, 1);
 }
 
 
@@ -143,19 +149,18 @@ void keyboard(unsigned char key, int x, int y) {
 		game->setStatus(PLAYING);
 		break;
 	case SPACEBAR:
-		Bullet new_bullet(game->getPlayer()->getBarrelPosition().first, game->getPlayer()->getBarrelPosition().second, game->getPlayer()->getBulletSpeed(), game->getPlayer()->getBarrelAngle());
-		playerBullet.push_back(new_bullet);
-		break;
+		std::cout << game->getPlayer()->getShootability();
+		if (game->getPlayer()->getShootability()) {
+			Bullet new_bullet(game->getPlayer()->getBarrelPosition().first, game->getPlayer()->getBarrelPosition().second, game->getPlayer()->getBulletSpeed(), game->getPlayer()->getBarrelAngle());
+			bulletList.push_back(new_bullet);
+			break;
+		}
 	}
 	glutPostRedisplay();
 }
 
 void specialKeyboard(int key, int x, int y) {
 	switch (key) {
-	/*case GLUT_KEY_UP: playerTank.move(0.0, SPEED);
-		break;
-	case GLUT_KEY_DOWN: playerTank.move(0.0, -SPEED);
-		break;*/
 	case GLUT_KEY_RIGHT: (game->getPlayer()->coordinate.first + game->getPlayer()->size + SPEED < WidthFactor) ? game->getPlayer()->move(SPEED, 0.0) : game->getPlayer()->move(0.0, 0.0);
 		break;
 	case GLUT_KEY_LEFT: (game->getPlayer()->coordinate.first - SPEED > -WidthFactor) ? game->getPlayer()->move(-SPEED, 0.0) : game->getPlayer()->move(0.0, 0.0);
@@ -176,6 +181,7 @@ int main(int argc, char** argv) {
 	glutReshapeFunc(reshape);
 	glutDisplayFunc(display);
 	glutIdleFunc(moveBullets);
+	glutTimerFunc(1000, timer, 1);
 
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialKeyboard);

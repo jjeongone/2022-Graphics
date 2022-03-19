@@ -8,13 +8,16 @@ Tank::Tank()
 	color_weight = make_tuple(1.f, 1.f, 1.f);
 }
 
-Tank::Tank(pair<float, float> init_coordinate, float init_size, tuple<float, float, float> init_color_weight, float init_angle_radian = 30 / 180 * 3.142, int init_health = 3)
+Tank::Tank(pair<float, float> init_coordinate, float init_size, tuple<float, float, float> init_color_weight, float init_angle_radian = 30 / 180 * 3.142, int init_health = 3, float init_bullet_speed = 0.006, bool reflect = false)
 {
 	coordinate = init_coordinate;
 	size = init_size;
 	color_weight = init_color_weight;
 	angle_radian = init_angle_radian;
 	health = init_health;
+	shootability = true;
+	bullet_speed = init_bullet_speed;
+	is_reflect = reflect;
 }
 
 void Tank::draw_tank()
@@ -93,7 +96,12 @@ void Tank::move(float dx, float dy) {
 }
 
 pair<float, float> Tank::getBarrelPosition() {
-	return make_pair(coordinate.first + 0.3 * size + barrel.width * cos(angle_radian), coordinate.second + 0.26 * size * 0.95 + barrel.width * sin(angle_radian));
+	if (is_reflect) {
+		return make_pair(coordinate.first - 0.3 * size - barrel.width * cos(angle_radian), coordinate.second + 0.26 * size * 0.95 + barrel.width * sin(angle_radian));
+	}
+	else {
+		return make_pair(coordinate.first + 0.3 * size + barrel.width * cos(angle_radian), coordinate.second + 0.26 * size * 0.95 + barrel.width * sin(angle_radian));
+	}
 }
 
 float Tank::getBarrelAngle()
@@ -129,4 +137,14 @@ int Tank::getHealth()
 void Tank::setHealth(int new_health)
 {
 	health = new_health;
+}
+
+bool Tank::getShootability()
+{
+	return shootability;
+}
+
+void Tank::setShootability(bool shoot)
+{
+	shootability = shoot;
 }
