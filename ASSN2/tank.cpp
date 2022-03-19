@@ -1,12 +1,28 @@
 #include "tank.h"
 
+Tank::Tank()
+{
+	bullet_speed = 0.006;
+	angle_radian = 30 / 180 * 3.142;
+	health = 3;
+	color_weight = make_tuple(1.f, 1.f, 1.f);
+}
+
+Tank::Tank(float init_size, tuple<int, int, int> init_color_weight, float init_angle_radian, int init_health)
+{
+	size = init_size;
+	color_weight = init_color_weight;
+	angle_radian = init_angle_radian;
+	health = init_health;
+}
+
 void Tank::draw_tank()
 {
 	body.width = size;
 	body.height = 0.26 * size;
 	body.rotation_angle_radian = 0.;
 	body.coordinate2D = coordinate;
-	body.colorRGB = make_tuple(0.3, 0.7, 0.3);
+	body.colorRGB = make_tuple(0.3 * get<0>(color_weight), 0.7 * get<1>(color_weight), 0.3 * get<2>(color_weight));
 
 	glPushMatrix();
 
@@ -16,7 +32,7 @@ void Tank::draw_tank()
 	turret.radius = 0.2 * size;
 	turret.rotation_angle_radian = 0;
 	turret.coordinate2D = make_pair(0, 0);
-	turret.colorRGB = make_tuple(0.1, 0.6, 0.1);
+	turret.colorRGB = make_tuple(0.1 * get<0>(color_weight), 0.6 * get<1>(color_weight), 0.1 * get<2>(color_weight));
 
 	glPushMatrix();
 	barrel.height = 0.05 * size;
@@ -55,7 +71,7 @@ void Tank::draw_tank()
 		}
 
 		tmp.coordinate2D = make_pair(0, 0);
-		tmp.colorRGB = make_tuple(0.3, 0.3, 0.8);
+		tmp.colorRGB = make_tuple(0.3 * get<0>(color_weight), 0.3 * get<1>(color_weight), 0.8 * get<2>(color_weight));
 		wheels.push_back(tmp);
 
 		wheels[i].draw_wheel();

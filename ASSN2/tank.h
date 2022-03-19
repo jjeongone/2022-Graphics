@@ -12,10 +12,14 @@ private:
 	float bullet_speed = 0.006;
 	float angle_radian = 30 / 180 * 3.142;
 	int health = 3;
+	tuple<int, int, int> color_weight = make_tuple(1.f, 1.f, 1.f);
 
 public: 
 	float size;
 	float speed;
+
+	Tank();
+	Tank(float init_size, tuple<int, int, int> init_color_weight, float init_angle_radian, int init_health);
 
 	pair<float, float> coordinate;
 	void draw_tank();
