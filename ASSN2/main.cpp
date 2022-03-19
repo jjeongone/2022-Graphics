@@ -11,15 +11,19 @@
 #include "shape.h"
 #include "bullet.h"
 #include "tank.h"
+#include "game.h"
 
 // To recognize spacebar input
 #define SPACEBAR 32
+#define ENTER 13
 
 // maybe custom
 #define SPEED 0.01
 
 GLfloat WidthFactor;
 GLfloat HeightFactor;
+
+bool isBegin = false;
 
 
 static std::vector<Bullet> playerBullet;
@@ -35,32 +39,40 @@ shape::Line ground;
 
 Tank playerTank;
 
+Game game;
+
 void init(void) {
-	gameWorld.width = 500;
-	gameWorld.height = 300;
+	gameWorld.width = 1000;
+	gameWorld.height = 600;
 
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glShadeModel(GL_FLAT);
 
-	playerTank.size = 0.7;
-	playerTank.angle_radian = 30. / 360 * 2 * 3.142;
+	playerTank.size = 0.5;
+	playerTank.setBarrel(30. / 360 * 2 * 3.142);
 
 	ground.width = 5;
 	ground.setPosition(playerTank.getBottom());
 }
 
-
 void display(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	ground.draw_line();
+	if (!isBegin) {
+		game.printTitle();
+	}
+	else {
+		ground.draw_line();
 
-	// draw tank
-	playerTank.draw_tank();
+		// draw tank
+		playerTank.draw_tank();
 
-	// draw bullet
-	for (auto &elem : playerBullet) {
-		elem.draw();
+		// draw bullet
+		for (auto &elem : playerBullet) {
+			elem.draw();
+		}
+
+		game.printStatus();
 	}
 
 	glFlush();
@@ -93,10 +105,34 @@ void moveBullets() {
 
 void keyboard(unsigned char key, int x, int y) {
 	switch (key) {
-	case SPACEBAR: 
-		// need to edit
+	case 'w': // barrel up
+		std::cout << "w\n";
+		break;
+	case 's': // barrel down
+		std::cout << "s\n";
+		break;
+	case 'e': // bullet speed up
+		std::cout << "e\n";
+		break;
+	case 'q': // bullet speed down
+		std::cout << "q\n";
+		break;
+	case 'c': // all pass mode
+		game.changeMode(ALLPASS);
+		break;
+	case 'f': // all fail mode
+		game.changeMode(ALLFAIL);
+		break;
+	case 'n': // normal mode
+		game.changeMode(NORMAL);
+		break;
+	case ENTER:
+		isBegin = true;
+		break;
+	case SPACEBAR:
 		Bullet new_bullet(playerTank.getBarrelPosition().first, playerTank.getBarrelPosition().second);
 		playerBullet.push_back(new_bullet);
+		break;
 	}
 	glutPostRedisplay();
 }
@@ -122,7 +158,7 @@ int main(int argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
 	glutInitWindowPosition(100, 100);
-	glutInitWindowSize(600, 600);
+	glutInitWindowSize(gameWorld.width, gameWorld.height);
 	glutCreateWindow("DimSum");
 	glutReshapeFunc(reshape);
 	glutDisplayFunc(display);
