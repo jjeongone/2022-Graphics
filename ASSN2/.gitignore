@@ -4,3 +4,6 @@ Debug
 include
 lib
 build
+*.vcxproj
+ASSN1.vcxproj
+*.vcxproj.user
