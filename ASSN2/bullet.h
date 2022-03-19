@@ -9,6 +9,7 @@
 #include <cmath>
 #include <vector>
 #include <utility>
+#include "tank.h"
 
 #define GRAVITY 0.00002
 
@@ -27,7 +28,7 @@ public:
 	void move();
 	void changeSpeed();
 	std::pair<float,float> getSpeed();
-	bool isExplode(float x, float y);
+	bool isExplode(float ground, Tank* player, Tank* enemy);
 };
 
 #endif
