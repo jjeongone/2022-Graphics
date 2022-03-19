@@ -8,7 +8,7 @@ Tank::Tank()
 	color_weight = make_tuple(1.f, 1.f, 1.f);
 }
 
-Tank::Tank(float init_size, tuple<int, int, int> init_color_weight, float init_angle_radian, int init_health)
+Tank::Tank(float init_size, tuple<float, float, float> init_color_weight, float init_angle_radian, int init_health)
 {
 	size = init_size;
 	color_weight = init_color_weight;
