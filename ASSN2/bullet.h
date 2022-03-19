@@ -26,7 +26,7 @@ public:
 	void move();
 	void changeSpeed();
 	std::pair<float,float> getSpeed();
-	bool isExplode(float bottom);
+	bool isExplode(float x, float y);
 };
 
 #endif

@@ -39,6 +39,6 @@ std::pair<float, float> Bullet::getSpeed() {
 	return std::make_pair(x_speed, y_speed);
 }
 
-bool Bullet::isExplode(float bottom) {
-	return this->y < bottom;
+bool Bullet::isExplode(float x, float y) {
+	return (this->y < y || this->x > x);
 }

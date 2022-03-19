@@ -37,9 +37,7 @@ world gameWorld;
 
 shape::Line ground;
 
-Tank playerTank;
-
-Game game;
+Game* game = new Game();
 
 void init(void) {
 	gameWorld.width = 1000;
@@ -48,31 +46,32 @@ void init(void) {
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glShadeModel(GL_FLAT);
 
-	playerTank.size = 0.5;
-	playerTank.setBarrel(30. / 360 * 2 * 3.142);
 
 	ground.width = 5;
-	ground.setPosition(playerTank.getBottom());
+	ground.setPosition(game->getPlayer()->getBottom());
 }
 
 void display(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	if (!isBegin) {
-		game.printTitle();
-	}
-	else {
-		ground.draw_line();
-
-		// draw tank
-		playerTank.draw_tank();
+	switch (game->getStatus()) {
+	case MENU:
+		game->printTitle();
+		break;
+	case PLAYING:
+		game->display();
 
 		// draw bullet
 		for (auto &elem : playerBullet) {
 			elem.draw();
 		}
-
-		game.printStatus();
+		break;
+	case WIN:
+		game->printWin();
+		break;
+	case GAMEOVER:
+		game->printGameOver();
+		break;
 	}
 
 	glFlush();
@@ -91,7 +90,7 @@ void moveBullets() {
 	std::vector<Bullet>::iterator iter = playerBullet.begin();
 	while (iter != playerBullet.end()) {
 		(*iter).changeSpeed();
-		if ((*iter).isExplode(playerTank.getBottom())) {
+		if ((*iter).isExplode(game->getEnemy()->coordinate.first, game->getPlayer()->getBottom())) {
 			iter = playerBullet.erase(iter);
 		}
 		else {
@@ -104,47 +103,47 @@ void moveBullets() {
 
 
 void keyboard(unsigned char key, int x, int y) {
-	float angle = playerTank.getBarrelAngle();
-	float speed = playerTank.getBulletSpeed();
+	float angle = game->getPlayer()->getBarrelAngle();
+	float speed = game->getPlayer()->getBulletSpeed();
 	switch (key) {
 	case 'w': // barrel up
 		if (angle + 0.03 <= 3.142 / 2 + 0.03)
 			angle += 0.03;
-		playerTank.setBarrel(angle);
+		game->getPlayer()->setBarrel(angle);
 		std::cout << "w\n";
 		break;
 	case 's': // barrel down
 		if (angle - 0.03 >= 0)
 			angle -= 0.03;
-		playerTank.setBarrel(angle);
+		game->getPlayer()->setBarrel(angle);
 		std::cout << "s\n";
 		break;
 	case 'e': // bullet speed up
 		if (speed + 0.0002 <= 0.01)
 			speed += 0.0002;
-		playerTank.setBulletSpeed(speed);
+		game->getPlayer()->setBulletSpeed(speed);
 		std::cout << "e\n";
 		break;
 	case 'q': // bullet speed down
 		if (speed - 0.0002 >= 0.003)
 			speed -= 0.0002;
-		playerTank.setBulletSpeed(speed);
+		game->getPlayer()->setBulletSpeed(speed);
 		std::cout << "q\n";
 		break;
 	case 'c': // all pass mode
-		game.changeMode(ALLPASS);
+		game->changeMode(ALLPASS);
 		break;
 	case 'f': // all fail mode
-		game.changeMode(ALLFAIL);
+		game->changeMode(ALLFAIL);
 		break;
 	case 'n': // normal mode
-		game.changeMode(NORMAL);
+		game->changeMode(NORMAL);
 		break;
 	case ENTER:
-		isBegin = true;
+		game->setStatus(PLAYING);
 		break;
 	case SPACEBAR:
-		Bullet new_bullet(playerTank.getBarrelPosition().first, playerTank.getBarrelPosition().second, playerTank.getBulletSpeed(), playerTank.getBarrelAngle());
+		Bullet new_bullet(game->getPlayer()->getBarrelPosition().first, game->getPlayer()->getBarrelPosition().second, game->getPlayer()->getBulletSpeed(), game->getPlayer()->getBarrelAngle());
 		playerBullet.push_back(new_bullet);
 		break;
 	}
@@ -157,9 +156,9 @@ void specialKeyboard(int key, int x, int y) {
 		break;
 	case GLUT_KEY_DOWN: playerTank.move(0.0, -SPEED);
 		break;*/
-	case GLUT_KEY_RIGHT: (playerTank.coordinate.first + playerTank.size + SPEED < WidthFactor) ? playerTank.move(SPEED, 0.0) : playerTank.move(0.0, 0.0);
+	case GLUT_KEY_RIGHT: (game->getPlayer()->coordinate.first + game->getPlayer()->size + SPEED < WidthFactor) ? game->getPlayer()->move(SPEED, 0.0) : game->getPlayer()->move(0.0, 0.0);
 		break;
-	case GLUT_KEY_LEFT: (playerTank.coordinate.first - SPEED > -WidthFactor) ? playerTank.move(-SPEED, 0.0) : playerTank.move(0.0, 0.0);
+	case GLUT_KEY_LEFT: (game->getPlayer()->coordinate.first - SPEED > -WidthFactor) ? game->getPlayer()->move(-SPEED, 0.0) : game->getPlayer()->move(0.0, 0.0);
 		break;
 	}
 	glutPostRedisplay();
@@ -171,7 +170,7 @@ int main(int argc, char** argv) {
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
-	glutInitWindowPosition(100, 100);
+	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(gameWorld.width, gameWorld.height);
 	glutCreateWindow("DimSum");
 	glutReshapeFunc(reshape);

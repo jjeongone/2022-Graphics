@@ -25,6 +25,8 @@ void Tank::draw_tank()
 	body.coordinate2D = coordinate;
 	body.colorRGB = make_tuple(0.3 * get<0>(color_weight), 0.7 * get<1>(color_weight), 0.3 * get<2>(color_weight));
 
+	body.draw_rectangle();
+
 	glPushMatrix();
 
 	float coordY = coordinate.second + 0.26 * size * 0.95;
@@ -82,7 +84,7 @@ void Tank::draw_tank()
 	for (int i = 0; i < 6; i++)
 		glPopMatrix();
 
-	body.draw_rectangle();
+	//body.draw_rectangle();
 }
 
 void Tank::move(float dx, float dy) {

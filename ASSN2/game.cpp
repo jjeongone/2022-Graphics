@@ -9,29 +9,31 @@ void printText(float r, float g, float b, float x, float y, std::string text) {
 	}
 }
 
-void printModeName(enum mode m) {
+std::string getModeName(enum mode m) {
 	switch (m) {
 	case NORMAL:
-		std::cout << "NORMAL mode\n";
-		break;
+		return "NORMAL";
 	case ALLPASS:
-		std::cout << "All PASS mode\n";
-		break;
+		return "ALL PASS";
 	case ALLFAIL:
-		std::cout << "ALL FAIL mode\n";
-		break;
+		return "ALL FAIL";
 	}
 }
 
 Game::Game()
 {
 	mode = NORMAL;
+	status = MENU;
+	player = new Tank(make_pair(-3.f, GROUND), 0.7f, make_tuple(1.f, 1.f, 1.f), 30. / 180 * 3.142, 3);
+	enemy = new Tank(make_pair(3.0f, GROUND), 0.7f, make_tuple(2.2f, 0.2f, 2.0f), 30. / 180 * 3.142, 3);
+	ground.width = 5;
+	ground.setPosition(player->getBottom());
 }
 
 void Game::changeMode(enum mode m)
 {
 	mode = m;
-	printModeName(m);
+	std::cout << getModeName(m) + " mode";
 }
 
 void Game::printTitle()
@@ -52,11 +54,54 @@ void Game::printGameOver()
 	printText(0.9, 0.0, 0.0, x, y, "GAME OVER...");
 }
 
+void Game::printWin()
+{
+	float x = 0.0;
+	float y = 0.0;
+
+	printText(0.9, 0.0, 0.0, x, y, "WIN!!!");
+}
+
 void Game::printStatus()
 {
-	float x = -1.0;
-	float y = 1.0;
+	float x = -3.2;
+	float y = 1.8;
 
-	printText(0.9, 0.9, 0.9, x, y, "hello");
-	printText(0.9, 0.9, 0.9, x, y -= 0.1, "world");
+	printText(0.9, 0.9, 0.9, x, y, "Player");
+	printText(0.9, 0.9, 0.9, x, y-0.1, "HP: ");
+
+	printText(0.9, 0.9, 0.9, 2.3, y, "Mode: " + getModeName(mode));
+}
+
+void Game::display()
+{
+	printStatus();
+	ground.draw_line();
+	player->draw_tank();
+	glPushMatrix();
+	glTranslatef(enemy->coordinate.first, enemy->coordinate.second, 0);
+	glRotatef(180, 0, 1, 0);
+	glTranslatef(-enemy->coordinate.first, -enemy->coordinate.second, 0);
+	enemy->draw_tank();
+	glPopMatrix();
+}
+
+Tank* Game::getPlayer()
+{
+	return this->player;
+}
+
+Tank * Game::getEnemy()
+{
+	return this->enemy;
+}
+
+status Game::getStatus()
+{
+	return status;
+}
+
+void Game::setStatus(enum status s)
+{
+	status = s;
 }
