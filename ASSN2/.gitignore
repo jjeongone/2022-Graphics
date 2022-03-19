@@ -1,0 +1,8 @@
+.vs
+bin
+Debug
+include
+lib
+*.sln
+*.vcxproj
+*.vcxproj.filters
