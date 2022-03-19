@@ -6,3 +6,4 @@ lib
 *.sln
 *.vcxproj
 *.vcxproj.filters
+build

@@ -1,5 +1,6 @@
 #pragma once
 #include <GL/freeglut.h>
+#include <cmath>
 #include <tuple>
 #include <utility>
 #include <vector>
