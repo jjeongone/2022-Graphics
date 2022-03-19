@@ -90,13 +90,14 @@ void moveBullets() {
 	std::vector<Bullet>::iterator iter = bulletList.begin();
 	while (iter != bulletList.end()) {
 		(*iter).changeSpeed();
-		if ((*iter).isExplode(game->getEnemy()->coordinate.first, game->getPlayer()->getBottom())) {
+		/*if ((*iter).isExplode(game->getEnemy()->coordinate.first, game->getPlayer()->getBottom())) {
 			iter = bulletList.erase(iter);
 		}
 		else {
 			(*iter).move();
-			iter++;
-		}
+		*/
+		(*iter).move();
+		iter++;
 	}
 	glutPostRedisplay();
 }
