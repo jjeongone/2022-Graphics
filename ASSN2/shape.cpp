@@ -18,13 +18,7 @@ void shape::Line::setPosition(float new_position)
 void shape::Rectangle::draw_rectangle()
 {
 	glColor3f(get<0>(colorRGB), get<1>(colorRGB), get<2>(colorRGB));
-	glPushMatrix();
-	glTranslatef(coordinate2D.first, (coordinate2D.second + height / 2.0), 0);
-	glRotatef(rotation_angle_radian / (2 * 3.142) * 360, 0, 0, 1.);
-	glTranslatef(-coordinate2D.first, -(coordinate2D.second + height / 2.0), 0);
-
 	glRectf(coordinate2D.first, coordinate2D.second, coordinate2D.first + width, coordinate2D.second + height);
-	glPopMatrix();
 }
 
 void shape::Semicircle::draw_semicircle()

@@ -9,16 +9,19 @@ private:
 	shape::Rectangle body;
 	vector<shape::Wheel> wheels;
 	shape::Semicircle turret;
+	float bullet_speed = 0.006;
+	float angle_radian;
 
 public: 
 	float size;
 	float speed;
-	float bullet_speed;
-	float angle_radian;
+
 	pair<float, float> coordinate;
 	void draw_tank();
 	void move(float dx, float dy);
 	pair<float, float> getBarrelPosition();
 	void setBarrel(float new_angle_radian);
+	void setBulletSpeed(float new_bullet_speed);
+	float getBulletSpeed();
 	float getBottom();
 };
