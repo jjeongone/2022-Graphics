@@ -49,7 +49,7 @@ pair<float, float> Tank::getBarrelPosition() {
 
 void Tank::setBarrel(float new_angle_radian)
 {
-
+	angle_radian = new_angle_radian;
 }
 
 float Tank::getBottom()
