@@ -19,7 +19,7 @@ public:
 	float speed;
 
 	Tank();
-	Tank(float init_size, tuple<float, float, float> init_color_weight, float init_angle_radian, int init_health);
+	Tank(pair<float, float> init_coordinate, float init_size, tuple<float, float, float> init_color_weight, float init_angle_radian, int init_health);
 
 	pair<float, float> coordinate;
 	void draw_tank();
