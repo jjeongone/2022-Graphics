@@ -74,7 +74,12 @@ void Tank::move(float dx, float dy) {
 }
 
 pair<float, float> Tank::getBarrelPosition() {
-	return make_pair(barrel.coordinate2D.first + barrel.width * cos(angle_radian), barrel.coordinate2D.second + barrel.width * sin(angle_radian));
+	return make_pair(coordinate.first + 0.3 * size + barrel.width * cos(angle_radian), coordinate.second + 0.26 * size * 0.95 + barrel.width * sin(angle_radian));
+}
+
+float Tank::getBarrelAngle()
+{
+	return angle_radian;
 }
 
 void Tank::setBarrel(float new_angle_radian)
@@ -95,4 +100,14 @@ float Tank::getBulletSpeed()
 float Tank::getBottom()
 {
 	return coordinate.second - 1.7 * size / 12;
+}
+
+int Tank::getHealth()
+{
+	return health;
+}
+
+void Tank::setHealth(int new_health)
+{
+	health = new_health;
 }

@@ -5,9 +5,11 @@ Bullet::Bullet() {
 	y = 0.0;
 }
 
-Bullet::Bullet(float init_x, float init_y) {
+Bullet::Bullet(float init_x, float init_y, float init_speed, float init_angle) {
 	x = init_x;
 	y = init_y;
+	x_speed = init_speed * std::cos(init_angle);
+	y_speed = init_speed * std::sin(init_angle);
 }
 
 std::pair<float, float> Bullet::position() {

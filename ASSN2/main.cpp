@@ -104,17 +104,31 @@ void moveBullets() {
 
 
 void keyboard(unsigned char key, int x, int y) {
+	float angle = playerTank.getBarrelAngle();
+	float speed = playerTank.getBulletSpeed();
 	switch (key) {
 	case 'w': // barrel up
+		if (angle + 0.03 <= 3.142 / 2 + 0.03)
+			angle += 0.03;
+		playerTank.setBarrel(angle);
 		std::cout << "w\n";
 		break;
 	case 's': // barrel down
+		if (angle - 0.03 >= 0)
+			angle -= 0.03;
+		playerTank.setBarrel(angle);
 		std::cout << "s\n";
 		break;
 	case 'e': // bullet speed up
+		if (speed + 0.0002 <= 0.01)
+			speed += 0.0002;
+		playerTank.setBulletSpeed(speed);
 		std::cout << "e\n";
 		break;
 	case 'q': // bullet speed down
+		if (speed - 0.0002 >= 0.003)
+			speed -= 0.0002;
+		playerTank.setBulletSpeed(speed);
 		std::cout << "q\n";
 		break;
 	case 'c': // all pass mode
@@ -130,7 +144,7 @@ void keyboard(unsigned char key, int x, int y) {
 		isBegin = true;
 		break;
 	case SPACEBAR:
-		Bullet new_bullet(playerTank.getBarrelPosition().first, playerTank.getBarrelPosition().second);
+		Bullet new_bullet(playerTank.getBarrelPosition().first, playerTank.getBarrelPosition().second, playerTank.getBulletSpeed(), playerTank.getBarrelAngle());
 		playerBullet.push_back(new_bullet);
 		break;
 	}

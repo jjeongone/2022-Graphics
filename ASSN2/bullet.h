@@ -20,7 +20,7 @@ private:
 	float y_speed = 0.006 * std::sin(30. * 3.142 / 180);
 public:
 	Bullet();
-	Bullet(float init_x, float init_y);
+	Bullet(float init_x, float init_y, float init_speed, float init_angle);
 	std::pair<float,float> position();
 	void draw();
 	void move();
