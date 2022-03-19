@@ -10,6 +10,7 @@
 
 #include "tank.h"
 
+#define X_POSITION 3.0
 #define GROUND -1.0
 
 enum mode {
@@ -49,6 +50,9 @@ public:
 	void setStatus(enum status s);
 	void autoMode();
 	bool isAuto();
+	void checkStatus();
+	bool checkRightCollision(float width, float height, float speed);
+	bool checkLeftCollision(float width, float height, float speed);
 };
 
 #endif // !GMAE_H

@@ -28,7 +28,7 @@ public:
 	void move();
 	void changeSpeed();
 	std::pair<float,float> getSpeed();
-	bool isExplode(float ground, Tank* player, Tank* enemy);
+	bool isExplode(Tank* player, Tank* enemy);
 };
 
 #endif

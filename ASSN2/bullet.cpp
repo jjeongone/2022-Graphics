@@ -39,7 +39,7 @@ std::pair<float, float> Bullet::getSpeed() {
 	return std::make_pair(x_speed, y_speed);
 }
 
-bool Bullet::isExplode(float ground, Tank* player, Tank* enemy) {
+bool Bullet::isExplode(Tank* player, Tank* enemy) {
 	std::pair<std::pair<float, float>, std::pair<float, float>> player_body_hitbox;
 	player_body_hitbox.first = make_pair(player->coordinate.first, player->coordinate.second - player->size / 12.);
 	player_body_hitbox.second = make_pair(player->coordinate.first + player->size, player->coordinate.second + 0.26 * player->size);
@@ -59,25 +59,36 @@ bool Bullet::isExplode(float ground, Tank* player, Tank* enemy) {
 	// player hitbox
 	if (this->x > player_body_hitbox.first.first && this->x < player_body_hitbox.second.first && this->y > player_body_hitbox.first.second && this->y < player_body_hitbox.second.second)
 	{
+		int current = player->getHealth();
+		std::cout << current;
 		player->setHealth(player->getHealth() - 1);
 		return true;
 	}
 	else if (this->x > player_turret_hitbox.first.first && this->x < player_turret_hitbox.second.first && this->y > player_turret_hitbox.first.second && this->y < player_turret_hitbox.second.second)
 	{
+		std::cout << "2";
 		player->setHealth(player->getHealth() - 1);
 		return true;
 	}
 	// enemy hitbox
 	else if (this->x < enemy_body_hitbox.first.first && this->x > enemy_body_hitbox.second.first && this->y > enemy_body_hitbox.first.second && this->y < enemy_body_hitbox.second.second)
 	{
+		std::cout << "3";
 		enemy->setHealth(enemy->getHealth() - 1);
 		return true;
 	}
 	else if (this->x < enemy_turret_hitbox.first.first && this->x > enemy_turret_hitbox.second.first && this->y > enemy_turret_hitbox.first.second && this->y < enemy_turret_hitbox.second.second)
 	{
+		std::cout << "4";
 		enemy->setHealth(enemy->getHealth() - 1);
 		return true;
 	}
+	else if (this->y < player->getBottom())
+	{
+		return true;
+	}
 	else
-		return this->y < ground;
+	{
+		return false;
+	}
 }

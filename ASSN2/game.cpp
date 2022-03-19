@@ -25,8 +25,8 @@ Game::Game()
 	mode = NORMAL;
 	status = MENU;
 	auto_mode = false;
-	player = new Tank(make_pair(-3.f, GROUND), 0.7f, make_tuple(1.f, 1.f, 1.f), 30. / 180 * 3.142, 3, 0.006, false);
-	enemy = new Tank(make_pair(3.0f, GROUND), 0.7f, make_tuple(2.2f, 0.2f, 2.0f), 30. / 180 * 3.142, 3, -0.006, true);
+	player = new Tank(make_pair(-X_POSITION, GROUND), 0.7f, make_tuple(1.f, 1.f, 1.f), 30. / 180 * 3.142, 3, 0.006, false);
+	enemy = new Tank(make_pair(X_POSITION, GROUND), 0.7f, make_tuple(2.2f, 0.2f, 2.0f), 30. / 180 * 3.142, 3, -0.006, true);
 	enemyList.push_back(*enemy);
 	ground.width = 5;
 	ground.setPosition(player->getBottom());
@@ -95,7 +95,7 @@ void Game::printStatus()
 	float x = -3.2;
 	float y = 1.8;
 
-	string player_mode = auto_mode ? "(AUTO)" : "";t
+	string player_mode = auto_mode ? "(AUTO)" : "";
 
 	printText(0.9, 0.9, 0.9, x, y, "Player" + player_mode);
 	printText(0.9, 0.9, 0.9, x, y-0.1, "HP: " + std::to_string(player->getHealth()));
@@ -144,4 +144,34 @@ void Game::autoMode()
 bool Game::isAuto()
 {
 	return auto_mode;
+}
+
+void Game::checkStatus()
+{
+	if (player->getHealth() <= 0) {
+		status = GAMEOVER;
+	}
+	else if (enemy->getHealth() <= 0) {
+		status = WIN;
+	}
+}
+
+bool Game::checkRightCollision(float width, float height, float speed)
+{
+	if (player->getCoordinate().first + player->getSize() + speed > width) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool Game::checkLeftCollision(float width, float height, float speed)
+{
+	if (player->getCoordinate().first - speed < -width) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }

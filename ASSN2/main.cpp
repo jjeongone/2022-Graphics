@@ -20,8 +20,8 @@
 // maybe custom
 #define SPEED 0.01
 
-GLfloat WidthFactor;
-GLfloat HeightFactor;
+float WidthFactor;
+float HeightFactor;
 
 bool isBegin = false;
 
@@ -45,7 +45,6 @@ void init(void) {
 
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glShadeModel(GL_FLAT);
-
 
 	ground.width = 5;
 	ground.setPosition(game->getPlayer()->getBottom());
@@ -86,19 +85,19 @@ void reshape(int w, int h) {
 	glOrtho(-1.0*WidthFactor, 1.0*WidthFactor, -1.0*HeightFactor, 1.0*HeightFactor, -1.0, 1.0);
 }
 
-void moveBullets() {
+void idle() {
 	std::vector<Bullet>::iterator iter = bulletList.begin();
 	while (iter != bulletList.end()) {
 		(*iter).changeSpeed();
-		/*if ((*iter).isExplode(game->getEnemy()->coordinate.first, game->getPlayer()->getBottom())) {
+		if ((*iter).isExplode(game->getPlayer(), game->getEnemy())) {
 			iter = bulletList.erase(iter);
 		}
 		else {
 			(*iter).move();
-		*/
-		(*iter).move();
-		iter++;
+			iter++;
+		}
 	}
+	game->checkStatus();
 	glutPostRedisplay();
 }
 
@@ -152,6 +151,9 @@ void keyboard(unsigned char key, int x, int y) {
 	case 'n': // normal mode
 		game->changeMode(NORMAL);
 		break;
+	case 'r':
+		game->getPlayer()->setCoordinate(make_pair(-X_POSITION, GROUND));
+		break;
 	case 'A': // auto mode
 		game->autoMode();
 		break;
@@ -159,7 +161,6 @@ void keyboard(unsigned char key, int x, int y) {
 		game->setStatus(PLAYING);
 		break;
 	case SPACEBAR:
-		std::cout << game->getPlayer()->getShootability();
 		if (game->getPlayer()->getShootability()) {
 			Bullet new_bullet(game->getPlayer()->getBarrelPosition().first, game->getPlayer()->getBarrelPosition().second, game->getPlayer()->getBulletSpeed(), game->getPlayer()->getBarrelAngle());
 			bulletList.push_back(new_bullet);
@@ -171,9 +172,15 @@ void keyboard(unsigned char key, int x, int y) {
 
 void specialKeyboard(int key, int x, int y) {
 	switch (key) {
-	case GLUT_KEY_RIGHT: (game->getPlayer()->coordinate.first + game->getPlayer()->size + SPEED < WidthFactor) ? game->getPlayer()->move(SPEED, 0.0) : game->getPlayer()->move(0.0, 0.0);
+	case GLUT_KEY_RIGHT: 
+		if (!game->checkRightCollision(WidthFactor, HeightFactor, SPEED) && !game->checkRightCollision((game->getEnemy()->getCoordinate().first -game->getEnemy()->getSize()), HeightFactor, SPEED)) {
+			game->getPlayer()->move(SPEED, 0.0);
+		}
 		break;
-	case GLUT_KEY_LEFT: (game->getPlayer()->coordinate.first - SPEED > -WidthFactor) ? game->getPlayer()->move(-SPEED, 0.0) : game->getPlayer()->move(0.0, 0.0);
+	case GLUT_KEY_LEFT:
+		if (!game->checkLeftCollision(WidthFactor, HeightFactor, SPEED)) {
+			game->getPlayer()->move(-SPEED, 0.0);
+		}
 		break;
 	}
 	glutPostRedisplay();
@@ -190,7 +197,7 @@ int main(int argc, char** argv) {
 	glutCreateWindow("DimSum");
 	glutReshapeFunc(reshape);
 	glutDisplayFunc(display);
-	glutIdleFunc(moveBullets);
+	glutIdleFunc(idle);
 	glutTimerFunc(1000, timer, 1);
 
 	glutKeyboardFunc(keyboard);

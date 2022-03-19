@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <GL/freeglut.h>
 #include <vector>
 #include "shape.h"
@@ -36,4 +37,7 @@ public:
 	void setHealth(int new_health);
 	bool getShootability();
 	void setShootability(bool shoot);
+	void setCoordinate(pair<float, float> new_coordinate);
+	pair<float, float> getCoordinate();
+	float getSize();
 };

@@ -86,8 +86,6 @@ void Tank::draw_tank()
 
 	for (int i = 0; i < 6; i++)
 		glPopMatrix();
-
-	//body.draw_rectangle();
 }
 
 void Tank::move(float dx, float dy) {
@@ -148,3 +146,19 @@ void Tank::setShootability(bool shoot)
 {
 	shootability = shoot;
 }
+
+void Tank::setCoordinate(pair<float, float> new_coordinate)
+{
+	coordinate = new_coordinate;
+}
+
+pair<float, float> Tank::getCoordinate()
+{
+	return coordinate;
+}
+
+float Tank::getSize()
+{
+	return size;
+}
+
