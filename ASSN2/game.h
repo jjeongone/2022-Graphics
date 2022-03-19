@@ -29,12 +29,14 @@ class Game {
 private:
 	mode mode;
 	status status;
+	bool auto_mode;
 	Tank* player = nullptr;
 	Tank* enemy = nullptr;
 	std::vector<Tank> enemyList;
 	shape::Line ground;
 public:
 	Game();
+	enum mode getMode();
 	void changeMode(enum mode m);
 	void printTitle();
 	void printGameOver();
@@ -45,6 +47,8 @@ public:
 	Tank* getEnemy();
 	enum status getStatus();
 	void setStatus(enum status s);
+	void autoMode();
+	bool isAuto();
 };
 
 #endif // !GMAE_H

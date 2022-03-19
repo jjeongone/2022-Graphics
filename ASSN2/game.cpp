@@ -9,7 +9,7 @@ void printText(float r, float g, float b, float x, float y, std::string text) {
 	}
 }
 
-std::string getModeName(enum mode m) {
+std::string getModeName(bool auto_mode, enum mode m) {
 	switch (m) {
 	case NORMAL:
 		return "NORMAL";
@@ -24,6 +24,7 @@ Game::Game()
 {
 	mode = NORMAL;
 	status = MENU;
+	auto_mode = false;
 	player = new Tank(make_pair(-3.f, GROUND), 0.7f, make_tuple(1.f, 1.f, 1.f), 30. / 180 * 3.142, 3, 0.006, false);
 	enemy = new Tank(make_pair(3.0f, GROUND), 0.7f, make_tuple(2.2f, 0.2f, 2.0f), 30. / 180 * 3.142, 3, -0.006, true);
 	enemyList.push_back(*enemy);
@@ -31,10 +32,15 @@ Game::Game()
 	ground.setPosition(player->getBottom());
 }
 
+mode Game::getMode()
+{
+	return mode;
+}
+
 void Game::changeMode(enum mode m)
 {
 	mode = m;
-	std::cout << getModeName(m) + " mode";
+	std::cout << getModeName(auto_mode, m) + " mode";
 
 	switch (mode) {
 	case NORMAL:
@@ -45,7 +51,7 @@ void Game::changeMode(enum mode m)
 		break;
 	case ALLPASS:
 		player->setHealth(3);
-		player->setShootability(false);
+		player->setShootability(true);
 		enemy->setHealth(3);
 		enemy->setShootability(false);
 		break;
@@ -63,7 +69,7 @@ void Game::printTitle()
 	float x = 0.0;
 	float y = 0.1;
 
-	printText(0.9, 0.9, 0.9, x-0.3, y, "Fortress");
+	printText(0.9, 0.9, 0.9, x-0.35, y, "<Fortress>");
 	printText(0.9, 0.9, 0.9, x-0.6, y-= 0.1, "Press ENTER to play");
 	printText(0.9, 0.9, 0.9, x-0.6, y -= 0.3, "developed by DimSum");
 }
@@ -89,10 +95,12 @@ void Game::printStatus()
 	float x = -3.2;
 	float y = 1.8;
 
-	printText(0.9, 0.9, 0.9, x, y, "Player");
+	string player_mode = auto_mode ? "(AUTO)" : "";t
+
+	printText(0.9, 0.9, 0.9, x, y, "Player" + player_mode);
 	printText(0.9, 0.9, 0.9, x, y-0.1, "HP: " + std::to_string(player->getHealth()));
 
-	printText(0.9, 0.9, 0.9, 2.3, y, "Mode: " + getModeName(mode));
+	printText(0.9, 0.9, 0.9, 2.3, y, "Mode: " + getModeName(auto_mode, mode));
 }
 
 void Game::display()
@@ -126,4 +134,14 @@ status Game::getStatus()
 void Game::setStatus(enum status s)
 {
 	status = s;
+}
+
+void Game::autoMode()
+{
+	auto_mode = !auto_mode;
+}
+
+bool Game::isAuto()
+{
+	return auto_mode;
 }

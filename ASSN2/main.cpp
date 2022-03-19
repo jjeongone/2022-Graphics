@@ -103,8 +103,14 @@ void moveBullets() {
 }
 
 void timer(int value) {
-	Bullet new_bullet(game->getEnemy()->getBarrelPosition().first, game->getEnemy()->getBarrelPosition().second, game->getEnemy()->getBulletSpeed(), game->getEnemy()->getBarrelAngle());
-	bulletList.push_back(new_bullet);
+	if (game->getStatus() == PLAYING && game->getEnemy()->getShootability()) {
+		Bullet new_bullet(game->getEnemy()->getBarrelPosition().first, game->getEnemy()->getBarrelPosition().second, game->getEnemy()->getBulletSpeed(), game->getEnemy()->getBarrelAngle());
+		bulletList.push_back(new_bullet);
+	}
+	if (game->isAuto() && game->getPlayer()->getShootability()) {
+		Bullet new_bullet(game->getPlayer()->getBarrelPosition().first, game->getPlayer()->getBarrelPosition().second, game->getPlayer()->getBulletSpeed(), game->getPlayer()->getBarrelAngle());
+		bulletList.push_back(new_bullet);
+	}
 	glutTimerFunc(1000, timer, 1);
 }
 
@@ -145,6 +151,9 @@ void keyboard(unsigned char key, int x, int y) {
 		break;
 	case 'n': // normal mode
 		game->changeMode(NORMAL);
+		break;
+	case 'A': // auto mode
+		game->autoMode();
 		break;
 	case ENTER:
 		game->setStatus(PLAYING);
