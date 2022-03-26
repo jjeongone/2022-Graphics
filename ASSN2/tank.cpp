@@ -57,6 +57,7 @@ Tank::Tank(pair<float, float> init_coordinate, float init_size, tuple<float, flo
 void Tank::draw_tank()
 {
 	body.coordinate2D = coordinate;
+	barrel.colorRGB = make_tuple(atan(bullet_speed * 20) / 3.142 * 2, atan(5 * bullet_speed * 20) / 3.142 * 2, atan(bullet_speed * 20) / 3.142 * 2);
 	float coordY = coordinate.second + 0.26 * size * 0.95;
 	float coordX = coordinate.first + 0.3 * size;
 
