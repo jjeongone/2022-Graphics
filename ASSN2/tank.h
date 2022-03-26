@@ -2,14 +2,29 @@
 #include <iostream>
 #include <GL/freeglut.h>
 #include <vector>
+#include <functional>
 #include "shape.h"
 
 class Tank {
 private:
 	shape::Rectangle barrel;
 	shape::Rectangle body;
-	vector<shape::Wheel> wheels;
+	vector<shape::Wheel> wheels = { shape::Wheel(), shape::Wheel(), shape::Wheel(), shape::Wheel(), shape::Wheel(), shape::Wheel() };
 	shape::Semicircle turret;
+
+	template<class T>
+	struct treenode {
+		tuple<float, float, float> translate = make_tuple(0., 0., 0.);
+		tuple<float, float, float, float> rotate = make_tuple(0., 0., 0., 0.);
+		T* part;
+		std::function<void(T&)> draw;
+		
+		struct treenode* sibling = nullptr;
+		struct treenode* child = nullptr;
+	};
+
+	treenode<shape::Rectangle> body_node;
+
 	float bullet_speed = 0.006;
 	float angle_radian = 30 / 180 * 3.142;
 	int health = 3;
@@ -26,6 +41,10 @@ public:
 
 	pair<float, float> coordinate;
 	void draw_tank();
+
+	template<class T>
+	void display(treenode<T>* node);
+	
 	void move(float dx, float dy);
 	pair<float, float> getBarrelPosition();
 	float getBarrelAngle();
