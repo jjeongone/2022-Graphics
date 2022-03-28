@@ -52,7 +52,7 @@ void Game::changeMode(Mode m)
 	case ALLPASS:
 		player->setHealth(3);
 		player->setShootability(true);
-		enemy->setHealth(3);
+		enemy->setHealth(1);
 		enemy->setShootability(false);
 		break;
 	case ALLFAIL:
