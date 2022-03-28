@@ -9,7 +9,7 @@ void printText(float r, float g, float b, float x, float y, std::string text) {
 	}
 }
 
-std::string getModeName(bool auto_mode, enum mode m) {
+std::string getModeName(bool auto_mode, Mode m) {
 	switch (m) {
 	case NORMAL:
 		return "NORMAL";
@@ -32,12 +32,12 @@ Game::Game()
 	ground.setPosition(player->getBottom());
 }
 
-mode Game::getMode()
+Mode Game::getMode()
 {
 	return mode;
 }
 
-void Game::changeMode(enum mode m)
+void Game::changeMode(Mode m)
 {
 	mode = m;
 	std::cout << getModeName(auto_mode, m) + " mode";
@@ -126,12 +126,12 @@ Tank * Game::getEnemy()
 	return this->enemy;
 }
 
-status Game::getStatus()
+Status Game::getStatus()
 {
 	return status;
 }
 
-void Game::setStatus(enum status s)
+void Game::setStatus(Status s)
 {
 	status = s;
 }
