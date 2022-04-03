@@ -22,7 +22,7 @@
 
 float WidthFactor;
 float HeightFactor;
-bool isBegin = false;\
+bool isBegin = false;
 
 static std::vector<Bullet> bulletList;
 
@@ -38,7 +38,10 @@ shape::Line ground;
 Game* game = new Game();
 Camera* camera = new Camera();
 
-//Loader* model = new Loader("./model/Challenger.obj");
+Loader* wheel = new Loader("./model/centauro/source/wheel.obj");
+Loader* body = new Loader("./model/centauro/source/body.obj");
+Loader* barrel = new Loader("./model/centauro/source/barrel.obj");
+Loader* head = new Loader("./model/centauro/source/head.obj");
 
 void init(void) {
 	gameWorld.width = 1000;
@@ -53,12 +56,53 @@ void display(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glClearColor(0.8, 0.8, 0.8, 1.0);
-	glColor3f(1.0, 1.0, 1.0);
+
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glBegin(GL_TRIANGLE_STRIP);
+	std::vector < glm::vec3 > wheel_vertices = wheel->get_vertex();
+	for (int i = 0; i < wheel_vertices.size(); i++) {
+		glVertex3f(wheel_vertices[i].x, wheel_vertices[i].y, wheel_vertices[i].z);
+	}
+	glEnd();
+
+	glColor3f(0.0f, 1.0f, 1.0f);
+	glBegin(GL_TRIANGLE_STRIP);
+	std::vector < glm::vec3 > barrel_vertices = barrel->get_vertex();
+	for (int i = 0; i < barrel_vertices.size(); i++) {
+		glVertex3f(barrel_vertices[i].x, barrel_vertices[i].y, barrel_vertices[i].z);
+	}
+	glEnd();
+
+	glColor3f(0.0f, 0.0f, 0.1f);
+	glBegin(GL_TRIANGLE_STRIP);
+	std::vector < glm::vec3 > body_vertices = body->get_vertex();
+	for (int i = 0; i < body_vertices.size(); i++) {
+		glVertex3f(body_vertices[i].x, body_vertices[i].y, body_vertices[i].z);
+	}
+	glEnd();
+
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glBegin(GL_TRIANGLE_STRIP);
+	std::vector < glm::vec3 > head_vertices = head->get_vertex();
+	for (int i = 0; i < head_vertices.size(); i++) {
+		glVertex3f(head_vertices[i].x, head_vertices[i].y, head_vertices[i].z);
+	}
+	glEnd();
 	
+	/*glColor3f(1.0f, 1.0f, 1.0f);
+	glBegin(GL_LINES);
+	std::vector < glm::vec3 > vertices = model->get_vertex();
+	for (int i = 0; i < vertices.size(); i++) {
+		glVertex3f(vertices[i].x, vertices[i].y, vertices[i].z);
+	}*/
+
+	//glBufferData(GL_ARRAY_BUFFER, model->get_vertex().size(), &(model->get_vertex()), GL_STATIC_DRAW);
+
+
+	glColor3f(1.0, 1.0, 1.0);	
 	glMatrixMode(GL_MODELVIEW);
 	game->display();
-
-	camera->look_at();
+	
 	/*switch (game->getStatus()) {
 	case MENU:
 		game->printTitle();
@@ -80,7 +124,7 @@ void display(void) {
 	}*/
 
 	/*glBufferData(GL_ARRAY_BUFFER, sizeof(model->get_vertex()), &(model->get_vertex()), GL_STATIC_DRAW);*/
-
+	camera->look_at();
 	glFlush();
 }
 

@@ -118,7 +118,6 @@ void Game::display()
 	enemy->draw_tank();
 	glPopMatrix();*/
 
-	printStatus();
 	ground.draw_plane();
 	boundary.draw_plane();
 }
