@@ -3,11 +3,6 @@
 #include <GL/freeglut.h>
 #include <glm/vec3.hpp>
 #include <vector>
-#ifdef _WIN32
-#include <Windows.h>
-#endif
-#include <vector>
-
 #include "shape.h"
 #include "bullet.h"
 #include "tank.h"
