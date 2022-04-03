@@ -34,7 +34,8 @@ private:
 	Tank* player = nullptr;
 	Tank* enemy = nullptr;
 	std::vector<Tank> enemyList;
-	shape::Line ground;
+	shape::Plane ground;
+	shape::Plane boundary;
 public:
 	Game();
 	enum mode getMode();

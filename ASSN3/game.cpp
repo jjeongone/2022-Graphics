@@ -28,8 +28,12 @@ Game::Game()
 	player = new Tank(make_pair(-X_POSITION, GROUND), 0.7f, make_tuple(1.f, 1.f, 1.f), 30. / 180 * 3.142, 3, 0.006, false);
 	enemy = new Tank(make_pair(X_POSITION, GROUND), 0.7f, make_tuple(2.2f, 0.2f, 2.0f), 30. / 180 * 3.142, 3, -0.006, true);
 	enemyList.push_back(*enemy);
-	ground.width = 5;
-	ground.setPosition(player->getBottom());
+
+	ground.set_color(make_tuple(0.3f, 0.3f, 0.3f));
+	ground.set_condition(30.0f, 1.0f);
+
+	boundary.set_color(make_tuple(0.0f, 0.25f, 1.0f));
+	boundary.set_condition(10.0f, 1.0f);
 }
 
 mode Game::getMode()
@@ -105,15 +109,18 @@ void Game::printStatus()
 
 void Game::display()
 {
-	printStatus();
-	ground.draw_line();
+	/*printStatus();
 	player->draw_tank();
 	glPushMatrix();
 	glTranslatef(enemy->coordinate.first, enemy->coordinate.second, 0);
 	glRotatef(180, 0, 1, 0);
 	glTranslatef(-enemy->coordinate.first, -enemy->coordinate.second, 0);
 	enemy->draw_tank();
-	glPopMatrix();
+	glPopMatrix();*/
+
+	printStatus();
+	ground.draw_plane();
+	boundary.draw_plane();
 }
 
 Tank* Game::getPlayer()

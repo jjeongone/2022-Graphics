@@ -14,6 +14,7 @@ namespace shape {
 		float rotation_angle_radian;
 		pair<float, float> translationXY;
 		pair<float, float> coordinate2D;	// left-bottom point
+		void set_color(tuple<float, float, float> color);
 	};
 
 	class Line : public Shape {
@@ -52,5 +53,14 @@ namespace shape {
 		float radius;
 		int num_circles;
 		void draw_wheel();
+	};
+
+	class Plane : public Shape {
+	private: 
+		float gap;
+		float length;
+	public:
+		void set_condition(float l, float g);
+		void draw_plane();
 	};
 }

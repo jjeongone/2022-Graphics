@@ -2,11 +2,16 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+#include <GL/glut.h>
 #include <vector>
+#include <tuple>
 #include "shape.h"
 #include "bullet.h"
 #include "tank.h"
 #include "game.h"
+#include "loader.h"
+#include "camera.h"
 
 // To recognize spacebar input
 #define SPACEBAR 32
@@ -17,9 +22,7 @@
 
 float WidthFactor;
 float HeightFactor;
-
-bool isBegin = false;
-
+bool isBegin = false;\
 
 static std::vector<Bullet> bulletList;
 
@@ -33,6 +36,9 @@ world gameWorld;
 shape::Line ground;
 
 Game* game = new Game();
+Camera* camera = new Camera();
+
+//Loader* model = new Loader("./model/Challenger.obj");
 
 void init(void) {
 	gameWorld.width = 1000;
@@ -40,15 +46,20 @@ void init(void) {
 
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glShadeModel(GL_FLAT);
-
-	ground.width = 5;
-	ground.setPosition(game->getPlayer()->getBottom());
 }
 
 void display(void) {
+
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	switch (game->getStatus()) {
+	glClearColor(0.8, 0.8, 0.8, 1.0);
+	glColor3f(1.0, 1.0, 1.0);
+	
+	glMatrixMode(GL_MODELVIEW);
+	game->display();
+
+	camera->look_at();
+	/*switch (game->getStatus()) {
 	case MENU:
 		game->printTitle();
 		break;
@@ -66,7 +77,9 @@ void display(void) {
 	case GAMEOVER:
 		game->printGameOver();
 		break;
-	}
+	}*/
+
+	/*glBufferData(GL_ARRAY_BUFFER, sizeof(model->get_vertex()), &(model->get_vertex()), GL_STATIC_DRAW);*/
 
 	glFlush();
 }
@@ -125,6 +138,18 @@ void keyboard(unsigned char key, int x, int y) {
 		game->getPlayer()->setBarrel(angle);
 		std::cout << "s\n";
 		break;
+	case 'a': // head left
+		if (angle + 0.03 <= 3.142 / 2 + 0.03)
+			angle += 0.03;
+		game->getPlayer()->setBarrel(angle);
+		std::cout << "w\n";
+		break;
+	case 'd': // head right
+		if (angle - 0.03 >= 0)
+			angle -= 0.03;
+		game->getPlayer()->setBarrel(angle);
+		std::cout << "s\n";
+		break;
 	case 'e': // bullet speed up
 		if (speed + 0.0002 <= 0.01)
 			speed += 0.0002;
@@ -137,6 +162,12 @@ void keyboard(unsigned char key, int x, int y) {
 		game->getPlayer()->setBulletSpeed(speed);
 		std::cout << "q\n";
 		break;
+	case 'v': // viewing mode(not yet)
+		camera->change_mode();
+		break;
+	case 'r': // rendering mode(not yet)
+		game->changeMode(ALLPASS);
+		break;
 	case 'c': // all pass mode
 		game->changeMode(ALLPASS);
 		break;
@@ -146,7 +177,7 @@ void keyboard(unsigned char key, int x, int y) {
 	case 'n': // normal mode
 		game->changeMode(NORMAL);
 		break;
-	case 'r':
+	case 'R':
 		game->getPlayer()->setCoordinate(make_pair(-X_POSITION, GROUND));
 		break;
 	case 'A': // auto mode
@@ -165,14 +196,25 @@ void keyboard(unsigned char key, int x, int y) {
 	glutPostRedisplay();
 }
 
+// not yet
 void specialKeyboard(int key, int x, int y) {
 	switch (key) {
-	case GLUT_KEY_RIGHT: 
+	case GLUT_KEY_UP: 
 		if (!game->checkRightCollision(WidthFactor, HeightFactor, SPEED) && !game->checkRightCollision((game->getEnemy()->getCoordinate().first -game->getEnemy()->getSize()), HeightFactor, SPEED)) {
 			game->getPlayer()->move(SPEED, 0.0);
 		}
 		break;
+	case GLUT_KEY_DOWN:
+		if (!game->checkLeftCollision(WidthFactor, HeightFactor, SPEED)) {
+			game->getPlayer()->move(-SPEED, 0.0);
+		}
+		break;
 	case GLUT_KEY_LEFT:
+		if (!game->checkRightCollision(WidthFactor, HeightFactor, SPEED) && !game->checkRightCollision((game->getEnemy()->getCoordinate().first - game->getEnemy()->getSize()), HeightFactor, SPEED)) {
+			game->getPlayer()->move(SPEED, 0.0);
+		}
+		break;
+	case GLUT_KEY_RIGHT:
 		if (!game->checkLeftCollision(WidthFactor, HeightFactor, SPEED)) {
 			game->getPlayer()->move(-SPEED, 0.0);
 		}
@@ -190,15 +232,17 @@ int main(int argc, char** argv) {
 	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(gameWorld.width, gameWorld.height);
 	glutCreateWindow("DimSum");
-	glutReshapeFunc(reshape);
+	//glutReshapeFunc(reshape);
 	glutDisplayFunc(display);
 	glutIdleFunc(idle);
 	glutTimerFunc(1000, timer, 1);
+	//temp();
+
 
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialKeyboard);
 
-	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-	glewInit();
+	//glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+	//glewInit();
 	glutMainLoop();
 }

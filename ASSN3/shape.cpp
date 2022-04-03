@@ -75,3 +75,30 @@ void shape::Wheel::draw_wheel()
 	}
 }
 
+void shape::Plane::set_condition(float l, float g)
+{
+	length = l;
+	gap = g;
+}
+
+void shape::Plane::draw_plane()
+{
+	glColor3f(get<0>(colorRGB), get<1>(colorRGB), get<2>(colorRGB));
+	glBegin(GL_LINES);
+	for (GLfloat i = -length; i <= length; i += gap) {
+		glVertex3f(i, 0, length);
+		glVertex3f(i, 0, -length);
+		glVertex3f(length, 0, i);
+		glVertex3f(-length, 0, i);
+		glVertex3f(i, 0, length);
+		glVertex3f(length, 0, i);
+		glVertex3f(i, 0, -length);
+		glVertex3f(-length, 0, i);
+	}
+	glEnd();
+}
+
+void shape::Shape::set_color(tuple<float, float, float> color)
+{
+	colorRGB = color;
+}
