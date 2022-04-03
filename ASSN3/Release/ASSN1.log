@@ -1,0 +1,64 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(373,5): warning MSB8004: Output 디렉터리가 슬래시로 끝나지 않습니다. Output 디렉터리의 적절한 평가를 허용하는 데 필요하므로 이 빌드 인스턴스에서 슬래시를 추가합니다.
+  bullet.cpp
+c:\users\최정원\source\repos\2022-graphics\assn2\bullet.h(18): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+c:\users\최정원\source\repos\2022-graphics\assn2\bullet.h(19): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\최정원\source\repos\2022-graphics\assn2\bullet.h(20): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+bullet.cpp(33): warning C4305: '-=': 'double'에서 'float'(으)로 잘립니다.
+  game.cpp
+c:\users\최정원\source\repos\2022-graphics\assn2\tank.h(12): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+game.cpp(7): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+game.cpp(40): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+game.cpp(42): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+game.cpp(42): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+game.cpp(43): warning C4305: '-=': 'double'에서 'float'(으)로 잘립니다.
+game.cpp(43): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+game.cpp(43): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+game.cpp(44): warning C4305: '-=': 'double'에서 'float'(으)로 잘립니다.
+game.cpp(44): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+game.cpp(44): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+game.cpp(52): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+game.cpp(60): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+game.cpp(61): warning C4305: '-=': 'double'에서 'float'(으)로 잘립니다.
+game.cpp(61): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  main.cpp
+c:\users\최정원\source\repos\2022-graphics\assn2\bullet.h(18): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+c:\users\최정원\source\repos\2022-graphics\assn2\bullet.h(19): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\최정원\source\repos\2022-graphics\assn2\bullet.h(20): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\최정원\source\repos\2022-graphics\assn2\tank.h(12): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+main.cpp(52): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+main.cpp(146): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+main.cpp(148): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+main.cpp(161): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  shape.cpp
+shape.cpp(30): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+shape.cpp(42): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+shape.cpp(55): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+shape.cpp(60): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+shape.cpp(68): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+shape.cpp(70): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+shape.cpp(71): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.12.25827\include\tuple(492): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  shape.cpp(57): note: 컴파일 중인 함수 템플릿 인스턴스화 'std::tuple<float,float,float> &std::tuple<float,float,float>::operator =<double,double,double>(std::tuple<double,double,double> &&)'에 대한 참조를 확인하십시오.
+  shape.cpp(57): note: 컴파일 중인 함수 템플릿 인스턴스화 'std::tuple<float,float,float> &std::tuple<float,float,float>::operator =<double,double,double>(std::tuple<double,double,double> &&)'에 대한 참조를 확인하십시오.
+  tank.cpp
+c:\users\최정원\source\repos\2022-graphics\assn2\tank.h(12): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+tank.cpp(6): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+tank.cpp(13): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+tank.cpp(14): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+tank.cpp(16): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+tank.cpp(22): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+tank.cpp(23): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+tank.cpp(25): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+tank.cpp(47): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+tank.cpp(97): warning C4244: 'return': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.12.25827\include\tuple(492): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  tank.cpp(9): note: 컴파일 중인 함수 템플릿 인스턴스화 'std::tuple<float,float,float> &std::tuple<float,float,float>::operator =<double,double,double>(std::tuple<double,double,double> &&)'에 대한 참조를 확인하십시오.
+  tank.cpp(9): note: 컴파일 중인 함수 템플릿 인스턴스화 'std::tuple<float,float,float> &std::tuple<float,float,float>::operator =<double,double,double>(std::tuple<double,double,double> &&)'에 대한 참조를 확인하십시오.
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.12.25827\include\utility(259): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  tank.cpp(18): note: 컴파일 중인 함수 템플릿 인스턴스화 'std::pair<float,float> &std::pair<float,float>::operator =<int,int>(std::pair<int,int> &&)'에 대한 참조를 확인하십시오.
+  tank.cpp(18): note: 컴파일 중인 함수 템플릿 인스턴스화 'std::pair<float,float> &std::pair<float,float>::operator =<int,int>(std::pair<int,int> &&)'에 대한 참조를 확인하십시오.
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.12.25827\include\utility(260): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다.
+  All 399 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  코드를 생성했습니다.
+  ASSN1.vcxproj -> C:\Users\최정원\source\repos\2022-Graphics\ASSN2\bin\x86\ASSN2.exe
