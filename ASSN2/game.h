@@ -13,13 +13,13 @@
 #define X_POSITION 3.0
 #define GROUND -1.0
 
-enum mode {
+enum Mode {
 	NORMAL = 0,
 	ALLPASS = 1,
 	ALLFAIL = 2,
 };
 
-enum status {
+enum Status {
 	MENU = 0,
 	PLAYING = 1,
 	WIN = 2,
@@ -28,8 +28,8 @@ enum status {
 
 class Game {
 private:
-	mode mode;
-	status status;
+	Mode mode;
+	Status status;
 	bool auto_mode;
 	Tank* player = nullptr;
 	Tank* enemy = nullptr;
@@ -37,8 +37,8 @@ private:
 	shape::Line ground;
 public:
 	Game();
-	enum mode getMode();
-	void changeMode(enum mode m);
+	Mode getMode();
+	void changeMode(Mode m);
 	void printTitle();
 	void printGameOver();
 	void printWin();
@@ -46,8 +46,8 @@ public:
 	void display();
 	Tank* getPlayer();
 	Tank* getEnemy();
-	enum status getStatus();
-	void setStatus(enum status s);
+	Status getStatus();
+	void setStatus(Status s);
 	void autoMode();
 	bool isAuto();
 	void checkStatus();
