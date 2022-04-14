@@ -208,3 +208,9 @@ void Game::enemyAction()
 		break;
 	}
 }
+
+void Game::recoil(float speed)
+{
+	float power = speed / 2;
+}
+

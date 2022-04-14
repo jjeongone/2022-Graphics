@@ -58,7 +58,7 @@ void display(void) {
 	glClearColor(0.8, 0.8, 0.8, 1.0);
 
 	glColor3f(1.0f, 0.0f, 0.0f);
-	glBegin(GL_TRIANGLE_STRIP);
+	glBegin(GL_TRIANGLES);
 	std::vector < glm::vec3 > wheel_vertices = wheel->get_vertex();
 	for (int i = 0; i < wheel_vertices.size(); i++) {
 		glVertex3f(wheel_vertices[i].x, wheel_vertices[i].y, wheel_vertices[i].z);
@@ -66,28 +66,29 @@ void display(void) {
 	glEnd();
 
 	glColor3f(0.0f, 1.0f, 1.0f);
-	glBegin(GL_TRIANGLE_STRIP);
+	glBegin(GL_TRIANGLES);
 	std::vector < glm::vec3 > barrel_vertices = barrel->get_vertex();
 	for (int i = 0; i < barrel_vertices.size(); i++) {
 		glVertex3f(barrel_vertices[i].x, barrel_vertices[i].y, barrel_vertices[i].z);
 	}
 	glEnd();
 
-	glColor3f(0.0f, 0.0f, 0.1f);
-	glBegin(GL_TRIANGLE_STRIP);
-	std::vector < glm::vec3 > body_vertices = body->get_vertex();
-	for (int i = 0; i < body_vertices.size(); i++) {
-		glVertex3f(body_vertices[i].x, body_vertices[i].y, body_vertices[i].z);
-	}
-	glEnd();
-
 	glColor3f(0.0f, 0.0f, 0.0f);
-	glBegin(GL_TRIANGLE_STRIP);
+	glBegin(GL_TRIANGLES);
 	std::vector < glm::vec3 > head_vertices = head->get_vertex();
 	for (int i = 0; i < head_vertices.size(); i++) {
 		glVertex3f(head_vertices[i].x, head_vertices[i].y, head_vertices[i].z);
 	}
 	glEnd();
+
+	/*glColor3f(0.5f, 0.5f, 0.5f);
+	glBegin(GL_TRIANGLES);
+	std::vector < glm::vec3 > body_vertices = body->get_vertex();
+	for (int i = 0; i < body_vertices.size(); i++) {
+		glVertex3f(body_vertices[i].x, body_vertices[i].y, body_vertices[i].z);
+	}
+	glEnd();*/
+
 	
 	/*glColor3f(1.0f, 1.0f, 1.0f);
 	glBegin(GL_LINES);
