@@ -181,3 +181,30 @@ bool Game::checkLeftCollision(float width, float height, float speed)
 		return false;
 	}
 }
+
+void Game::enemyAction()
+{
+	std::srand(15);
+	switch (std::rand()) {
+	case 0:
+	case 1: // move forward
+		break;
+	case 2:
+	case 3: // move backward
+		break;
+	case 4: // rotate right
+		break;
+	case 5: // rotate left
+		break;
+	case 6: // barrel up
+		break;
+	case 7: // barrel down
+		break;
+	case 8: // bullet up
+		break;
+	case 9: // bullet down
+		break;
+	default: // do nothing
+		break;
+	}
+}

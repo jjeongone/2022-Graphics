@@ -7,6 +7,7 @@
 #include <glm/vec3.hpp>
 #include <string>
 #include <vector>
+#include <cstdlib> 
 
 #include "tank.h"
 
@@ -54,6 +55,7 @@ public:
 	void checkStatus();
 	bool checkRightCollision(float width, float height, float speed);
 	bool checkLeftCollision(float width, float height, float speed);
+	void enemyAction();
 };
 
 #endif // !GMAE_H
