@@ -58,8 +58,8 @@ public:
 	bool checkLeftCollision(float width, float height, float speed);
 	void enemyAction();
 	void recoil(float speed);
-	void setRenderMode(bool r);
-	bool getRenderMode(bool r);
+	void setRenderMode();
+	bool getRenderMode();
 };
 
 #endif // !GMAE_H
