@@ -71,11 +71,14 @@ void display(void) {
 	glPolygonMode(GL_FRONT, GL_LINE);
 	game->display(false);
 
-	glPolygonMode(GL_FRONT, GL_FILL);
-	glEnable(GL_POLYGON_OFFSET_FILL);
-	glPolygonOffset(1.0, 5.0);
-	game->display(true);
-	glDisable(GL_POLYGON_OFFSET_FILL);
+	if (game->getRenderMode()) {
+		glPolygonMode(GL_FRONT, GL_FILL);
+		glEnable(GL_POLYGON_OFFSET_FILL);
+		glPolygonOffset(1.0, 5.0);
+		game->display(true);
+		glDisable(GL_POLYGON_OFFSET_FILL);
+	}
+
 	/*switch (game->getStatus()) {
 	case MENU:
 		game->printTitle();
@@ -181,7 +184,7 @@ void keyboard(unsigned char key, int x, int y) {
 		camera->change_mode();
 		break;
 	case 'r': // rendering mode(not yet)
-		game->changeMode(ALLPASS);
+		game->setRenderMode();
 		break;
 	case 'c': // all pass mode
 		game->changeMode(ALLPASS);
