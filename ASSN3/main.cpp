@@ -259,7 +259,7 @@ int main(int argc, char** argv) {
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialKeyboard);
 
-	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+	glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
 	glewInit();
 	glutMainLoop();
 }

@@ -4,7 +4,7 @@
 void shape::Body::draw()
 {
 	if (fill)
-		glColor3f(0.3, 0.3, 0.3);
+		glColor3f(0.8f, 0.8f, 0.8f);
 	else
 		glColor3f(get<0>(colorRGB), get<1>(colorRGB), get<2>(colorRGB));
 	
@@ -20,7 +20,7 @@ void shape::Body::draw()
 void shape::Head::draw()
 {
 	if (fill)
-		glColor3f(0.3, 0.3, 0.3);
+		glColor3f(0.8f, 0.8f, 0.8f);
 	else
 		glColor3f(get<0>(colorRGB), get<1>(colorRGB), get<2>(colorRGB));
 
@@ -37,7 +37,7 @@ void shape::Head::draw()
 void shape::Barrel::draw()
 {
 	if (fill)
-		glColor3f(0.3, 0.3, 0.3);
+		glColor3f(0.8f, 0.8f, 0.8f);
 	else
 		glColor3f(get<0>(colorRGB), get<1>(colorRGB), get<2>(colorRGB));
 
@@ -53,7 +53,7 @@ void shape::Barrel::draw()
 void shape::Wheel::draw()
 {
 	if (fill)
-		glColor3f(0.3, 0.3, 0.3);
+		glColor3f(0.8f, 0.8f, 0.8f);
 	else
 		glColor3f(get<0>(colorRGB), get<1>(colorRGB), get<2>(colorRGB));
 
@@ -81,10 +81,11 @@ void shape::Wheel::draw()
 //	position = new_position;
 //}
 
-void shape::Plane::set_condition(float l, float g)
+void shape::Plane::set_condition(float l, float g, float d)
 {
 	length = l;
 	gap = g;
+	depth = d;
 }
 
 void shape::Plane::draw_plane()
@@ -92,14 +93,14 @@ void shape::Plane::draw_plane()
 	glColor3f(get<0>(colorRGB), get<1>(colorRGB), get<2>(colorRGB));
 	glBegin(GL_LINES);
 	for (GLfloat i = -length; i <= length; i += gap) {
-		glVertex3f(i, 0, length);
-		glVertex3f(i, 0, -length);
-		glVertex3f(length, 0, i);
-		glVertex3f(-length, 0, i);
-		glVertex3f(i, 0, length);
-		glVertex3f(length, 0, i);
-		glVertex3f(i, 0, -length);
-		glVertex3f(-length, 0, i);
+		glVertex3f(i, depth, length);
+		glVertex3f(i, depth, -length);
+		glVertex3f(length, depth, i);
+		glVertex3f(-length, depth, i);
+		glVertex3f(i, depth, length);
+		glVertex3f(length, depth, i);
+		glVertex3f(i, depth, -length);
+		glVertex3f(-length, depth, i);
 	}
 	glEnd();
 }

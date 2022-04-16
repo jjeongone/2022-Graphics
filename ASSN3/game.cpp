@@ -33,10 +33,10 @@ Game::Game()
 	enemyList.push_back(*enemy);
 
 	ground.set_color(make_tuple(0.3f, 0.3f, 0.3f));
-	ground.set_condition(300.0f, 10.0f);
+	ground.set_condition(300.0f, 10.0f, -0.0003f);
 
 	boundary.set_color(make_tuple(0.0f, 0.25f, 1.0f));
-	boundary.set_condition(100.0f, 10.0f);
+	boundary.set_condition(100.0f, 10.0f, 0.0f);
 }
 
 mode Game::getMode()

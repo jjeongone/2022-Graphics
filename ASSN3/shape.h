@@ -55,8 +55,9 @@ namespace shape {
 	private: 
 		float gap;
 		float length;
+		float depth;
 	public:
-		void set_condition(float l, float g);
+		void set_condition(float l, float g, float d);
 		void draw_plane();
 	};
 }
