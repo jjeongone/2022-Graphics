@@ -34,6 +34,10 @@ Game::Game()
 
 	ground.set_color(make_tuple(0.3f, 0.3f, 0.3f));
 	ground.set_condition(300.0f, 10.0f, -0.0003f);
+	ground_node.translate = make_tuple(0., 0., 0.);
+	ground_node.rotate = make_tuple(0., 0., 0., 0.);
+	ground_node.part = &ground;
+	ground_node.draw = &shape::Plane::draw_plane;
 
 	boundary.set_color(make_tuple(0.0f, 0.25f, 1.0f));
 	boundary.set_condition(100.0f, 10.0f, 0.0f);
@@ -110,21 +114,75 @@ void Game::printStatus()
 	printText(0.9, 0.9, 0.9, 2.3, y, "Mode: " + getModeName(auto_mode, mode));
 }
 
-void Game::display(bool fill)
-{
-	/*printStatus();
-	player->draw_tank();
-	glPushMatrix();
-	glTranslatef(enemy->coordinate.first, enemy->coordinate.second, 0);
-	glRotatef(180, 0, 1, 0);
-	glTranslatef(-enemy->coordinate.first, -enemy->coordinate.second, 0);
-	enemy->draw_tank();
-	glPopMatrix();*/
-	
-	ground.draw_plane();
-	boundary.draw_plane();
+//void Game::display(bool fill)
+//{
+//	/*printStatus();
+//	player->draw_tank();
+//	glPushMatrix();
+//	glTranslatef(enemy->coordinate.first, enemy->coordinate.second, 0);
+//	glRotatef(180, 0, 1, 0);
+//	glTranslatef(-enemy->coordinate.first, -enemy->coordinate.second, 0);
+//	enemy->draw_tank();
+//	glPopMatrix();*/
+//	
+//	ground.draw_plane();
+//	boundary.draw_plane();
+//
+//	player->draw_tank(fill);
+//}
 
-	player->draw_tank(fill);
+void Game::drawWorld(bool fill)
+{
+	treenode<shape::Plane> boundary_node;
+	treenode<Tank> player_node;
+	treenode<Tank> enemy_node;
+
+	boundary_node.part = &boundary;
+	boundary_node.draw = &shape::Plane::draw_plane;
+	ground_node.child = &boundary_node;
+
+	player_node.part = player;
+	player_node.draw = &Tank::draw_tank;
+	player_node.translate = player_translation;
+	player_node.rotate = player_rotation;
+	boundary_node.sibling = reinterpret_cast<treenode<shape::Plane>*>(&player_node);
+
+	enemy_node.part = enemy;
+	enemy_node.draw = &Tank::draw_tank;
+	enemy_node.translate = enemy_translation;
+	enemy_node.rotate = enemy_rotation;
+	player_node.sibling = &enemy_node;
+
+	display(&ground_node, fill);
+}
+
+template<class T>
+void Game::display(treenode<T>* node, bool fill)
+{
+	if (node == nullptr)
+	{
+		return;
+	}
+
+	glPushMatrix();
+	
+	glTranslatef(get<0>(node->translate), get<1>(node->translate), get<2>(node->translate));
+	glRotatef(get<0>(node->rotate), get<1>(node->rotate), get<2>(node->rotate), get<3>(node->rotate));
+	
+
+	
+
+	if (node->child != nullptr)
+	{
+		display(node->child, fill);
+	}
+	node->draw(*(node->part), fill);
+	glPopMatrix();
+
+	if (node->sibling != nullptr)
+	{
+		display(node->sibling, fill);
+	}
 }
 
 Tank* Game::getPlayer()
@@ -229,4 +287,44 @@ void Game::setRenderMode()
 bool Game::getRenderMode()
 {
 	return render_mode;
+}
+
+tuple<float, float, float> Game::get_player_translation()
+{
+	return player_translation;
+}
+
+tuple<float, float, float> Game::get_enemy_translation()
+{
+	return enemy_translation;
+}
+
+tuple<float, float, float, float> Game::get_player_rotation()
+{
+	return player_rotation;
+}
+
+tuple<float, float, float, float> Game::get_enemy_rotation()
+{
+	return enemy_rotation;
+}
+
+void Game::set_player_translation(tuple<float, float, float> new_translation)
+{
+	player_translation = new_translation;
+}
+
+void Game::set_enemy_translation(tuple<float, float, float> new_translation)
+{
+	enemy_translation = new_translation;
+}
+
+void Game::set_player_rotation(tuple<float, float, float, float> new_rotation)
+{
+	player_rotation = new_rotation;
+}
+
+void Game::set_enemy_rotation(tuple<float, float, float, float> new_rotation)
+{
+	enemy_rotation = new_rotation;
 }

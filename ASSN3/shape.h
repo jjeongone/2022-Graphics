@@ -43,6 +43,14 @@ namespace shape {
 		void draw();
 	};
 
+	class WheelRight : public Shape {
+	private:
+		Loader* wheel_right = new Loader("./model/centauro/source/wheel_right.obj");
+		vector<glm::vec3> wheel_vertices = wheel_right->get_vertex();
+	public:
+		void draw();
+	};
+
 	class Barrel : public Shape {
 	private:
 		Loader* barrel = new Loader("./model/centauro/source/barrel.obj");
@@ -58,6 +66,6 @@ namespace shape {
 		float depth;
 	public:
 		void set_condition(float l, float g, float d);
-		void draw_plane();
+		void draw_plane(bool fill);
 	};
 }

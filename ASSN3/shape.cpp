@@ -88,7 +88,7 @@ void shape::Plane::set_condition(float l, float g, float d)
 	depth = d;
 }
 
-void shape::Plane::draw_plane()
+void shape::Plane::draw_plane(bool fill)
 {
 	glColor3f(get<0>(colorRGB), get<1>(colorRGB), get<2>(colorRGB));
 	glBegin(GL_LINES);
@@ -108,4 +108,20 @@ void shape::Plane::draw_plane()
 void shape::Shape::set_color(tuple<float, float, float> color)
 {
 	colorRGB = color;
+}
+
+void shape::WheelRight::draw()
+{
+	if (fill)
+		glColor3f(0.8f, 0.8f, 0.8f);
+	else
+		glColor3f(get<0>(colorRGB), get<1>(colorRGB), get<2>(colorRGB));
+
+	for (int i = 0; i < wheel_vertices.size(); i += 3) {
+		glBegin(fill ? GL_TRIANGLES : GL_LINE_LOOP);
+		glVertex3f(wheel_vertices[i].x, wheel_vertices[i].y, wheel_vertices[i].z);
+		glVertex3f(wheel_vertices[i + 1].x, wheel_vertices[i + 1].y, wheel_vertices[i + 1].z);
+		glVertex3f(wheel_vertices[i + 2].x, wheel_vertices[i + 2].y, wheel_vertices[i + 2].z);
+		glEnd();
+	}
 }

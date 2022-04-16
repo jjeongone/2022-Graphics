@@ -35,9 +35,29 @@ private:
 	bool render_mode;
 	Tank* player = nullptr;
 	Tank* enemy = nullptr;
+
+	tuple<float, float, float> player_translation = make_tuple(0, 0, 30);
+	tuple<float, float, float, float> player_rotation = make_tuple(0, 0, 1, 0);
+	tuple<float, float, float> enemy_translation = make_tuple(0, 0, -30);
+	tuple<float, float, float, float> enemy_rotation = make_tuple(180, 0, 1, 0);
+
 	std::vector<Tank> enemyList;
 	shape::Plane ground;
 	shape::Plane boundary;
+
+	template<class T>
+	struct treenode {
+		tuple<float, float, float> translate = make_tuple(0., 0., 0.);
+		tuple<float, float, float, float> rotate = make_tuple(0., 0., 0., 0.);
+		T* part = nullptr;
+		std::function<void(T&, bool)> draw;
+
+		struct treenode* sibling = nullptr;
+		struct treenode* child = nullptr;
+	};
+
+	treenode<shape::Plane> ground_node;
+
 public:
 	Game();
 	enum mode getMode();
@@ -47,6 +67,11 @@ public:
 	void printWin();
 	void printStatus();
 	void display(bool fill);
+
+	void drawWorld(bool fill);
+	template <class T>
+	void display(treenode<T>* node, bool fill);
+
 	Tank* getPlayer();
 	Tank* getEnemy();
 	enum status getStatus();
@@ -60,6 +85,16 @@ public:
 	void recoil(float speed);
 	void setRenderMode();
 	bool getRenderMode();
+
+	tuple<float, float, float> get_player_translation();
+	tuple<float, float, float> get_enemy_translation();
+	tuple<float, float, float, float> get_player_rotation();
+	tuple<float, float, float, float> get_enemy_rotation();
+
+	void set_player_translation(tuple<float, float, float>);
+	void set_enemy_translation(tuple<float, float, float>);
+	void set_player_rotation(tuple<float, float, float, float>);
+	void set_enemy_rotation(tuple<float, float, float, float>);
 };
 
-#endif // !GMAE_H
+#endif // !GAME_H

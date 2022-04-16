@@ -9,14 +9,15 @@ class Tank {
 private:
 	shape::Barrel barrel;
 	shape::Body body;
-	vector<shape::Wheel> wheels = { shape::Wheel(), shape::Wheel(), shape::Wheel(), shape::Wheel(), shape::Wheel(), shape::Wheel(), shape::Wheel(), shape::Wheel() };
+	vector<shape::Wheel> wheels = { shape::Wheel(), shape::Wheel(), shape::Wheel(), shape::Wheel() };
+	vector<shape::WheelRight> right_wheels = { shape::WheelRight(), shape::WheelRight(), shape::WheelRight(), shape::WheelRight() };
 	shape::Head head;
 
 	template<class T>
 	struct treenode {
 		tuple<float, float, float> translate = make_tuple(0., 0., 0.);
 		tuple<float, float, float, float> rotate = make_tuple(0., 0., 0., 0.);
-		T* part;
+		T* part = nullptr;
 		std::function<void(T&)> draw;
 		
 		struct treenode* sibling = nullptr;
@@ -27,6 +28,9 @@ private:
 
 	float bullet_speed = 0.006;
 	float angle_radian = 30 / 180 * 3.142;
+	float head_angle = 0.;
+	float barrel_angle = 0.;
+
 	int health = 3;
 	tuple<float, float, float> color_weight = make_tuple(1.f, 1.f, 1.f);
 	bool shootability;
@@ -54,6 +58,8 @@ public:
 	tuple<float, float, float, float> getBarrelOrientation();
 	float getBarrelAngle();
 	void setBarrel(float new_angle_radian);
+	float getHeadAngle();
+	void setHead(float new_angle_radian);
 	void setBulletSpeed(float new_bullet_speed);
 	float getBulletSpeed();
 	int getHealth();

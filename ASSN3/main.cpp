@@ -39,7 +39,8 @@ Camera* camera = new Camera();
 Loader* wheel = new Loader("./model/centauro/source/wheel.obj");
 Loader* body = new Loader("./model/centauro/source/body.obj");
 Loader* barrel = new Loader("./model/centauro/source/barrel.obj");
-Loader* head = new Loader("./model/centauro/source/head.obj");
+Loader* bullet = new Loader("./model/bullet.obj");
+
 
 void init(void) {
 	gameWorld.width = 600;
@@ -50,7 +51,7 @@ void init(void) {
 }
 
 void temp_draw(bool fill) {
-	std::vector < glm::vec3 > body_vertices = body->get_vertex();
+	std::vector < glm::vec3 > body_vertices = bullet->get_vertex();
 	for (int i = 0; i < body_vertices.size(); i++) {
 		glBegin(fill ? GL_TRIANGLES : GL_LINE_LOOP);
 		glVertex3f(body_vertices[i].x, body_vertices[i].y, body_vertices[i].z);
@@ -69,13 +70,13 @@ void display(void) {
 
 	glEnable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT, GL_LINE);
-	game->display(false);
+	game->drawWorld(false);
 
 	if (game->getRenderMode()) {
 		glPolygonMode(GL_FRONT, GL_FILL);
 		glEnable(GL_POLYGON_OFFSET_FILL);
 		glPolygonOffset(1.0, 5.0);
-		game->display(true);
+		game->drawWorld(true);
 		glDisable(GL_POLYGON_OFFSET_FILL);
 	}
 
@@ -141,31 +142,32 @@ void timer(int value) {
 
 
 void keyboard(unsigned char key, int x, int y) {
-	float angle = game->getPlayer()->getBarrelAngle();
+	float barrel_angle = game->getPlayer()->getBarrelAngle();
+	float head_angle = game->getPlayer()->getHeadAngle();
 	float speed = game->getPlayer()->getBulletSpeed();
 	switch (key) {
 	case 'w': // barrel up
-		if (angle + 0.03 <= 3.142 / 2 + 0.03)
-			angle += 0.03;
-		game->getPlayer()->setBarrel(angle);
+		if (barrel_angle - 0.5 >= -30.)
+			barrel_angle -= 0.5;
+		game->getPlayer()->setBarrel(barrel_angle);
 		std::cout << "w\n";
 		break;
 	case 's': // barrel down
-		if (angle - 0.03 >= 0)
-			angle -= 0.03;
-		game->getPlayer()->setBarrel(angle);
+		if (barrel_angle + 0.5 <= 0)
+			barrel_angle += 0.5;
+		game->getPlayer()->setBarrel(barrel_angle);
 		std::cout << "s\n";
 		break;
 	case 'a': // head left
-		if (angle + 0.03 <= 3.142 / 2 + 0.03)
-			angle += 0.03;
-		game->getPlayer()->setBarrel(angle);
+		if (head_angle + 1. <= 90.)
+			head_angle += 1.;
+		game->getPlayer()->setHead(head_angle);
 		std::cout << "w\n";
 		break;
 	case 'd': // head right
-		if (angle - 0.03 >= 0)
-			angle -= 0.03;
-		game->getPlayer()->setBarrel(angle);
+		if (head_angle - 1. >= -90.)
+			head_angle -= 1.;
+		game->getPlayer()->setHead(head_angle);
 		std::cout << "s\n";
 		break;
 	case 'e': // bullet speed up
@@ -216,26 +218,45 @@ void keyboard(unsigned char key, int x, int y) {
 
 // not yet
 void specialKeyboard(int key, int x, int y) {
+	tuple<float, float, float> tmp_translation;
+	tuple<float, float, float, float> tmp_rotation;
+	float tmp_angle;
+
 	switch (key) {
 	case GLUT_KEY_UP: 
-		/*if (!game->checkRightCollision(WidthFactor, HeightFactor, SPEED) && !game->checkRightCollision((game->getEnemy()->getCoordinate().first -game->getEnemy()->getSize()), HeightFactor, SPEED)) {
-			game->getPlayer()->move(SPEED, 0.0);
-		}*/
+		/*if (!game->checkRightCollision(WidthFactor, HeightFactor, SPEED) && !game->checkRightCollision((game->getEnemy()->getCoordinate().first -game->getEnemy()->getSize()), HeightFactor, SPEED)) {*/
+		tmp_translation = game->get_player_translation();
+		tmp_angle = get<0>(game->get_player_rotation());
+		get<2>(tmp_translation) -= 0.2 * cos(tmp_angle / 180 * 3.142);
+		get<0>(tmp_translation) -= 0.2 * sin(tmp_angle / 180 * 3.142);
+		game->set_player_translation(tmp_translation);
+		/* }*/
 		break;
 	case GLUT_KEY_DOWN:
-		if (!game->checkLeftCollision(WidthFactor, HeightFactor, SPEED)) {
+		/*if (!game->checkLeftCollision(WidthFactor, HeightFactor, SPEED)) {
 			game->getPlayer()->move(-SPEED, 0.0);
-		}
+		}*/
+		tmp_translation = game->get_player_translation();
+		tmp_angle = get<0>(game->get_player_rotation());
+		get<2>(tmp_translation) += 0.2 * cos(tmp_angle / 180 * 3.142);
+		get<0>(tmp_translation) += 0.2 * sin(tmp_angle / 180 * 3.142);
+		game->set_player_translation(tmp_translation);
 		break;
 	case GLUT_KEY_LEFT:
 		/*if (!game->checkRightCollision(WidthFactor, HeightFactor, SPEED) && !game->checkRightCollision((game->getEnemy()->getCoordinate().first - game->getEnemy()->getSize()), HeightFactor, SPEED)) {
 			game->getPlayer()->move(SPEED, 0.0);
 		}*/
+		tmp_rotation = game->get_player_rotation();
+		get<0>(tmp_rotation) += 0.5;
+		game->set_player_rotation(tmp_rotation);
 		break;
 	case GLUT_KEY_RIGHT:
-		if (!game->checkLeftCollision(WidthFactor, HeightFactor, SPEED)) {
+		/*if (!game->checkLeftCollision(WidthFactor, HeightFactor, SPEED)) {
 			game->getPlayer()->move(-SPEED, 0.0);
-		}
+		}*/
+		tmp_rotation = game->get_player_rotation();
+		get<0>(tmp_rotation) -= 0.5;
+		game->set_player_rotation(tmp_rotation);
 		break;
 	}
 	glutPostRedisplay();
