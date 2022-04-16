@@ -5,6 +5,10 @@ Camera::Camera()
 	eye = make_tuple(0.0, 10.0, 5.0); // need to edit as player position
 	center = make_tuple(0.0, 0.0, 1.0);
 	up = make_tuple(0.0, 1.0, 0.0);
+	left = 4;
+	right = 4;
+	front = 1;
+	back = 20;
 	mode = THIRD;
 }
 
@@ -18,9 +22,9 @@ Camera::Camera(tuple<float, float, float> e, tuple<float, float, float> c, tuple
 
 void Camera::look_at()
 {
-	glMatrixMode(GL_PROJECTION);
+	/*glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glFrustum(-2, 2, -1.5, 1.5, 1, 40);
+	glFrustum(-left, left, -right, right, front, back);*/
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -34,25 +38,28 @@ void Camera::set_position(tuple<float, float, float> e, tuple<float, float, floa
 	up = u;
 }
 
+void Camera::set_volume(float l, float r, float f, float b)
+{
+	left = l;
+	right = r;
+	front = f;
+	back = b;
+}
+
+
 void Camera::change_mode()
 {
 	switch (mode) {
 	case THIRD:
-		eye = make_tuple(0.0, 10.0, 5.0); // need to edit as player position
-		center = make_tuple(0.0, 0.0, 1.0);
-		up = make_tuple(0.0, 1.0, 0.0);
+		set_position(make_tuple(0.0, 10.0, 5.0), make_tuple(0.0, 0.0, 1.0), make_tuple(0.0, 1.0, 0.0)); // need to edit as player position
 		mode = FIRST;
 		break;
 	case FIRST:
-		eye = make_tuple(0.0, 10.0, 0.0);
-		center = make_tuple(0.0, 1.0, 0.0);
-		up = make_tuple(-1.0, 0.0, 0.0);
+		set_position(make_tuple(0.0, 10.0, 0.0), make_tuple(0.0, 1.0, 0.0), make_tuple(0.0, 0.0, -1.0));
 		mode = TOP;
 		break;
 	case TOP:
-		eye = make_tuple(0.0, 10.0, 5.0); // need to edit as player position
-		center = make_tuple(0.0, 0.0, 1.0);
-		up = make_tuple(0.0, 1.0, 0.0);
+		set_position(make_tuple(0.0, 10.0, 5.0), make_tuple(0.0, 0.0, 1.0), make_tuple(0.0, 1.0, 0.0)); // need to edit as player position
 		mode = THIRD;
 		break;
 	}
