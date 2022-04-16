@@ -105,7 +105,8 @@ public:
 	glm::mat4 getPlayerTankBarrelPosition();
 	glm::mat4 getPlayerTankPosition();
 
-	pair<glm::vec3, glm::vec3> getTankBound();
+	pair<glm::vec3, glm::vec3> getPlayerTankBound();
+	pair<glm::vec3, glm::vec3> getEnemyTankBound();
 
 	Camera* camera = new Camera();
 };
