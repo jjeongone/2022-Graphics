@@ -8,8 +8,10 @@
 #include <string>
 #include <vector>
 #include <cstdlib> 
+#include <ctime>
 
 #include "tank.h"
+#include "camera.h"
 
 #define X_POSITION 3.0
 #define GROUND -1.0
@@ -66,7 +68,7 @@ public:
 	void printGameOver();
 	void printWin();
 	void printStatus();
-	void display(bool fill);
+	void display();
 
 	void drawWorld(bool fill);
 	template <class T>
@@ -95,6 +97,8 @@ public:
 	void set_enemy_translation(tuple<float, float, float>);
 	void set_player_rotation(tuple<float, float, float, float>);
 	void set_enemy_rotation(tuple<float, float, float, float>);
+
+	Camera* camera = new Camera();
 };
 
 #endif // !GAME_H

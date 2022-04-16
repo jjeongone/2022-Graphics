@@ -80,14 +80,14 @@ void Game::printTitle()
 	float x = 0.0;
 	float y = 0.1;
 
-	printText(0.9, 0.9, 0.9, x-0.35, y, "<Fortress>");
-	printText(0.9, 0.9, 0.9, x-0.6, y-= 0.1, "Press ENTER to play");
-	printText(0.9, 0.9, 0.9, x-0.6, y -= 0.3, "developed by DimSum");
+	printText(0.0, 0.0, 0.0, x - 0.17, y, "<Fortress>");
+	printText(0.0, 0.0, 0.0, x - 0.3, y -= 0.1, "Press ENTER to play");
+	printText(0.0, 0.0, 0.0, x - 0.3, y -= 0.3, "developed by DimSum");
 }
 
 void Game::printGameOver()
 {
-	float x = -0.5;
+	float x = -0.2;
 	float y = 0.0;
 
 	printText(0.9, 0.0, 0.0, x, y, "GAME OVER...");
@@ -98,38 +98,39 @@ void Game::printWin()
 	float x = -0.1;
 	float y = 0.0;
 
-	printText(0.9, 0.9, 0.0, x, y, "WIN!!!");
+	printText(0.0, 0.0, 0.9, x, y, "WIN!!!");
 }
 
 void Game::printStatus()
 {
 	float x = -3.2;
-	float y = 1.8;
+	float y = 35.0;
 
 	string player_mode = auto_mode ? "(AUTO)" : "";
 
-	printText(0.9, 0.9, 0.9, x, y, "Player" + player_mode);
-	printText(0.9, 0.9, 0.9, x, y-0.1, "HP: " + std::to_string(player->getHealth()));
+	printText(0.0, 0.0, 0.0, x, y, "Player" + player_mode);
+	printText(0.0, 0.0, 0.0, x, y-0.1, "HP: " + std::to_string(player->getHealth()));
 
-	printText(0.9, 0.9, 0.9, 2.3, y, "Mode: " + getModeName(auto_mode, mode));
+	printText(0.0, 0.0, 0.0, 2.3, y, "Mode: " + getModeName(auto_mode, mode));
 }
 
-//void Game::display(bool fill)
-//{
-//	/*printStatus();
-//	player->draw_tank();
-//	glPushMatrix();
-//	glTranslatef(enemy->coordinate.first, enemy->coordinate.second, 0);
-//	glRotatef(180, 0, 1, 0);
-//	glTranslatef(-enemy->coordinate.first, -enemy->coordinate.second, 0);
-//	enemy->draw_tank();
-//	glPopMatrix();*/
-//	
-//	ground.draw_plane();
-//	boundary.draw_plane();
-//
-//	player->draw_tank(fill);
-//}
+void Game::display()
+{
+	// printStatus();
+
+	camera->look_at();
+	glEnable(GL_DEPTH_TEST);
+	glPolygonMode(GL_FRONT, GL_LINE);
+	drawWorld(false);
+
+	if (render_mode) {
+		glPolygonMode(GL_FRONT, GL_FILL);
+		glEnable(GL_POLYGON_OFFSET_FILL);
+		glPolygonOffset(1.0, 5.0);
+		drawWorld(true);
+		glDisable(GL_POLYGON_OFFSET_FILL);
+	}
+}
 
 void Game::drawWorld(bool fill)
 {
@@ -169,9 +170,6 @@ void Game::display(treenode<T>* node, bool fill)
 	glTranslatef(get<0>(node->translate), get<1>(node->translate), get<2>(node->translate));
 	glRotatef(get<0>(node->rotate), get<1>(node->rotate), get<2>(node->rotate), get<3>(node->rotate));
 	
-
-	
-
 	if (node->child != nullptr)
 	{
 		display(node->child, fill);
@@ -249,25 +247,71 @@ bool Game::checkLeftCollision(float width, float height, float speed)
 
 void Game::enemyAction()
 {
-	std::srand(15);
-	switch (std::rand()) {
-	case 0:
-	case 1: // move forward
+	std::srand(time(NULL));
+	float barrel_angle = enemy->getBarrelAngle();
+	float head_angle = enemy->getHeadAngle();
+	float speed = enemy->getBulletSpeed();
+
+	tuple<float, float, float> tmp_translation;
+	tuple<float, float, float, float> tmp_rotation;
+	float tmp_angle;
+
+	cout << std::rand() % 12 << endl;
+	
+	switch (std::rand() % 12) {
+	case 0: // move forward
+		tmp_translation = enemy_translation;
+		tmp_angle = get<0>(enemy_rotation);
+		get<2>(tmp_translation) -= 0.2 * cos(tmp_angle / 180 * 3.142);
+		get<0>(tmp_translation) -= 0.2 * sin(tmp_angle / 180 * 3.142);
+		enemy_translation = tmp_translation;
 		break;
-	case 2:
-	case 3: // move backward
+	case 1: // move backward
+		tmp_translation = enemy_translation;
+		tmp_angle = get<0>(enemy_rotation);
+		get<2>(tmp_translation) += 0.2 * cos(tmp_angle / 180 * 3.142);
+		get<0>(tmp_translation) += 0.2 * sin(tmp_angle / 180 * 3.142);
+		enemy_translation = tmp_translation;
 		break;
-	case 4: // rotate right
+	case 2: // rotate right
+		tmp_rotation = enemy_rotation;
+		get<0>(tmp_rotation) += 0.5;
+		enemy_rotation = tmp_rotation;
 		break;
-	case 5: // rotate left
+	case 3: // rotate left
+		tmp_rotation = enemy_rotation;
+		get<0>(tmp_rotation) -= 0.5;
+		enemy_rotation = tmp_rotation;
 		break;
 	case 6: // barrel up
+		if (barrel_angle - 0.5 >= -30.)
+			barrel_angle -= 0.5;
+		enemy->setBarrel(barrel_angle);
 		break;
 	case 7: // barrel down
+		if (barrel_angle + 0.5 <= 0)
+			barrel_angle += 0.5;
+		enemy->setBarrel(barrel_angle);
 		break;
-	case 8: // bullet up
+	case 8: // head left
+		if (head_angle + 1. <= 90.)
+			head_angle += 1.;
+		enemy->setHead(head_angle);
 		break;
-	case 9: // bullet down
+	case 9: // head right
+		if (head_angle - 1. >= -90.)
+			head_angle -= 1.;
+		enemy->setHead(head_angle);
+		break;
+	case 10: // bullet speed up
+		if (speed + 0.0002 <= 0.01)
+			speed += 0.0002;
+		enemy->setBulletSpeed(speed);
+		break;
+	case 11: // bullet speed down
+		if (speed - 0.0002 >= 0.003)
+			speed -= 0.0002;
+		enemy->setBulletSpeed(speed);
 		break;
 	default: // do nothing
 		break;

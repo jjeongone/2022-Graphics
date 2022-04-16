@@ -34,13 +34,6 @@ typedef struct world {
 world gameWorld;
 
 Game* game = new Game();
-Camera* camera = new Camera();
-
-Loader* wheel = new Loader("./model/centauro/source/wheel.obj");
-Loader* body = new Loader("./model/centauro/source/body.obj");
-Loader* barrel = new Loader("./model/centauro/source/barrel.obj");
-Loader* bullet = new Loader("./model/bullet.obj");
-
 
 void init(void) {
 	gameWorld.width = 600;
@@ -50,47 +43,22 @@ void init(void) {
 	glShadeModel(GL_FLAT);
 }
 
-void temp_draw(bool fill) {
-	std::vector < glm::vec3 > body_vertices = bullet->get_vertex();
-	for (int i = 0; i < body_vertices.size(); i++) {
-		glBegin(fill ? GL_TRIANGLES : GL_LINE_LOOP);
-		glVertex3f(body_vertices[i].x, body_vertices[i].y, body_vertices[i].z);
-		i++;
-		glVertex3f(body_vertices[i].x, body_vertices[i].y, body_vertices[i].z);
-		i++;
-		glVertex3f(body_vertices[i].x, body_vertices[i].y, body_vertices[i].z);
-		glEnd();
-	}
-}
 
 void display(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	camera->look_at();
-
-	glEnable(GL_DEPTH_TEST);
-	glPolygonMode(GL_FRONT, GL_LINE);
-	game->drawWorld(false);
-
-	if (game->getRenderMode()) {
-		glPolygonMode(GL_FRONT, GL_FILL);
-		glEnable(GL_POLYGON_OFFSET_FILL);
-		glPolygonOffset(1.0, 5.0);
-		game->drawWorld(true);
-		glDisable(GL_POLYGON_OFFSET_FILL);
-	}
-
-	/*switch (game->getStatus()) {
+	switch (game->getStatus()) {
 	case MENU:
 		game->printTitle();
 		break;
 	case PLAYING:
+		game->camera->look_at();
 		game->display();
 
 		// draw bullet
-		for (auto &elem : bulletList) {
+		/*for (auto &elem : bulletList) {
 			elem.draw();
-		}
+		}*/
 		break;
 	case WIN:
 		game->printWin();
@@ -98,7 +66,7 @@ void display(void) {
 	case GAMEOVER:
 		game->printGameOver();
 		break;
-	}*/
+	}
 
 	glFlush();
 }
@@ -113,6 +81,10 @@ void reshape(int w, int h) {
 }
 
 void idle() {
+	if (game->getStatus() == PLAYING) {
+		game->enemyAction();
+	}
+
 	std::vector<Bullet>::iterator iter = bulletList.begin();
 	while (iter != bulletList.end()) {
 		(*iter).changeSpeed();
@@ -183,9 +155,9 @@ void keyboard(unsigned char key, int x, int y) {
 		std::cout << "q\n";
 		break;
 	case 'v': // viewing mode(not yet)
-		camera->change_mode();
+		game->camera->change_mode();
 		break;
-	case 'r': // rendering mode(not yet)
+	case 'r':
 		game->setRenderMode();
 		break;
 	case 'c': // all pass mode
@@ -275,7 +247,6 @@ int main(int argc, char** argv) {
 	glutDisplayFunc(display);
 	glutIdleFunc(idle);
 	glutTimerFunc(1000, timer, 1);
-
 
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialKeyboard);
