@@ -105,10 +105,14 @@ public:
 	glm::mat4 getPlayerTankBarrelPosition();
 	glm::mat4 getPlayerTankPosition();
 
-	pair<glm::vec3, glm::vec3> getPlayerTankBound();
-	pair<glm::vec3, glm::vec3> getEnemyTankBound();
+	glm::mat4 getEnemyTankPosition();
+
+	pair<glm::vec3, glm::vec3> getPlayerTankBound(tuple<float, float, float>);
+	pair<glm::vec3, glm::vec3> getEnemyTankBound(tuple<float, float, float>);
 
 	Camera* camera = new Camera();
+	bool checkTankCollision(pair<glm::vec3, glm::vec3> playerBound, pair<glm::vec3, glm::vec3> enemyBound);
+	bool checkBoundaryCollision(pair<glm::vec3, glm::vec3> bound);
 };
 
 #endif // !GAME_H

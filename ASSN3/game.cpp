@@ -264,14 +264,21 @@ void Game::enemyAction()
 		tmp_angle = get<0>(enemy_rotation);
 		get<2>(tmp_translation) -= 0.2 * cos(tmp_angle / 180 * 3.142);
 		get<0>(tmp_translation) -= 0.2 * sin(tmp_angle / 180 * 3.142);
-		enemy_translation = tmp_translation;
+		if (!checkBoundaryCollision(getEnemyTankBound(tmp_translation)) && !checkTankCollision(getPlayerTankBound(get_player_translation()), getEnemyTankBound(tmp_translation)))
+		{
+			enemy_translation = tmp_translation;
+		}
+
 		break;
 	case 1: // move backward
 		tmp_translation = enemy_translation;
 		tmp_angle = get<0>(enemy_rotation);
 		get<2>(tmp_translation) += 0.2 * cos(tmp_angle / 180 * 3.142);
 		get<0>(tmp_translation) += 0.2 * sin(tmp_angle / 180 * 3.142);
-		enemy_translation = tmp_translation;
+		if (!checkBoundaryCollision(getEnemyTankBound(tmp_translation)) && !checkTankCollision(getPlayerTankBound(get_player_translation()), getEnemyTankBound(tmp_translation)))
+		{
+			enemy_translation = tmp_translation;
+		}
 		break;
 	case 2: // rotate right
 		tmp_rotation = enemy_rotation;
@@ -407,21 +414,21 @@ glm::mat4 Game::getEnemyTankPosition()
 	return matrix;
 }
 
-pair<glm::vec3, glm::vec3> Game::getPlayerTankBound()
+pair<glm::vec3, glm::vec3> Game::getPlayerTankBound(tuple<float, float, float> t)
 {
-	glm::vec4 tank_coord = getPlayerTankPosition() * glm::vec4(0, 0, 0, 1);
+	glm::vec3 tank_coord(get<0>(t), get<1>(t), get<2>(t));
 
 	return make_pair(glm::vec3(tank_coord.x - 9., tank_coord.y - 4., tank_coord.z - 9.), glm::vec3(tank_coord.x + 9., tank_coord.y + 4., tank_coord.z + 9.));
 }
 
-pair<glm::vec3, glm::vec3> Game::getEnemyTankBound()
+pair<glm::vec3, glm::vec3> Game::getEnemyTankBound(tuple<float, float, float> t)
 {
-	glm::vec4 tank_coord = getEnemyTankPosition() * glm::vec4(0, 0, 0, 1);
+	glm::vec3 tank_coord(get<0>(t), get<1>(t), get<2>(t));
 
 	return make_pair(glm::vec3(tank_coord.x - 9., tank_coord.y - 4., tank_coord.z - 9.), glm::vec3(tank_coord.x + 9., tank_coord.y + 4., tank_coord.z + 9.));
 }
 
-bool checkTankCollision(pair<glm::vec3, glm::vec3> playerBound, pair<glm::vec3, glm::vec3> enemyBound)
+bool Game::checkTankCollision(pair<glm::vec3, glm::vec3> playerBound, pair<glm::vec3, glm::vec3> enemyBound)
 {
 	// Tank-to-tank Collision Check
 	if ((playerBound.first.x <= enemyBound.first.x && playerBound.second.x >= enemyBound.first.x) && (playerBound.first.z <= enemyBound.first.z && playerBound.second.z >= enemyBound.first.z))
@@ -436,7 +443,7 @@ bool checkTankCollision(pair<glm::vec3, glm::vec3> playerBound, pair<glm::vec3, 
 		return false;
 }
 
-bool checkBoundaryCollision(pair<glm::vec3, glm::vec3> bound)
+bool Game::checkBoundaryCollision(pair<glm::vec3, glm::vec3> bound)
 {
 	// Tank-to-tank Collision Check
 	if (bound.first.x <= -60.f)

@@ -204,7 +204,10 @@ void specialKeyboard(int key, int x, int y) {
 		tmp_angle = get<0>(game->get_player_rotation());
 		get<2>(tmp_translation) -= 0.2 * cos(tmp_angle / 180 * 3.142);
 		get<0>(tmp_translation) -= 0.2 * sin(tmp_angle / 180 * 3.142);
-		game->set_player_translation(tmp_translation);
+		if (!game->checkBoundaryCollision(game->getPlayerTankBound(tmp_translation)) && !game->checkTankCollision(game->getPlayerTankBound(tmp_translation), game->getEnemyTankBound(game->get_enemy_translation())))
+		{
+			game->set_player_translation(tmp_translation);
+		}
 		/* }*/
 		break;
 	case GLUT_KEY_DOWN:
@@ -215,7 +218,10 @@ void specialKeyboard(int key, int x, int y) {
 		tmp_angle = get<0>(game->get_player_rotation());
 		get<2>(tmp_translation) += 0.2 * cos(tmp_angle / 180 * 3.142);
 		get<0>(tmp_translation) += 0.2 * sin(tmp_angle / 180 * 3.142);
-		game->set_player_translation(tmp_translation);
+		if (!game->checkBoundaryCollision(game->getPlayerTankBound(tmp_translation)) && !game->checkTankCollision(game->getPlayerTankBound(tmp_translation), game->getEnemyTankBound(game->get_enemy_translation())))
+		{
+			game->set_player_translation(tmp_translation);
+		}
 		break;
 	case GLUT_KEY_LEFT:
 		/*if (!game->checkRightCollision(WidthFactor, HeightFactor, SPEED) && !game->checkRightCollision((game->getEnemy()->getCoordinate().first - game->getEnemy()->getSize()), HeightFactor, SPEED)) {
