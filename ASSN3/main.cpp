@@ -33,8 +33,6 @@ typedef struct world {
 
 world gameWorld;
 
-shape::Line ground;
-
 Game* game = new Game();
 Camera* camera = new Camera();
 
@@ -71,14 +69,12 @@ void display(void) {
 
 	glEnable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT, GL_LINE);
-	glColor3f(0.0, 0.0, 0.0);
-	temp_draw(false);
+	game->display(false);
 
 	glPolygonMode(GL_FRONT, GL_FILL);
 	glEnable(GL_POLYGON_OFFSET_FILL);
 	glPolygonOffset(1.0, 5.0);
-	glColor3f(0.3f, 0.3f, 0.3f);
-	temp_draw(true);
+	game->display(true);
 	glDisable(GL_POLYGON_OFFSET_FILL);
 	/*switch (game->getStatus()) {
 	case MENU:
@@ -197,7 +193,7 @@ void keyboard(unsigned char key, int x, int y) {
 		game->changeMode(NORMAL);
 		break;
 	case 'R':
-		game->getPlayer()->setCoordinate(make_pair(-X_POSITION, GROUND));
+		//game->getPlayer()->setCoordinate(make_pair(-X_POSITION, GROUND));
 		break;
 	case 'A': // auto mode
 		game->autoMode();
@@ -219,9 +215,9 @@ void keyboard(unsigned char key, int x, int y) {
 void specialKeyboard(int key, int x, int y) {
 	switch (key) {
 	case GLUT_KEY_UP: 
-		if (!game->checkRightCollision(WidthFactor, HeightFactor, SPEED) && !game->checkRightCollision((game->getEnemy()->getCoordinate().first -game->getEnemy()->getSize()), HeightFactor, SPEED)) {
+		/*if (!game->checkRightCollision(WidthFactor, HeightFactor, SPEED) && !game->checkRightCollision((game->getEnemy()->getCoordinate().first -game->getEnemy()->getSize()), HeightFactor, SPEED)) {
 			game->getPlayer()->move(SPEED, 0.0);
-		}
+		}*/
 		break;
 	case GLUT_KEY_DOWN:
 		if (!game->checkLeftCollision(WidthFactor, HeightFactor, SPEED)) {
@@ -229,9 +225,9 @@ void specialKeyboard(int key, int x, int y) {
 		}
 		break;
 	case GLUT_KEY_LEFT:
-		if (!game->checkRightCollision(WidthFactor, HeightFactor, SPEED) && !game->checkRightCollision((game->getEnemy()->getCoordinate().first - game->getEnemy()->getSize()), HeightFactor, SPEED)) {
+		/*if (!game->checkRightCollision(WidthFactor, HeightFactor, SPEED) && !game->checkRightCollision((game->getEnemy()->getCoordinate().first - game->getEnemy()->getSize()), HeightFactor, SPEED)) {
 			game->getPlayer()->move(SPEED, 0.0);
-		}
+		}*/
 		break;
 	case GLUT_KEY_RIGHT:
 		if (!game->checkLeftCollision(WidthFactor, HeightFactor, SPEED)) {

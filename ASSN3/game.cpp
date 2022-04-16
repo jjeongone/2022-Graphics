@@ -25,15 +25,18 @@ Game::Game()
 	mode = NORMAL;
 	status = MENU;
 	auto_mode = false;
-	player = new Tank(make_pair(-X_POSITION, GROUND), 0.7f, make_tuple(1.f, 1.f, 1.f), 30. / 180 * 3.142, 3, 0.006, false);
-	enemy = new Tank(make_pair(X_POSITION, GROUND), 0.7f, make_tuple(2.2f, 0.2f, 2.0f), 30. / 180 * 3.142, 3, -0.006, true);
+	//player = new Tank(make_pair(-X_POSITION, GROUND), 0.7f, make_tuple(1.f, 1.f, 1.f), 30. / 180 * 3.142, 3, 0.006, false);
+	//enemy = new Tank(make_pair(X_POSITION, GROUND), 0.7f, make_tuple(2.2f, 0.2f, 2.0f), 30. / 180 * 3.142, 3, -0.006, true);
+
+	player = new Tank(make_tuple(0, 0, 0), 0.7f, make_tuple(1.f, 1.f, 1.f), 30. / 180 * 3.142, 3, 0.006, false);
+	enemy = new Tank(make_tuple(0, 0, 0), 0.7f, make_tuple(2.2f, 0.2f, 2.0f), 30. / 180 * 3.142, 3, -0.006, true);
 	enemyList.push_back(*enemy);
 
 	ground.set_color(make_tuple(0.3f, 0.3f, 0.3f));
-	ground.set_condition(30.0f, 1.0f);
+	ground.set_condition(300.0f, 10.0f);
 
 	boundary.set_color(make_tuple(0.0f, 0.25f, 1.0f));
-	boundary.set_condition(10.0f, 1.0f);
+	boundary.set_condition(100.0f, 10.0f);
 }
 
 mode Game::getMode()
@@ -107,7 +110,7 @@ void Game::printStatus()
 	printText(0.9, 0.9, 0.9, 2.3, y, "Mode: " + getModeName(auto_mode, mode));
 }
 
-void Game::display()
+void Game::display(bool fill)
 {
 	/*printStatus();
 	player->draw_tank();
@@ -117,9 +120,11 @@ void Game::display()
 	glTranslatef(-enemy->coordinate.first, -enemy->coordinate.second, 0);
 	enemy->draw_tank();
 	glPopMatrix();*/
-
+	
 	ground.draw_plane();
 	boundary.draw_plane();
+
+	player->draw_tank(fill);
 }
 
 Tank* Game::getPlayer()
@@ -164,22 +169,24 @@ void Game::checkStatus()
 
 bool Game::checkRightCollision(float width, float height, float speed)
 {
-	if (player->getCoordinate().first + player->getSize() + speed > width) {
+	/*if (player->getCoordinate().first + player->getSize() + speed > width) {
 		return true;
 	}
 	else {
 		return false;
-	}
+	}*/
+	return false;
 }
 
 bool Game::checkLeftCollision(float width, float height, float speed)
 {
-	if (player->getCoordinate().first - speed < -width) {
+	/*if (player->getCoordinate().first - speed < -width) {
 		return true;
 	}
 	else {
 		return false;
-	}
+	}*/
+	return false;
 }
 
 void Game::enemyAction()

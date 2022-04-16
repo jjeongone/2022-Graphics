@@ -1,6 +1,72 @@
 #include "shape.h"
 
-void shape::Line::draw_line()
+
+void shape::Body::draw()
+{
+	if (fill)
+		glColor3f(0.3, 0.3, 0.3);
+	else
+		glColor3f(get<0>(colorRGB), get<1>(colorRGB), get<2>(colorRGB));
+	
+	for (int i = 0; i < body_vertices.size(); i += 3) {
+		glBegin(fill ? GL_TRIANGLES : GL_LINE_LOOP);
+		glVertex3f(body_vertices[i].x, body_vertices[i].y, body_vertices[i].z);
+		glVertex3f(body_vertices[i + 1].x, body_vertices[i + 1].y, body_vertices[i + 1].z);
+		glVertex3f(body_vertices[i + 2].x, body_vertices[i + 2].y, body_vertices[i + 2].z);
+		glEnd();
+	}
+}
+
+void shape::Head::draw()
+{
+	if (fill)
+		glColor3f(0.3, 0.3, 0.3);
+	else
+		glColor3f(get<0>(colorRGB), get<1>(colorRGB), get<2>(colorRGB));
+
+	for (int i = 0; i < head_vertices.size(); i += 3) {
+		glBegin(fill ? GL_TRIANGLES : GL_LINE_LOOP);
+		glVertex3f(head_vertices[i].x, head_vertices[i].y, head_vertices[i].z);
+		glVertex3f(head_vertices[i + 1].x, head_vertices[i + 1].y, head_vertices[i + 1].z);
+		glVertex3f(head_vertices[i + 2].x, head_vertices[i + 2].y, head_vertices[i + 2].z);
+		glEnd();
+	}
+	
+}
+
+void shape::Barrel::draw()
+{
+	if (fill)
+		glColor3f(0.3, 0.3, 0.3);
+	else
+		glColor3f(get<0>(colorRGB), get<1>(colorRGB), get<2>(colorRGB));
+
+	for (int i = 0; i < barrel_vertices.size(); i += 3) {
+		glBegin(fill ? GL_TRIANGLES : GL_LINE_LOOP);
+		glVertex3f(barrel_vertices[i].x, barrel_vertices[i].y, barrel_vertices[i].z);
+		glVertex3f(barrel_vertices[i + 1].x, barrel_vertices[i + 1].y, barrel_vertices[i + 1].z);
+		glVertex3f(barrel_vertices[i + 2].x, barrel_vertices[i + 2].y, barrel_vertices[i + 2].z);
+		glEnd();
+	}
+}
+
+void shape::Wheel::draw()
+{
+	if (fill)
+		glColor3f(0.3, 0.3, 0.3);
+	else
+		glColor3f(get<0>(colorRGB), get<1>(colorRGB), get<2>(colorRGB));
+
+	for (int i = 0; i < wheel_vertices.size(); i += 3) {
+		glBegin(fill ? GL_TRIANGLES : GL_LINE_LOOP);
+		glVertex3f(wheel_vertices[i].x, wheel_vertices[i].y, wheel_vertices[i].z);
+		glVertex3f(wheel_vertices[i + 1].x, wheel_vertices[i + 1].y, wheel_vertices[i + 1].z);
+		glVertex3f(wheel_vertices[i + 2].x, wheel_vertices[i + 2].y, wheel_vertices[i + 2].z);
+		glEnd();
+	}
+}
+
+/*void shape::Line::draw_line()
 {
 	glColor3f(get<0>(colorRGB), get<1>(colorRGB), get<2>(colorRGB));
 	glLineWidth(width);
@@ -8,72 +74,12 @@ void shape::Line::draw_line()
 	glVertex3f(100.0, position, 0);
 	glVertex3f(-100.0, position, 0);
 	glEnd();
-}
+}*/
 
-void shape::Line::setPosition(float new_position)
-{
-	position = new_position;
-}
-
-void shape::Rectangle::draw_rectangle()
-{
-	glColor3f(get<0>(colorRGB), get<1>(colorRGB), get<2>(colorRGB));
-	glRectf(coordinate2D.first, coordinate2D.second, coordinate2D.first + width, coordinate2D.second + height);
-}
-
-void shape::Semicircle::draw_semicircle()
-{
-	float theta;
-	glColor3f(get<0>(colorRGB), get<1>(colorRGB), get<2>(colorRGB));
-	glBegin(GL_POLYGON);
-	for (int i = 0; i < 180; i++) {
-		theta = i * 3.142 / 180;
-		glVertex3f(coordinate2D.first + radius * cos(theta), coordinate2D.second + radius * sin(theta), 0);
-	}
-	glEnd();
-}
-
-void shape::Circle::draw_circle()
-{
-	float theta;
-	glColor3f(get<0>(colorRGB), get<1>(colorRGB), get<2>(colorRGB));
-	glBegin(GL_POLYGON);
-	for (int i = 0; i < 360; i++) {
-		theta = i * 3.142 / 180;
-		glVertex3f(coordinate2D.first + radius * cos(theta), coordinate2D.second + radius * sin(theta), 0);
-	}
-	glEnd();
-}
-
-void shape::Wheel::draw_wheel()
-{
-	body_large.radius = radius;
-	body_large.coordinate2D = coordinate2D;
-	body_large.colorRGB = colorRGB;
-	body_large.draw_circle();
-
-	body_background.radius = 0.9 * radius;
-	body_background.coordinate2D = coordinate2D;
-	body_background.colorRGB = make_tuple(0., 0., 0.);
-	body_background.draw_circle();
-	
-	body_small.radius = 0.2 * radius;
-	body_small.coordinate2D = coordinate2D;
-	body_small.colorRGB = colorRGB;
-	body_small.draw_circle();
-
-	for (int i = 0; i < num_circles; i++)
-	{
-		Circle tmp;
-		tmp.radius = 0.1 * radius;
-		tmp.colorRGB = colorRGB;
-		float coordY = coordinate2D.second + 0.6 * radius * cos(2 * 3.142 * i / num_circles);
-		float coordX = coordinate2D.first + 0.6 * radius * sin(2 * 3.142 * i / num_circles);
-		tmp.coordinate2D = make_pair(coordX, coordY);
-		small_bolts.push_back(tmp);
-		tmp.draw_circle();
-	}
-}
+//void shape::Line::setPosition(float new_position)
+//{
+//	position = new_position;
+//}
 
 void shape::Plane::set_condition(float l, float g)
 {

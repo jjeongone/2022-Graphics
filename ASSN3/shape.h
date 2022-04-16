@@ -4,6 +4,7 @@
 #include <tuple>
 #include <utility>
 #include <vector>
+#include "loader.h"
 
 using namespace std;
 
@@ -13,46 +14,41 @@ namespace shape {
 		tuple<float, float, float> colorRGB;
 		float rotation_angle_radian;
 		pair<float, float> translationXY;
-		pair<float, float> coordinate2D;	// left-bottom point
+		tuple<float, float, float> coordinate3D;	// left-bottom point
+		bool fill = false;
 		void set_color(tuple<float, float, float> color);
 	};
-
-	class Line : public Shape {
+	
+	class Body : public Shape {
+	private:
+		Loader* body = new Loader("./model/centauro/source/body.obj");
+		vector<glm::vec3> body_vertices = body->get_vertex();
 	public:
-		float width, length, position;
-		pair<float, float> line_position;
-		void draw_line();
-		void setPosition(float new_position);
+		void draw();
 	};
 
-	class Rectangle : public Shape {
+	class Head : public Shape {
+	private:
+		Loader* head = new Loader("./model/centauro/source/head.obj");
+		vector<glm::vec3> head_vertices = head->get_vertex();
 	public:
-		float width, height;
-		void draw_rectangle();
-	};
-
-	class Semicircle : public Shape {
-	public:
-		float radius;
-		void draw_semicircle();
-	};
-
-	class Circle : public Shape {
-	public:
-		float radius;
-		void draw_circle();
+		void draw();
 	};
 
 	class Wheel : public Shape {
-	private:
-		Circle body_large;
-		Circle body_background;
-		Circle body_small;
-		vector<Circle> small_bolts;
+	private: 
+		Loader* wheel = new Loader("./model/centauro/source/wheel.obj");
+		vector<glm::vec3> wheel_vertices = wheel->get_vertex();
 	public:
-		float radius;
-		int num_circles;
-		void draw_wheel();
+		void draw();
+	};
+
+	class Barrel : public Shape {
+	private:
+		Loader* barrel = new Loader("./model/centauro/source/barrel.obj");
+		vector<glm::vec3> barrel_vertices = barrel->get_vertex();
+	public:
+		void draw();
 	};
 
 	class Plane : public Shape {

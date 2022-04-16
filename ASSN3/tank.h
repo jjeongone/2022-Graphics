@@ -7,10 +7,10 @@
 
 class Tank {
 private:
-	shape::Rectangle barrel;
-	shape::Rectangle body;
-	vector<shape::Wheel> wheels = { shape::Wheel(), shape::Wheel(), shape::Wheel(), shape::Wheel(), shape::Wheel(), shape::Wheel() };
-	shape::Semicircle turret;
+	shape::Barrel barrel;
+	shape::Body body;
+	vector<shape::Wheel> wheels = { shape::Wheel(), shape::Wheel(), shape::Wheel(), shape::Wheel(), shape::Wheel(), shape::Wheel(), shape::Wheel(), shape::Wheel() };
+	shape::Head head;
 
 	template<class T>
 	struct treenode {
@@ -23,7 +23,7 @@ private:
 		struct treenode* child = nullptr;
 	};
 
-	treenode<shape::Rectangle> body_node;
+	treenode<shape::Body> body_node;
 
 	float bullet_speed = 0.006;
 	float angle_radian = 30 / 180 * 3.142;
@@ -32,31 +32,35 @@ private:
 	bool shootability;
 	bool is_reflect;
 
+	tuple<float, float, float> barrelPosition = make_tuple(0.f, 0.f, 0.f);
+	tuple<float, float, float, float> barrelOrientation = make_tuple(0., 0., 0., 0.);
+
 public: 
 	float size;
 	float speed;
+	bool fill;
 
 	Tank();
-	Tank(pair<float, float> init_coordinate, float init_size, tuple<float, float, float> init_color_weight, float init_angle_radian, int init_health, float init_bullet_speed, bool reflect);
+	Tank(tuple<float, float, float> init_coordinate, float init_size, tuple<float, float, float> init_color_weight, float init_angle_radian, int init_health, float init_bullet_speed, bool reflect);
 
-	pair<float, float> coordinate;
-	void draw_tank();
+	tuple<float, float, float> coordinate;
+	void draw_tank(bool fill);
 
 	template<class T>
 	void display(treenode<T>* node);
 	
 	void move(float dx, float dy);
-	pair<float, float> getBarrelPosition();
+	tuple<float, float, float> getBarrelPosition();
+	tuple<float, float, float, float> getBarrelOrientation();
 	float getBarrelAngle();
 	void setBarrel(float new_angle_radian);
 	void setBulletSpeed(float new_bullet_speed);
 	float getBulletSpeed();
-	float getBottom();
 	int getHealth();
 	void setHealth(int new_health);
 	bool getShootability();
 	void setShootability(bool shoot);
-	void setCoordinate(pair<float, float> new_coordinate);
-	pair<float, float> getCoordinate();
+	void setCoordinate(tuple<float, float, float> new_coordinate);
+	tuple<float, float, float> getCoordinate();
 	float getSize();
 };

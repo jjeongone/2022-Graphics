@@ -45,7 +45,7 @@ public:
 	void printGameOver();
 	void printWin();
 	void printStatus();
-	void display();
+	void display(bool fill);
 	Tank* getPlayer();
 	Tank* getEnemy();
 	enum status getStatus();
