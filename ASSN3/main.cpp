@@ -44,66 +44,42 @@ Loader* barrel = new Loader("./model/centauro/source/barrel.obj");
 Loader* head = new Loader("./model/centauro/source/head.obj");
 
 void init(void) {
-	gameWorld.width = 1000;
+	gameWorld.width = 600;
 	gameWorld.height = 600;
 
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glShadeModel(GL_FLAT);
 }
 
-void display(void) {
-
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	glClearColor(0.8, 0.8, 0.8, 1.0);
-
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glBegin(GL_TRIANGLES);
-	std::vector < glm::vec3 > wheel_vertices = wheel->get_vertex();
-	for (int i = 0; i < wheel_vertices.size(); i++) {
-		glVertex3f(wheel_vertices[i].x, wheel_vertices[i].y, wheel_vertices[i].z);
-	}
-	glEnd();
-
-	glColor3f(0.0f, 1.0f, 1.0f);
-	glBegin(GL_TRIANGLES);
-	std::vector < glm::vec3 > barrel_vertices = barrel->get_vertex();
-	for (int i = 0; i < barrel_vertices.size(); i++) {
-		glVertex3f(barrel_vertices[i].x, barrel_vertices[i].y, barrel_vertices[i].z);
-	}
-	glEnd();
-
-	glColor3f(0.0f, 0.0f, 0.0f);
-	glBegin(GL_TRIANGLES);
-	std::vector < glm::vec3 > head_vertices = head->get_vertex();
-	for (int i = 0; i < head_vertices.size(); i++) {
-		glVertex3f(head_vertices[i].x, head_vertices[i].y, head_vertices[i].z);
-	}
-	glEnd();
-
-	/*glColor3f(0.5f, 0.5f, 0.5f);
-	glBegin(GL_TRIANGLES);
+void temp_draw(bool fill) {
 	std::vector < glm::vec3 > body_vertices = body->get_vertex();
 	for (int i = 0; i < body_vertices.size(); i++) {
+		glBegin(fill ? GL_TRIANGLES : GL_LINE_LOOP);
 		glVertex3f(body_vertices[i].x, body_vertices[i].y, body_vertices[i].z);
+		i++;
+		glVertex3f(body_vertices[i].x, body_vertices[i].y, body_vertices[i].z);
+		i++;
+		glVertex3f(body_vertices[i].x, body_vertices[i].y, body_vertices[i].z);
+		glEnd();
 	}
-	glEnd();*/
+}
 
-	
-	/*glColor3f(1.0f, 1.0f, 1.0f);
-	glBegin(GL_LINES);
-	std::vector < glm::vec3 > vertices = model->get_vertex();
-	for (int i = 0; i < vertices.size(); i++) {
-		glVertex3f(vertices[i].x, vertices[i].y, vertices[i].z);
-	}*/
+void display(void) {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//glBufferData(GL_ARRAY_BUFFER, model->get_vertex().size(), &(model->get_vertex()), GL_STATIC_DRAW);
+	camera->look_at();
 
+	glEnable(GL_DEPTH_TEST);
+	glPolygonMode(GL_FRONT, GL_LINE);
+	glColor3f(0.0, 0.0, 0.0);
+	temp_draw(false);
 
-	glColor3f(1.0, 1.0, 1.0);	
-	glMatrixMode(GL_MODELVIEW);
-	game->display();
-	
+	glPolygonMode(GL_FRONT, GL_FILL);
+	glEnable(GL_POLYGON_OFFSET_FILL);
+	glPolygonOffset(1.0, 5.0);
+	glColor3f(0.3f, 0.3f, 0.3f);
+	temp_draw(true);
+	glDisable(GL_POLYGON_OFFSET_FILL);
 	/*switch (game->getStatus()) {
 	case MENU:
 		game->printTitle();
@@ -124,8 +100,6 @@ void display(void) {
 		break;
 	}*/
 
-	/*glBufferData(GL_ARRAY_BUFFER, sizeof(model->get_vertex()), &(model->get_vertex()), GL_STATIC_DRAW);*/
-	camera->look_at();
 	glFlush();
 }
 
@@ -155,7 +129,7 @@ void idle() {
 }
 
 void timer(int value) {
-	if (game->getStatus() == PLAYING && game->getEnemy()->getShootability()) {
+	/*if (game->getStatus() == PLAYING && game->getEnemy()->getShootability()) {
 		Bullet new_bullet(game->getEnemy()->getBarrelPosition().first, game->getEnemy()->getBarrelPosition().second, game->getEnemy()->getBulletSpeed(), game->getEnemy()->getBarrelAngle());
 		bulletList.push_back(new_bullet);
 	}
@@ -163,7 +137,7 @@ void timer(int value) {
 		Bullet new_bullet(game->getPlayer()->getBarrelPosition().first, game->getPlayer()->getBarrelPosition().second, game->getPlayer()->getBulletSpeed(), game->getPlayer()->getBarrelAngle());
 		bulletList.push_back(new_bullet);
 	}
-	glutTimerFunc(1000, timer, 1);
+	glutTimerFunc(1000, timer, 1);*/
 }
 
 
@@ -231,12 +205,12 @@ void keyboard(unsigned char key, int x, int y) {
 	case ENTER:
 		game->setStatus(PLAYING);
 		break;
-	case SPACEBAR:
+	/*case SPACEBAR:
 		if (game->getPlayer()->getShootability()) {
 			Bullet new_bullet(game->getPlayer()->getBarrelPosition().first, game->getPlayer()->getBarrelPosition().second, game->getPlayer()->getBulletSpeed(), game->getPlayer()->getBarrelAngle());
 			bulletList.push_back(new_bullet);
 			break;
-		}
+		}*/
 	}
 	glutPostRedisplay();
 }
@@ -281,13 +255,12 @@ int main(int argc, char** argv) {
 	glutDisplayFunc(display);
 	glutIdleFunc(idle);
 	glutTimerFunc(1000, timer, 1);
-	//temp();
 
 
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialKeyboard);
 
-	//glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-	//glewInit();
+	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+	glewInit();
 	glutMainLoop();
 }
