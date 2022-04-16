@@ -221,3 +221,12 @@ void Game::recoil(float speed)
 	float power = speed / 2;
 }
 
+void Game::setRenderMode(bool r)
+{
+	render_mode = r;
+}
+
+bool Game::getRenderMode(bool r)
+{
+	return render_mode;
+}

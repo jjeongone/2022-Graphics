@@ -32,6 +32,7 @@ private:
 	mode mode;
 	status status;
 	bool auto_mode;
+	bool render_mode;
 	Tank* player = nullptr;
 	Tank* enemy = nullptr;
 	std::vector<Tank> enemyList;
@@ -57,6 +58,8 @@ public:
 	bool checkLeftCollision(float width, float height, float speed);
 	void enemyAction();
 	void recoil(float speed);
+	void setRenderMode(bool r);
+	bool getRenderMode(bool r);
 };
 
 #endif // !GMAE_H
