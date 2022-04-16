@@ -2,11 +2,11 @@
 
 Camera::Camera()
 {
-	eye = make_tuple(0.0, 20.0, 5.0); // need to edit as player position
-	center = make_tuple(0.0, 0.0, 1.0);
+	eye = make_tuple(7.0, 9.0, 0.0); // need to edit as player position
+	center = make_tuple(0.0, 9.0, 0.0);
 	up = make_tuple(0.0, 1.0, 0.0);
-	left = 4;
-	right = 4;
+	left = 3;
+	right = 3;
 	front = 1;
 	back = 70;
 	mode = THIRD;
@@ -25,7 +25,7 @@ void Camera::look_at()
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	if (mode == TOP)
-		glOrtho(-30, 30, -30, 30, front, back);
+		glOrtho(-100, 100, -100, 100, front, back);
 	else
 		glFrustum(-left, left, -right, right, front, back);
 
@@ -42,6 +42,47 @@ void Camera::set_position(tuple<float, float, float> e, tuple<float, float, floa
 	up = u;
 }
 
+glm::vec3 Camera::get_eye_first()
+{
+	return eye_first;
+}
+
+void Camera::set_eye_first(glm::vec3 new_eye)
+{
+	eye_first = new_eye;
+}
+
+glm::vec3 Camera::get_center_first()
+{
+	return center_first;
+}
+
+void Camera::set_center_first(glm::vec3 new_center)
+{
+	center_first = new_center;
+}
+
+glm::vec3 Camera::get_eye_third()
+{
+	return eye_third;
+}
+
+void Camera::set_eye_third(glm::vec3 new_eye)
+{
+	eye_third = new_eye;
+}
+
+glm::vec3 Camera::get_center_third()
+{
+	return center_third;
+}
+
+void Camera::set_center_third(glm::vec3 new_center)
+{
+	center_third = new_center;
+}
+
+
 void Camera::set_volume(float l, float r, float f, float b)
 {
 	left = l;
@@ -50,20 +91,41 @@ void Camera::set_volume(float l, float r, float f, float b)
 	back = b;
 }
 
+void Camera::set_transform(glm::mat4 new_transform_tank, glm::mat4 new_transform_barrel)
+{
+	transform_tank = new_transform_tank;
+	transform_barrel = new_transform_barrel;
+	eye_first = transform_barrel * glm::vec4(0.5, 0, 0, 1);
+	center_first = transform_barrel * glm::vec4(0.5, 0, -3, 1);
+	eye_third = transform_tank * glm::vec4(0, 14, 9, 1);
+	center_third = transform_tank * glm::vec4(0, 12, 5, 1);
+	switch (mode) {
+	case FIRST:
+		set_position(make_tuple(eye_first.x, eye_first.y, eye_first.z), make_tuple(center_first.x, center_first.y, center_first.z), make_tuple(0.0, 1.0, 0.0)); // need to edit as player position
+		break;
+	case TOP:
+		set_position(make_tuple(0.0, 13.0, 0.0), make_tuple(0.0, 1.0, 0.0), make_tuple(0.0, 0.0, -1.0));
+		break;
+	case THIRD:
+		set_position(make_tuple(eye_third.x, eye_third.y, eye_third.z), make_tuple(center_third.x, center_third.y, center_third.z), make_tuple(0.0, 1.0, 0.0)); // need to edit as player position
+		break;
+	}
+}
+
 
 void Camera::change_mode()
 {
 	switch (mode) {
 	case THIRD:
-		set_position(make_tuple(0.0, 20.0, 5.0), make_tuple(0.0, 0.0, 1.0), make_tuple(0.0, 1.0, 0.0)); // need to edit as player position
+		set_position(make_tuple(eye_first.x, eye_first.y, eye_first.z), make_tuple(center_first.x, center_first.y, center_first.z), make_tuple(0.0, 1.0, 0.0)); // need to edit as player position
 		mode = FIRST;
 		break;
 	case FIRST:
 		set_position(make_tuple(0.0, 13.0, 0.0), make_tuple(0.0, 1.0, 0.0), make_tuple(0.0, 0.0, -1.0));
 		mode = TOP;
 		break;
-	case TOP:
-		set_position(make_tuple(0.0, 20.0, 5.0), make_tuple(0.0, 0.0, 1.0), make_tuple(0.0, 1.0, 0.0)); // need to edit as player position
+	case TOP: 
+		set_position(make_tuple(eye_third.x, eye_third.y, eye_third.z), make_tuple(center_third.x, center_third.y, center_third.z), make_tuple(0.0, 1.0, 0.0)); // need to edit as player position
 		mode = THIRD;
 		break;
 	}

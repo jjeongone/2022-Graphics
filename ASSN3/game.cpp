@@ -33,14 +33,14 @@ Game::Game()
 	enemyList.push_back(*enemy);
 
 	ground.set_color(make_tuple(0.3f, 0.3f, 0.3f));
-	ground.set_condition(300.0f, 10.0f, -0.0003f);
+	ground.set_condition(180.0f, 10.0f, -0.0003f);
 	ground_node.translate = make_tuple(0., 0., 0.);
 	ground_node.rotate = make_tuple(0., 0., 0., 0.);
 	ground_node.part = &ground;
 	ground_node.draw = &shape::Plane::draw_plane;
 
 	boundary.set_color(make_tuple(0.0f, 0.25f, 1.0f));
-	boundary.set_condition(100.0f, 10.0f, 0.0f);
+	boundary.set_condition(60.0f, 10.0f, 0.0f);
 }
 
 mode Game::getMode()
@@ -258,7 +258,7 @@ void Game::enemyAction()
 
 	cout << std::rand() % 12 << endl;
 	
-	switch (std::rand() % 12) {
+	switch (std::rand() % 20) {
 	case 0: // move forward
 		tmp_translation = enemy_translation;
 		tmp_angle = get<0>(enemy_rotation);
@@ -371,4 +371,35 @@ void Game::set_player_rotation(tuple<float, float, float, float> new_rotation)
 void Game::set_enemy_rotation(tuple<float, float, float, float> new_rotation)
 {
 	enemy_rotation = new_rotation;
+}
+
+glm::mat4 Game::getPlayerTankBarrelPosition()
+{
+	glm::mat4 matrix(1.0f);
+	matrix = glm::translate(matrix, glm::vec3(get<0>(player_translation), get<1>(player_translation), get<2>(player_translation)));
+	matrix = glm::rotate(matrix, glm::radians(get<0>(player_rotation)), glm::vec3(get<1>(player_rotation), get<2>(player_rotation), get<3>(player_rotation)));
+	matrix = glm::translate(matrix, glm::vec3(-0.3, 2.5, -1.97));
+	matrix = glm::rotate(matrix, glm::radians(player->getHeadAngle()), glm::vec3(0, 1, 0));
+	matrix = glm::translate(matrix, glm::vec3(0, 0, 4));
+	matrix = glm::rotate(matrix, glm::radians(-player->getBarrelAngle()), glm::vec3(1, 0, 0));
+	matrix = glm::translate(matrix, glm::vec3(0, 1, -10));
+
+	return matrix;
+}
+
+glm::mat4 Game::getPlayerTankPosition()
+{
+	glm::mat4 matrix(1.0f);
+	matrix = glm::translate(matrix, glm::vec3(get<0>(player_translation), get<1>(player_translation), get<2>(player_translation)));
+	matrix = glm::rotate(matrix, glm::radians(get<0>(player_rotation)), glm::vec3(get<1>(player_rotation), get<2>(player_rotation), get<3>(player_rotation)));
+	matrix = glm::translate(matrix, glm::vec3(-0.3, 2.5, -1.97));
+
+	return matrix;
+}
+
+pair<glm::vec3, glm::vec3> Game::getTankBound()
+{
+	glm::vec4 tank_coord = getPlayerTankPosition() * glm::vec4(0, 0, 0, 1);
+
+	return make_pair(glm::vec3(tank_coord.x - 9., tank_coord.y - 4., tank_coord.z - 9.), glm::vec3(tank_coord.x + 9., tank_coord.y + 4., tank_coord.z + 9.));
 }

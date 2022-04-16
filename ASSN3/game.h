@@ -5,6 +5,10 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <glm/vec3.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <string>
 #include <vector>
 #include <cstdlib> 
@@ -97,6 +101,11 @@ public:
 	void set_enemy_translation(tuple<float, float, float>);
 	void set_player_rotation(tuple<float, float, float, float>);
 	void set_enemy_rotation(tuple<float, float, float, float>);
+
+	glm::mat4 getPlayerTankBarrelPosition();
+	glm::mat4 getPlayerTankPosition();
+
+	pair<glm::vec3, glm::vec3> getTankBound();
 
 	Camera* camera = new Camera();
 };

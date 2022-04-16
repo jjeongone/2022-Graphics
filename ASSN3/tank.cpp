@@ -106,7 +106,7 @@ void Tank::draw_tank(bool fill)
 
 		if (i == 0)
 		{
-			wheel_nodes[i].sibling = reinterpret_cast<treenode<shape::Wheel>*>(&wheel_right_nodes[i]);
+			wheel_nodes[3].sibling = reinterpret_cast<treenode<shape::Wheel>*>(&wheel_right_nodes[i]);
 			wheel_right_nodes[i].translate = make_tuple(-2.5, -1.4, 5.15);
 			wheel_nodes[i].rotate = make_tuple(wheels[i].rotation_angle_radian, 1, 0, 0);
 		}
@@ -151,14 +151,6 @@ void Tank::move(float dx, float dy) {
 	
 }
 
-tuple<float, float, float> Tank::getBarrelPosition() {
-	if (is_reflect) {
-		return make_tuple(0., 0., 0.);
-	}
-	else {
-		return make_tuple(0., 0., 0.);
-	}
-}
 
 tuple<float, float, float, float> Tank::getBarrelOrientation()
 {

@@ -3,6 +3,7 @@
 #include <GL/freeglut.h>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <GL/glut.h>
 #include <vector>
 #include <tuple>
@@ -81,9 +82,6 @@ void reshape(int w, int h) {
 }
 
 void idle() {
-	if (game->getStatus() == PLAYING) {
-		game->enemyAction();
-	}
 
 	std::vector<Bullet>::iterator iter = bulletList.begin();
 	while (iter != bulletList.end()) {
@@ -96,11 +94,16 @@ void idle() {
 			iter++;
 		}
 	}
+	game->camera->set_transform(game->getPlayerTankPosition(), game->getPlayerTankBarrelPosition());
 	game->checkStatus();
 	glutPostRedisplay();
 }
 
 void timer(int value) {
+	if (game->getStatus() == PLAYING) {
+		game->enemyAction();
+	}
+	glutTimerFunc(100, timer, 1);
 	/*if (game->getStatus() == PLAYING && game->getEnemy()->getShootability()) {
 		Bullet new_bullet(game->getEnemy()->getBarrelPosition().first, game->getEnemy()->getBarrelPosition().second, game->getEnemy()->getBulletSpeed(), game->getEnemy()->getBarrelAngle());
 		bulletList.push_back(new_bullet);
@@ -246,7 +249,7 @@ int main(int argc, char** argv) {
 	//glutReshapeFunc(reshape);
 	glutDisplayFunc(display);
 	glutIdleFunc(idle);
-	glutTimerFunc(1000, timer, 1);
+	glutTimerFunc(100, timer, 1);
 
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialKeyboard);
