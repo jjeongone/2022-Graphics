@@ -11,6 +11,7 @@ enum view_mode {
 using namespace std;
 class Camera {
 private:
+	float left, right, front, back;
 	tuple<float, float, float> eye;
 	tuple<float, float, float> center;
 	tuple<float, float, float> up;
@@ -21,5 +22,6 @@ public:
 	Camera(tuple<float, float, float> e, tuple<float, float, float> c, tuple<float, float, float> u);
 	void look_at();
 	void set_position(tuple<float, float, float> e, tuple<float, float, float> c, tuple<float, float, float> u);
+	void set_volume(float l, float r, float f, float b);
 	void change_mode();
 };
