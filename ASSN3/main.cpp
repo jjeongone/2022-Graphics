@@ -98,7 +98,7 @@ void idle() {
 	std::vector<Bullet>::iterator iter = bulletList.begin();
 	while (iter != bulletList.end()) {
 		(*iter).changeSpeed();
-		if ((*iter).isExplode(game->getPlayer(), game->getEnemy())) {
+		if ((*iter).isExplode(game->getPlayer(), game->getPlayerTankBound(game->get_player_translation()), game->getEnemy(), game->getEnemyTankBound(game->get_enemy_translation()))) {
 			iter = bulletList.erase(iter);
 		}
 		else {
@@ -111,20 +111,23 @@ void idle() {
 	glutPostRedisplay();
 }
 
-void timer(int value) {
+void actionTimer(int value) {
 	if (game->getStatus() == PLAYING) {
 		game->enemyAction();
 	}
-	glutTimerFunc(100, timer, 1);
-	/*if (game->getStatus() == PLAYING && game->getEnemy()->getShootability()) {
-		Bullet new_bullet(game->getEnemy()->getBarrelPosition().first, game->getEnemy()->getBarrelPosition().second, game->getEnemy()->getBulletSpeed(), game->getEnemy()->getBarrelAngle());
+	glutTimerFunc(100, actionTimer, 1);
+}
+
+void shootTimer(int value) {
+	if (game->getStatus() == PLAYING && game->getEnemy()->getShootability()) {
+		Bullet new_bullet(game->getEnemy()->getCoordinate(), game->get_enemy_translation(), game->get_enemy_rotation(), game->getEnemy()->getHeadAngle(), game->getEnemy()->getBarrelAngle(), -game->getEnemy()->getBulletSpeed());
 		bulletList.push_back(new_bullet);
 	}
 	if (game->isAuto() && game->getPlayer()->getShootability()) {
-		Bullet new_bullet(game->getPlayer()->getBarrelPosition().first, game->getPlayer()->getBarrelPosition().second, game->getPlayer()->getBulletSpeed(), game->getPlayer()->getBarrelAngle());
+		Bullet new_bullet(game->getPlayer()->getCoordinate(), game->get_player_translation(), game->get_player_rotation(), game->getPlayer()->getHeadAngle(), game->getPlayer()->getBarrelAngle(), game->getPlayer()->getBulletSpeed());
 		bulletList.push_back(new_bullet);
 	}
-	glutTimerFunc(1000, timer, 1);*/
+	glutTimerFunc(3000, shootTimer, 1);
 }
 
 
@@ -195,7 +198,6 @@ void keyboard(unsigned char key, int x, int y) {
 		break;
 	case SPACEBAR:
 		if (game->getPlayer()->getShootability()) {
-			glm::vec4 barrel_pos = game->getPlayerTankBarrelPosition() * glm::vec4(0, 0, 0, 1);
 			Bullet new_bullet(game->getPlayer()->getCoordinate(), game->get_player_translation(), game->get_player_rotation(), game->getPlayer()->getHeadAngle(), game->getPlayer()->getBarrelAngle(), game->getPlayer()->getBulletSpeed());
 			bulletList.push_back(new_bullet);
 			break;
@@ -213,7 +215,6 @@ void specialKeyboard(int key, int x, int y) {
 
 	switch (key) {
 	case GLUT_KEY_UP: 
-		/*if (!game->checkRightCollision(WidthFactor, HeightFactor, SPEED) && !game->checkRightCollision((game->getEnemy()->getCoordinate().first -game->getEnemy()->getSize()), HeightFactor, SPEED)) {*/
 		tmp_translation = game->get_player_translation();
 		tmp_angle = get<0>(game->get_player_rotation());
 		get<2>(tmp_translation) -= 0.2 * cos(tmp_angle / 180 * 3.142);
@@ -229,9 +230,6 @@ void specialKeyboard(int key, int x, int y) {
 		}
 		break;
 	case GLUT_KEY_DOWN:
-		/*if (!game->checkLeftCollision(WidthFactor, HeightFactor, SPEED)) {
-			game->getPlayer()->move(-SPEED, 0.0);
-		}*/
 		tmp_translation = game->get_player_translation();
 		tmp_angle = get<0>(game->get_player_rotation());
 		get<2>(tmp_translation) += 0.2 * cos(tmp_angle / 180 * 3.142);
@@ -247,9 +245,6 @@ void specialKeyboard(int key, int x, int y) {
 		}
 		break;
 	case GLUT_KEY_LEFT:
-		/*if (!game->checkRightCollision(WidthFactor, HeightFactor, SPEED) && !game->checkRightCollision((game->getEnemy()->getCoordinate().first - game->getEnemy()->getSize()), HeightFactor, SPEED)) {
-			game->getPlayer()->move(SPEED, 0.0);
-		}*/
 		tmp_rotation = game->get_player_rotation();
 		get<0>(tmp_rotation) += 0.5;
 		tmp_wheel_angle = game->getPlayer()->getWheelAngle();
@@ -259,9 +254,6 @@ void specialKeyboard(int key, int x, int y) {
 		game->set_player_rotation(tmp_rotation);
 		break;
 	case GLUT_KEY_RIGHT:
-		/*if (!game->checkLeftCollision(WidthFactor, HeightFactor, SPEED)) {
-			game->getPlayer()->move(-SPEED, 0.0);
-		}*/
 		tmp_rotation = game->get_player_rotation();
 		get<0>(tmp_rotation) -= 0.5;
 		tmp_wheel_angle = game->getPlayer()->getWheelAngle();
@@ -283,10 +275,10 @@ int main(int argc, char** argv) {
 	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(gameWorld.width, gameWorld.height);
 	glutCreateWindow("DimSum");
-	//glutReshapeFunc(reshape);
 	glutDisplayFunc(display);
 	glutIdleFunc(idle);
-	glutTimerFunc(100, timer, 1);
+	glutTimerFunc(1000, actionTimer, 1);
+	glutTimerFunc(3000, shootTimer, 1);
 
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialKeyboard);

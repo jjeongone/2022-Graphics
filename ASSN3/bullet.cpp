@@ -24,18 +24,7 @@ Bullet::Bullet(tuple<float, float, float> coordinate, tuple<float, float, float>
 	barrel_angle = barrel;
 	speed = s;
 
-	glm::mat4 matrix(1.0f);
-	matrix = glm::translate(matrix, glm::vec3(get<0>(tank_coordinate), get<1>(tank_coordinate), get<2>(tank_coordinate)));
-	matrix = glm::translate(matrix, glm::vec3(get<0>(tank_translation), get<1>(tank_translation), get<2>(tank_translation)));
-	matrix = glm::rotate(matrix, glm::radians(get<0>(tank_rotation)), glm::vec3(get<1>(tank_rotation), get<2>(tank_rotation), get<3>(tank_rotation)));
-	matrix = glm::translate(matrix, glm::vec3(0., 2.5, -1.97));
-	matrix = glm::translate(matrix, glm::vec3(0, 0, 4));
-	matrix = glm::rotate(matrix, glm::radians(head_angle), glm::vec3(0., 1., 0.));
-	matrix = glm::rotate(matrix, glm::radians(-barrel_angle), glm::vec3(1., 0., 0.));
-	matrix = glm::translate(matrix, glm::vec3(0, 6., bullet_position));
-
-	glm::vec4 bullet_pos = matrix * glm::vec4(0, 0, 0, 1);
-
+	glm::vec4 bullet_pos = cal_transformation() * glm::vec4(0, 0, 0, 1);
 	x = bullet_pos.x;
 	y = bullet_pos.y;
 	z = bullet_pos.z;
@@ -45,9 +34,8 @@ std::tuple<float, float, float> Bullet::position() {
 	return std::tuple<float, float, float>(x, y, z);
 }
 
-void Bullet::move() {
-	bullet_position -= speed;
-
+glm::mat4 Bullet::cal_transformation()
+{
 	glm::mat4 matrix(1.0f);
 	matrix = glm::translate(matrix, glm::vec3(get<0>(tank_coordinate), get<1>(tank_coordinate), get<2>(tank_coordinate)));
 	matrix = glm::translate(matrix, glm::vec3(get<0>(tank_translation), get<1>(tank_translation), get<2>(tank_translation)));
@@ -58,7 +46,13 @@ void Bullet::move() {
 	matrix = glm::rotate(matrix, glm::radians(-barrel_angle), glm::vec3(1., 0., 0.));
 	matrix = glm::translate(matrix, glm::vec3(0, 6., bullet_position));
 
-	glm::vec4 bullet_pos = matrix * glm::vec4(0, 0, 0, 1);
+	return matrix;
+}
+
+void Bullet::move() {
+	bullet_position -= speed;
+
+	glm::vec4 bullet_pos = cal_transformation() * glm::vec4(0, 0, 0, 1);
 
 	x = bullet_pos.x;
 	y += y_speed;
@@ -89,10 +83,20 @@ void Bullet::changeSpeed() {
 	y_speed -= GRAVITY;
 }
 
-std::tuple<float, float, float> Bullet::getSpeed() {
-	return std::make_tuple(x_speed, y_speed, z_speed);
-}
-
-bool Bullet::isExplode(Tank* player, Tank* enemy) {
+bool Bullet::isExplode(Tank* player, pair<glm::vec3, glm::vec3> player_bound, Tank* enemy, pair<glm::vec3, glm::vec3> enemy_bound) {
+	if (y < player_bound.second.y && (x > player_bound.first.x && x < player_bound.second.x) && (z > player_bound.first.z && z < player_bound.second.z))
+	{
+		player->setHealth(player->getHealth() - 1);
+		return true;
+	}
+	else if (y < enemy_bound.second.y && (x > enemy_bound.first.x && x < enemy_bound.second.x) && (z > enemy_bound.first.z && z < enemy_bound.second.z))
+	{
+		enemy->setHealth(enemy->getHealth() - 1);
+		return true;
+	}
+	else if (y < 0)
+	{
+		return true;
+	}
 	return false;
 }
