@@ -47,7 +47,7 @@ void Tank::draw_tank(bool fill)
 	barrel.fill = fill;
 	head.fill = fill;
 	
-	barrel.colorRGB = make_tuple(atan(bullet_speed * 20) / 3.142 * 2, atan(5 * bullet_speed * 20) / 3.142 * 2, atan(bullet_speed * 20) / 3.142 * 2);
+	barrel.colorRGB = make_tuple(atan(bullet_speed * 0.1) / 3.142 * 2, atan(5 * bullet_speed * 0.1) / 3.142 * 2, atan(bullet_speed * 0.1) / 3.142 * 2);
 
 
 	treenode<shape::Barrel> barrel_node;

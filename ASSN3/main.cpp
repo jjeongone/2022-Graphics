@@ -161,14 +161,14 @@ void keyboard(unsigned char key, int x, int y) {
 		std::cout << "s\n";
 		break;
 	case 'e': // bullet speed up
-		if (speed + 0.0002 <= 0.01)
-			speed += 0.0002;
+		if (speed + 0.2 <= 2)
+			speed += 0.2;
 		game->getPlayer()->setBulletSpeed(speed);
 		std::cout << "e\n";
 		break;
 	case 'q': // bullet speed down
-		if (speed - 0.0002 >= 0.003)
-			speed -= 0.0002;
+		if (speed - 0.2 >= 0.2)
+			speed -= 0.2;
 		game->getPlayer()->setBulletSpeed(speed);
 		std::cout << "q\n";
 		break;
