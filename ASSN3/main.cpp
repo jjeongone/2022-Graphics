@@ -68,7 +68,7 @@ void display(void) {
 			glEnable(GL_POLYGON_OFFSET_FILL);
 			glPolygonOffset(1.0, 5.0);
 			for (auto& elem : bulletList) {
-				elem.draw_bullet(false);
+				elem.draw_bullet(true);
 			}
 			glDisable(GL_POLYGON_OFFSET_FILL);
 		}

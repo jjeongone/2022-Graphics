@@ -15,7 +15,7 @@ Bullet::Bullet(tuple<float, float, float> coordinate, tuple<float, float, float>
 	head_angle = head;
 	barrel_angle = barrel;
 	speed = s;
-	y_speed = s * tan(-barrel / 180 * 3.142) / 2;
+	y_speed = s * tan(-barrel / 180 * 3.142);
 
 	glm::vec4 bullet_pos = cal_transformation() * glm::vec4(0, 0, 0, 1);
 	x = bullet_pos.x;
