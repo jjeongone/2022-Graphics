@@ -106,6 +106,8 @@ void idle() {
 			iter++;
 		}
 	}
+	game->getPlayer()->recoil();
+	game->getEnemy()->recoil();
 	game->camera->set_transform(game->getPlayerTankPosition(), game->getPlayerTankBarrelPosition());
 	game->checkStatus();
 	glutPostRedisplay();
@@ -120,10 +122,12 @@ void actionTimer(int value) {
 
 void shootTimer(int value) {
 	if (game->getStatus() == PLAYING && game->getEnemy()->getShootability()) {
+		game->getEnemy()->setRecoil();
 		Bullet new_bullet(game->getEnemy()->getCoordinate(), game->get_enemy_translation(), game->get_enemy_rotation(), game->getEnemy()->getHeadAngle(), game->getEnemy()->getBarrelAngle(), -game->getEnemy()->getBulletSpeed());
 		bulletList.push_back(new_bullet);
 	}
 	if (game->isAuto() && game->getPlayer()->getShootability()) {
+		game->getPlayer()->setRecoil();
 		Bullet new_bullet(game->getPlayer()->getCoordinate(), game->get_player_translation(), game->get_player_rotation(), game->getPlayer()->getHeadAngle(), game->getPlayer()->getBarrelAngle(), game->getPlayer()->getBulletSpeed());
 		bulletList.push_back(new_bullet);
 	}
@@ -168,7 +172,7 @@ void keyboard(unsigned char key, int x, int y) {
 		break;
 	case 'q': // bullet speed down
 		if (speed - 0.2 >= 0.2)
-			speed -= 0.2;
+			speed -= 0.2;  
 		game->getPlayer()->setBulletSpeed(speed);
 		std::cout << "q\n";
 		break;
@@ -198,6 +202,7 @@ void keyboard(unsigned char key, int x, int y) {
 		break;
 	case SPACEBAR:
 		if (game->getPlayer()->getShootability()) {
+			game->getPlayer()->setRecoil();
 			Bullet new_bullet(game->getPlayer()->getCoordinate(), game->get_player_translation(), game->get_player_rotation(), game->getPlayer()->getHeadAngle(), game->getPlayer()->getBarrelAngle(), game->getPlayer()->getBulletSpeed());
 			bulletList.push_back(new_bullet);
 			break;

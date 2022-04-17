@@ -54,7 +54,7 @@ void Tank::draw_tank(bool fill)
 	treenode<shape::Head> turret_node;
 
 	turret_node.part = &head;
-	turret_node.translate = make_tuple(-0.3, 2.5, -1.97);
+	turret_node.translate = make_tuple(-0.3, 2.5, -1.97 - abs(bullet_speed) * 0.8 * sin(recoil_theta));
 	turret_node.rotate = make_tuple(head_angle, 0, 1, 0);
 
 	//turret_node.rotate = make_tuple(-angle_radian / (2 * 3.142) * 360, 0, 1., 0);
@@ -226,4 +226,32 @@ void Tank::setWheelAngle(pair<float, float> new_angle)
 {
 	wheel_angle_left = new_angle.first;
 	wheel_angle_right = new_angle.second;
+}
+
+void Tank::recoil()
+{
+	if (is_recoil)
+	{
+		if (recoil_theta + 0.15 < 3.142)
+		{
+			shootability = false;
+			recoil_theta += 0.15;
+		}
+		else
+		{
+			recoil_theta = 0.;
+			is_recoil = false;
+			shootability = true;
+		}
+	}
+
+	else
+	{
+		recoil_theta = 0.;
+	}
+}
+
+void Tank::setRecoil()
+{
+	is_recoil = true;
 }

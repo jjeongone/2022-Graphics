@@ -33,6 +33,9 @@ private:
 	float wheel_angle_left = 0.;
 	float wheel_angle_right = 0.;
 
+	float recoil_theta = 0.;
+	bool is_recoil;
+
 	int health = 3;
 	tuple<float, float, float> color_weight = make_tuple(1.f, 1.f, 1.f);
 	bool shootability;
@@ -73,4 +76,7 @@ public:
 
 	pair<float, float> getWheelAngle();
 	void setWheelAngle(pair<float, float> new_angle);
+
+	void setRecoil();
+	void recoil();
 };
