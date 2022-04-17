@@ -32,7 +32,7 @@ void Bullet::draw_bullet(bool fill) {
 	if (fill)
 		glColor3f(0.8f, 0.8f, 0.8f);
 	else
-		glColor3f(1.0f, 1.0f, 1.0f);
+		glColor3f(0.0f, 0.0f, 0.0f);
 	for (int i = 0; i < bullet_vertices.size(); i++) {
 		glBegin(fill ? GL_TRIANGLES : GL_LINE_LOOP);
 		glVertex3f(bullet_vertices[i].x, bullet_vertices[i].y, bullet_vertices[i].z);

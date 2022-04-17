@@ -57,9 +57,22 @@ void display(void) {
 		game->display();
 
 		// draw bullet
-		/*for (auto &elem : bulletList) {
-			elem.draw();
-		}*/
+		glEnable(GL_DEPTH_TEST);
+		glPolygonMode(GL_FRONT, GL_LINE);
+		for (auto& elem : bulletList) {
+			elem.draw_bullet(false);
+		}
+
+		if (game->getRenderMode()) {
+			glPolygonMode(GL_FRONT, GL_FILL);
+			glEnable(GL_POLYGON_OFFSET_FILL);
+			glPolygonOffset(1.0, 5.0);
+			for (auto& elem : bulletList) {
+				elem.draw_bullet(false);
+			}
+			glDisable(GL_POLYGON_OFFSET_FILL);
+		}
+		
 		break;
 	case WIN:
 		game->printWin();
@@ -181,12 +194,13 @@ void keyboard(unsigned char key, int x, int y) {
 	case ENTER:
 		game->setStatus(PLAYING);
 		break;
-	/*case SPACEBAR:
+	case SPACEBAR:
 		if (game->getPlayer()->getShootability()) {
-			Bullet new_bullet(game->getPlayer()->getBarrelPosition().first, game->getPlayer()->getBarrelPosition().second, game->getPlayer()->getBulletSpeed(), game->getPlayer()->getBarrelAngle());
+			glm::vec4 barrel_pos = game->getPlayerTankBarrelPosition() * glm::vec4(0, 0, 0, 1);
+			Bullet new_bullet(barrel_pos.x, barrel_pos.y, barrel_pos.z, game->getPlayer()->getBulletSpeed(), game->getPlayer()->getBarrelAngle());
 			bulletList.push_back(new_bullet);
 			break;
-		}*/
+		}
 	}
 	glutPostRedisplay();
 }

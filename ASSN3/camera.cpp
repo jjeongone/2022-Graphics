@@ -5,10 +5,10 @@ Camera::Camera()
 	eye = make_tuple(7.0, 9.0, 0.0); // need to edit as player position
 	center = make_tuple(0.0, 9.0, 0.0);
 	up = make_tuple(0.0, 1.0, 0.0);
-	left = 3;
-	right = 3;
+	left = 1.5;
+	right = 1.5;
 	front = 1;
-	back = 70;
+	back = 150;
 	mode = THIRD;
 }
 
@@ -101,7 +101,7 @@ void Camera::set_transform(glm::mat4 new_transform_tank, glm::mat4 new_transform
 	center_third = transform_tank * glm::vec4(0, 12, 5, 1);
 	switch (mode) {
 	case FIRST:
-		set_position(make_tuple(eye_first.x, eye_first.y, eye_first.z), make_tuple(center_first.x, center_first.y, center_first.z), make_tuple(0.0, 1.0, 0.0)); // need to edit as player position
+		set_position(make_tuple(eye_first.x, eye_first.y, eye_first.z), make_tuple(0, 0, 0), make_tuple(0.0, 1.0, 0.0)); // need to edit as player position
 		break;
 	case TOP:
 		set_position(make_tuple(0.0, 13.0, 0.0), make_tuple(0.0, 1.0, 0.0), make_tuple(0.0, 0.0, -1.0));

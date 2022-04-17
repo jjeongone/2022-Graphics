@@ -42,9 +42,9 @@ private:
 	Tank* player = nullptr;
 	Tank* enemy = nullptr;
 
-	tuple<float, float, float> player_translation = make_tuple(0, 0, 30);
+	tuple<float, float, float> player_translation = make_tuple(0, -1, 30);
 	tuple<float, float, float, float> player_rotation = make_tuple(0, 0, 1, 0);
-	tuple<float, float, float> enemy_translation = make_tuple(0, 0, -30);
+	tuple<float, float, float> enemy_translation = make_tuple(0, -1, -30);
 	tuple<float, float, float, float> enemy_rotation = make_tuple(180, 0, 1, 0);
 
 	std::vector<Tank> enemyList;

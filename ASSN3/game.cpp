@@ -385,11 +385,12 @@ glm::mat4 Game::getPlayerTankBarrelPosition()
 	glm::mat4 matrix(1.0f);
 	matrix = glm::translate(matrix, glm::vec3(get<0>(player_translation), get<1>(player_translation), get<2>(player_translation)));
 	matrix = glm::rotate(matrix, glm::radians(get<0>(player_rotation)), glm::vec3(get<1>(player_rotation), get<2>(player_rotation), get<3>(player_rotation)));
-	matrix = glm::translate(matrix, glm::vec3(-0.3, 2.5, -1.97));
-	matrix = glm::rotate(matrix, glm::radians(player->getHeadAngle()), glm::vec3(0, 1, 0));
-	matrix = glm::translate(matrix, glm::vec3(0, 0, 4));
-	matrix = glm::rotate(matrix, glm::radians(-player->getBarrelAngle()), glm::vec3(1, 0, 0));
-	matrix = glm::translate(matrix, glm::vec3(0, 1, -10));
+	matrix = glm::translate(matrix, glm::vec3(0., 2.5, -1.97));
+	matrix = glm::rotate(matrix, glm::radians(player->getHeadAngle()), glm::vec3(0., 1., 0.));
+	matrix = glm::translate(matrix, glm::vec3(0., 5., -4.));
+	matrix = glm::rotate(matrix, glm::radians(-player->getBarrelAngle()), glm::vec3(1., 0., 0.));
+	cout << player->getBarrelAngle() << endl;
+	matrix = glm::translate(matrix, glm::vec3(0., 0., -8.));
 
 	return matrix;
 }
