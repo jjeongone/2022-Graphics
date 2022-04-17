@@ -21,11 +21,7 @@
 class Bullet {
 private:
 	float x, y, z;
-
-	float radius = 1.8f;
-	float x_speed = 6 * std::cos(30. * 3.142 / 180);
 	float y_speed = -GRAVITY;
-	float z_speed = 6 * std::cos(30. * 3.142 / 180);
 
 	tuple<float, float, float> tank_coordinate, tank_translation;
 	tuple<float, float, float, float> tank_rotation;
@@ -36,7 +32,6 @@ private:
 	std::vector < glm::vec3 > bullet_vertices = bullet->get_vertex();
 public:
 	Bullet();
-	Bullet(float init_x, float init_y, float init_z, float init_speed, float init_angle);
 	Bullet(tuple<float, float, float>, tuple<float, float, float>, tuple<float, float, float, float>, float, float, float);
 	std::tuple<float,float, float> position();
 	glm::mat4 cal_transformation();

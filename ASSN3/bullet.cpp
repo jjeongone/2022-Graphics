@@ -6,14 +6,6 @@ Bullet::Bullet() {
 	z = 0.0f;
 }
 
-Bullet::Bullet(float init_x, float init_y, float init_z, float init_speed, float init_angle) {
-	x = init_x;
-	y = init_y;
-	z = init_z;
-	x_speed = init_speed * std::cos(init_angle);
-	y_speed = abs(init_speed * std::sin(init_angle));
-	z_speed = init_speed * std::cos(init_angle);
-}
 
 Bullet::Bullet(tuple<float, float, float> coordinate, tuple<float, float, float> translation, tuple<float, float, float, float> rotation, float head, float barrel, float s)
 {
@@ -23,6 +15,7 @@ Bullet::Bullet(tuple<float, float, float> coordinate, tuple<float, float, float>
 	head_angle = head;
 	barrel_angle = barrel;
 	speed = s;
+	y_speed = s * tan(-barrel / 180 * 3.142) / 2;
 
 	glm::vec4 bullet_pos = cal_transformation() * glm::vec4(0, 0, 0, 1);
 	x = bullet_pos.x;
@@ -51,6 +44,8 @@ glm::mat4 Bullet::cal_transformation()
 
 void Bullet::move() {
 	bullet_position -= speed;
+	y_speed -= 0.02;
+	cout << y_speed << endl;
 
 	glm::vec4 bullet_pos = cal_transformation() * glm::vec4(0, 0, 0, 1);
 
