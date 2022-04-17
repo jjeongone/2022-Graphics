@@ -28,8 +28,8 @@ Game::Game()
 	//player = new Tank(make_pair(-X_POSITION, GROUND), 0.7f, make_tuple(1.f, 1.f, 1.f), 30. / 180 * 3.142, 3, 0.006, false);
 	//enemy = new Tank(make_pair(X_POSITION, GROUND), 0.7f, make_tuple(2.2f, 0.2f, 2.0f), 30. / 180 * 3.142, 3, -0.006, true);
 
-	player = new Tank(make_tuple(0, 0, 0), 0.7f, make_tuple(1.f, 1.f, 1.f), 30. / 180 * 3.142, 3, 0.006, false);
-	enemy = new Tank(make_tuple(0, 0, 0), 0.7f, make_tuple(2.2f, 0.2f, 2.0f), 30. / 180 * 3.142, 3, -0.006, true);
+	player = new Tank(make_tuple(0, 0, 0), 0.7f, make_tuple(1.f, 1.f, 1.f), 30. / 180 * 3.142, 3, 1, false);
+	enemy = new Tank(make_tuple(0, 0, 0), 0.7f, make_tuple(2.2f, 0.2f, 2.0f), 30. / 180 * 3.142, 3, -1, true);
 	enemyList.push_back(*enemy);
 
 	ground.set_color(make_tuple(0.3f, 0.3f, 0.3f));

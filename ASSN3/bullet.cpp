@@ -15,14 +15,54 @@ Bullet::Bullet(float init_x, float init_y, float init_z, float init_speed, float
 	z_speed = init_speed * std::cos(init_angle);
 }
 
+Bullet::Bullet(tuple<float, float, float> coordinate, tuple<float, float, float> translation, tuple<float, float, float, float> rotation, float head, float barrel, float s)
+{
+	tank_coordinate = coordinate;
+	tank_translation = translation;
+	tank_rotation = rotation;
+	head_angle = head;
+	barrel_angle = barrel;
+	speed = s;
+
+	glm::mat4 matrix(1.0f);
+	matrix = glm::translate(matrix, glm::vec3(get<0>(tank_coordinate), get<1>(tank_coordinate), get<2>(tank_coordinate)));
+	matrix = glm::translate(matrix, glm::vec3(get<0>(tank_translation), get<1>(tank_translation), get<2>(tank_translation)));
+	matrix = glm::rotate(matrix, glm::radians(get<0>(tank_rotation)), glm::vec3(get<1>(tank_rotation), get<2>(tank_rotation), get<3>(tank_rotation)));
+	matrix = glm::translate(matrix, glm::vec3(0., 2.5, -1.97));
+	matrix = glm::translate(matrix, glm::vec3(0, 0, 4));
+	matrix = glm::rotate(matrix, glm::radians(head_angle), glm::vec3(0., 1., 0.));
+	matrix = glm::rotate(matrix, glm::radians(-barrel_angle), glm::vec3(1., 0., 0.));
+	matrix = glm::translate(matrix, glm::vec3(0, 6., bullet_position));
+
+	glm::vec4 bullet_pos = matrix * glm::vec4(0, 0, 0, 1);
+
+	x = bullet_pos.x;
+	y = bullet_pos.y;
+	z = bullet_pos.z;
+}
+
 std::tuple<float, float, float> Bullet::position() {
 	return std::tuple<float, float, float>(x, y, z);
 }
 
 void Bullet::move() {
-	x += x_speed;
+	bullet_position -= speed;
+
+	glm::mat4 matrix(1.0f);
+	matrix = glm::translate(matrix, glm::vec3(get<0>(tank_coordinate), get<1>(tank_coordinate), get<2>(tank_coordinate)));
+	matrix = glm::translate(matrix, glm::vec3(get<0>(tank_translation), get<1>(tank_translation), get<2>(tank_translation)));
+	matrix = glm::rotate(matrix, glm::radians(get<0>(tank_rotation)), glm::vec3(get<1>(tank_rotation), get<2>(tank_rotation), get<3>(tank_rotation)));
+	matrix = glm::translate(matrix, glm::vec3(0., 2.5, -1.97));
+	matrix = glm::translate(matrix, glm::vec3(0, 0, 4));
+	matrix = glm::rotate(matrix, glm::radians(head_angle), glm::vec3(0., 1., 0.));
+	matrix = glm::rotate(matrix, glm::radians(-barrel_angle), glm::vec3(1., 0., 0.));
+	matrix = glm::translate(matrix, glm::vec3(0, 6., bullet_position));
+
+	glm::vec4 bullet_pos = matrix * glm::vec4(0, 0, 0, 1);
+
+	x = bullet_pos.x;
 	y += y_speed;
-	z += z_speed;
+	z = bullet_pos.z;
 }
 
 void Bullet::draw_bullet(bool fill) {

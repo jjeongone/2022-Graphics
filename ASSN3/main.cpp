@@ -196,7 +196,7 @@ void keyboard(unsigned char key, int x, int y) {
 	case SPACEBAR:
 		if (game->getPlayer()->getShootability()) {
 			glm::vec4 barrel_pos = game->getPlayerTankBarrelPosition() * glm::vec4(0, 0, 0, 1);
-			Bullet new_bullet(barrel_pos.x, barrel_pos.y, barrel_pos.z, game->getPlayer()->getBulletSpeed(), game->getPlayer()->getBarrelAngle());
+			Bullet new_bullet(game->getPlayer()->getCoordinate(), game->get_player_translation(), game->get_player_rotation(), game->getPlayer()->getHeadAngle(), game->getPlayer()->getBarrelAngle(), game->getPlayer()->getBulletSpeed());
 			bulletList.push_back(new_bullet);
 			break;
 		}
