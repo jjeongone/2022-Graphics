@@ -83,13 +83,13 @@ void Tank::draw_tank(bool fill)
 		{
 			turret_node.sibling = reinterpret_cast<treenode<shape::Head>*>(&wheel_nodes[i]);
 			wheel_nodes[i].translate = make_tuple(2.5, -1.4, 5.15);
-			wheel_nodes[i].rotate = make_tuple(90, 1, 0, 0);
+			wheel_nodes[i].rotate = make_tuple(wheel_angle_left, 1, 0, 0);
 		}
 		else
 		{
 			wheel_nodes[i - 1].sibling = &wheel_nodes[i];
 			wheel_nodes[i].translate = make_tuple(2.5, -1.4, 1.55 - 3.22 * (i - 1));
-			wheel_nodes[i].rotate = make_tuple(wheels[i].rotation_angle_radian, 1, 0, 0);
+			wheel_nodes[i].rotate = make_tuple(wheel_angle_left, 1, 0, 0);
 		}
 	}
 
@@ -108,13 +108,13 @@ void Tank::draw_tank(bool fill)
 		{
 			wheel_nodes[3].sibling = reinterpret_cast<treenode<shape::Wheel>*>(&wheel_right_nodes[i]);
 			wheel_right_nodes[i].translate = make_tuple(-2.5, -1.4, 5.15);
-			wheel_nodes[i].rotate = make_tuple(wheels[i].rotation_angle_radian, 1, 0, 0);
+			wheel_right_nodes[i].rotate = make_tuple(wheel_angle_right, 1, 0, 0);
 		}
 		else
 		{
 			wheel_right_nodes[i - 1].sibling = &wheel_right_nodes[i];
 			wheel_right_nodes[i].translate = make_tuple(-2.5, -1.4, 1.55 - 3.22 * (i - 1));
-			wheel_right_nodes[i].rotate = make_tuple(wheels[i].rotation_angle_radian, 1, 0, 0);
+			wheel_right_nodes[i].rotate = make_tuple(wheel_angle_right, 1, 0, 0);
 		}
 	}
 	
@@ -146,11 +146,6 @@ void Tank::display(treenode<T>* node)
 		display(node->sibling);
 	}
 }
-
-void Tank::move(float dx, float dy) {
-	
-}
-
 
 tuple<float, float, float, float> Tank::getBarrelOrientation()
 {
@@ -220,4 +215,15 @@ tuple<float, float, float> Tank::getCoordinate()
 float Tank::getSize()
 {
 	return size;
+}
+
+pair<float, float> Tank::getWheelAngle()
+{
+	return make_pair(wheel_angle_left, wheel_angle_right);
+}
+
+void Tank::setWheelAngle(pair<float, float> new_angle)
+{
+	wheel_angle_left = new_angle.first;
+	wheel_angle_right = new_angle.second;
 }

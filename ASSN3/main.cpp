@@ -95,7 +95,6 @@ void reshape(int w, int h) {
 }
 
 void idle() {
-
 	std::vector<Bullet>::iterator iter = bulletList.begin();
 	while (iter != bulletList.end()) {
 		(*iter).changeSpeed();
@@ -210,6 +209,7 @@ void specialKeyboard(int key, int x, int y) {
 	tuple<float, float, float> tmp_translation;
 	tuple<float, float, float, float> tmp_rotation;
 	float tmp_angle;
+	pair<float, float> tmp_wheel_angle;
 
 	switch (key) {
 	case GLUT_KEY_UP: 
@@ -220,9 +220,13 @@ void specialKeyboard(int key, int x, int y) {
 		get<0>(tmp_translation) -= 0.2 * sin(tmp_angle / 180 * 3.142);
 		if (!game->checkBoundaryCollision(game->getPlayerTankBound(tmp_translation)) && !game->checkTankCollision(game->getPlayerTankBound(tmp_translation), game->getEnemyTankBound(game->get_enemy_translation())))
 		{
+			tmp_wheel_angle = game->getPlayer()->getWheelAngle();
+			tmp_wheel_angle.first += 3;
+			tmp_wheel_angle.second += 3;
+			game->getPlayer()->setWheelAngle(tmp_wheel_angle);
+
 			game->set_player_translation(tmp_translation);
 		}
-		/* }*/
 		break;
 	case GLUT_KEY_DOWN:
 		/*if (!game->checkLeftCollision(WidthFactor, HeightFactor, SPEED)) {
@@ -234,6 +238,11 @@ void specialKeyboard(int key, int x, int y) {
 		get<0>(tmp_translation) += 0.2 * sin(tmp_angle / 180 * 3.142);
 		if (!game->checkBoundaryCollision(game->getPlayerTankBound(tmp_translation)) && !game->checkTankCollision(game->getPlayerTankBound(tmp_translation), game->getEnemyTankBound(game->get_enemy_translation())))
 		{
+			tmp_wheel_angle = game->getPlayer()->getWheelAngle();
+			tmp_wheel_angle.first -= 3;
+			tmp_wheel_angle.second -= 3;
+
+			game->getPlayer()->setWheelAngle(tmp_wheel_angle);
 			game->set_player_translation(tmp_translation);
 		}
 		break;
@@ -243,6 +252,10 @@ void specialKeyboard(int key, int x, int y) {
 		}*/
 		tmp_rotation = game->get_player_rotation();
 		get<0>(tmp_rotation) += 0.5;
+		tmp_wheel_angle = game->getPlayer()->getWheelAngle();
+		tmp_wheel_angle.first -= 3;
+		tmp_wheel_angle.second += 3;
+		game->getPlayer()->setWheelAngle(tmp_wheel_angle);
 		game->set_player_rotation(tmp_rotation);
 		break;
 	case GLUT_KEY_RIGHT:
@@ -251,6 +264,10 @@ void specialKeyboard(int key, int x, int y) {
 		}*/
 		tmp_rotation = game->get_player_rotation();
 		get<0>(tmp_rotation) -= 0.5;
+		tmp_wheel_angle = game->getPlayer()->getWheelAngle();
+		tmp_wheel_angle.first += 3;
+		tmp_wheel_angle.second -= 3;
+		game->getPlayer()->setWheelAngle(tmp_wheel_angle);
 		game->set_player_rotation(tmp_rotation);
 		break;
 	}

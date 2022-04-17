@@ -255,8 +255,7 @@ void Game::enemyAction()
 	tuple<float, float, float> tmp_translation;
 	tuple<float, float, float, float> tmp_rotation;
 	float tmp_angle;
-
-	cout << std::rand() % 12 << endl;
+	pair<float, float> tmp_wheel_angle;
 	
 	switch (std::rand() % 20) {
 	case 0: // move forward
@@ -266,6 +265,10 @@ void Game::enemyAction()
 		get<0>(tmp_translation) -= 0.2 * sin(tmp_angle / 180 * 3.142);
 		if (!checkBoundaryCollision(getEnemyTankBound(tmp_translation)) && !checkTankCollision(getPlayerTankBound(get_player_translation()), getEnemyTankBound(tmp_translation)))
 		{
+			tmp_wheel_angle = enemy->getWheelAngle();
+			tmp_wheel_angle.first += 3;
+			tmp_wheel_angle.second += 3;
+			enemy->setWheelAngle(tmp_wheel_angle);
 			enemy_translation = tmp_translation;
 		}
 
@@ -277,17 +280,29 @@ void Game::enemyAction()
 		get<0>(tmp_translation) += 0.2 * sin(tmp_angle / 180 * 3.142);
 		if (!checkBoundaryCollision(getEnemyTankBound(tmp_translation)) && !checkTankCollision(getPlayerTankBound(get_player_translation()), getEnemyTankBound(tmp_translation)))
 		{
+			tmp_wheel_angle = enemy->getWheelAngle();
+			tmp_wheel_angle.first -= 3;
+			tmp_wheel_angle.second -= 3;
+			enemy->setWheelAngle(tmp_wheel_angle);
 			enemy_translation = tmp_translation;
 		}
 		break;
 	case 2: // rotate right
 		tmp_rotation = enemy_rotation;
 		get<0>(tmp_rotation) += 0.5;
+		tmp_wheel_angle = enemy->getWheelAngle();
+		tmp_wheel_angle.first -= 3;
+		tmp_wheel_angle.second += 3;
+		enemy->setWheelAngle(tmp_wheel_angle);
 		enemy_rotation = tmp_rotation;
 		break;
 	case 3: // rotate left
 		tmp_rotation = enemy_rotation;
 		get<0>(tmp_rotation) -= 0.5;
+		tmp_wheel_angle = enemy->getWheelAngle();
+		tmp_wheel_angle.first += 3;
+		tmp_wheel_angle.second -= 3;
+		enemy->setWheelAngle(tmp_wheel_angle);
 		enemy_rotation = tmp_rotation;
 		break;
 	case 6: // barrel up
@@ -386,7 +401,7 @@ glm::mat4 Game::getPlayerTankBarrelPosition()
 	matrix = glm::translate(matrix, glm::vec3(get<0>(player->getCoordinate()), get<1>(player->getCoordinate()), get<2>(player->getCoordinate())));
 	matrix = glm::translate(matrix, glm::vec3(get<0>(player_translation), get<1>(player_translation), get<2>(player_translation)));
 	matrix = glm::rotate(matrix, glm::radians(get<0>(player_rotation)), glm::vec3(get<1>(player_rotation), get<2>(player_rotation), get<3>(player_rotation)));
-	matrix = glm::translate(matrix, glm::vec3(0., 2.5, -1.97));
+	matrix = glm::translate(matrix, glm::vec3(0.3, 2.5, -1.97));
 	matrix = glm::translate(matrix, glm::vec3(0, 0, 4));
 	matrix = glm::rotate(matrix, glm::radians(player->getHeadAngle()), glm::vec3(0., 1., 0.));
 	matrix = glm::rotate(matrix, glm::radians(-player->getBarrelAngle()), glm::vec3(1., 0., 0.));

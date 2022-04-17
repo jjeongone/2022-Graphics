@@ -30,6 +30,8 @@ private:
 	float angle_radian = 30 / 180 * 3.142;
 	float head_angle = 0.;
 	float barrel_angle = 0.;
+	float wheel_angle_left = 0.;
+	float wheel_angle_right = 0.;
 
 	int health = 3;
 	tuple<float, float, float> color_weight = make_tuple(1.f, 1.f, 1.f);
@@ -53,7 +55,6 @@ public:
 	template<class T>
 	void display(treenode<T>* node);
 	
-	void move(float dx, float dy);
 	tuple<float, float, float> getBarrelPosition();
 	tuple<float, float, float, float> getBarrelOrientation();
 	float getBarrelAngle();
@@ -69,4 +70,7 @@ public:
 	void setCoordinate(tuple<float, float, float> new_coordinate);
 	tuple<float, float, float> getCoordinate();
 	float getSize();
+
+	pair<float, float> getWheelAngle();
+	void setWheelAngle(pair<float, float> new_angle);
 };
