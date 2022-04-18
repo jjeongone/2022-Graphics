@@ -66,21 +66,6 @@ void shape::Wheel::draw()
 	}
 }
 
-/*void shape::Line::draw_line()
-{
-	glColor3f(get<0>(colorRGB), get<1>(colorRGB), get<2>(colorRGB));
-	glLineWidth(width);
-	glBegin(GL_LINES);
-	glVertex3f(100.0, position, 0);
-	glVertex3f(-100.0, position, 0);
-	glEnd();
-}*/
-
-//void shape::Line::setPosition(float new_position)
-//{
-//	position = new_position;
-//}
-
 void shape::Plane::set_condition(float l, float g, float d)
 {
 	length = l;

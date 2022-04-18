@@ -25,8 +25,6 @@ Game::Game()
 	mode = NORMAL;
 	status = MENU;
 	auto_mode = false;
-	//player = new Tank(make_pair(-X_POSITION, GROUND), 0.7f, make_tuple(1.f, 1.f, 1.f), 30. / 180 * 3.142, 3, 0.006, false);
-	//enemy = new Tank(make_pair(X_POSITION, GROUND), 0.7f, make_tuple(2.2f, 0.2f, 2.0f), 30. / 180 * 3.142, 3, -0.006, true);
 
 	player = new Tank(make_tuple(0, 0, 0), 0.7f, make_tuple(1.f, 1.f, 1.f), 30. / 180 * 3.142, 3, 1, false);
 	enemy = new Tank(make_tuple(0, 0, 0), 0.7f, make_tuple(2.2f, 0.2f, 2.0f), 30. / 180 * 3.142, 3, -1, true);
@@ -51,7 +49,6 @@ mode Game::getMode()
 void Game::changeMode(enum mode m)
 {
 	mode = m;
-	std::cout << getModeName(auto_mode, m) + " mode";
 
 	switch (mode) {
 	case NORMAL:
@@ -60,12 +57,14 @@ void Game::changeMode(enum mode m)
 		enemy->setHealth(3);
 		enemy->setShootability(true);
 		break;
+
 	case ALLPASS:
 		player->setHealth(3);
 		player->setShootability(true);
 		enemy->setHealth(3);
 		enemy->setShootability(false);
 		break;
+
 	case ALLFAIL:
 		player->setHealth(1);
 		player->setShootability(false);
@@ -116,8 +115,6 @@ void Game::printStatus()
 
 void Game::display()
 {
-	// printStatus();
-
 	camera->look_at();
 	glEnable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT, GL_LINE);
@@ -223,28 +220,6 @@ void Game::checkStatus()
 	}
 }
 
-bool Game::checkRightCollision(float width, float height, float speed)
-{
-	/*if (player->getCoordinate().first + player->getSize() + speed > width) {
-		return true;
-	}
-	else {
-		return false;
-	}*/
-	return false;
-}
-
-bool Game::checkLeftCollision(float width, float height, float speed)
-{
-	/*if (player->getCoordinate().first - speed < -width) {
-		return true;
-	}
-	else {
-		return false;
-	}*/
-	return false;
-}
-
 void Game::enemyAction()
 {
 	std::srand(time(NULL));
@@ -263,78 +238,101 @@ void Game::enemyAction()
 		tmp_angle = get<0>(enemy_rotation);
 		get<2>(tmp_translation) -= 0.2 * cos(tmp_angle / 180 * 3.142);
 		get<0>(tmp_translation) -= 0.2 * sin(tmp_angle / 180 * 3.142);
+
 		if (!checkBoundaryCollision(getEnemyTankBound(tmp_translation)) && !checkTankCollision(getPlayerTankBound(get_player_translation()), getEnemyTankBound(tmp_translation)))
 		{
 			tmp_wheel_angle = enemy->getWheelAngle();
 			tmp_wheel_angle.first += 3;
 			tmp_wheel_angle.second += 3;
 			enemy->setWheelAngle(tmp_wheel_angle);
+
 			enemy_translation = tmp_translation;
 		}
-
 		break;
+
 	case 1: // move backward
 		tmp_translation = enemy_translation;
 		tmp_angle = get<0>(enemy_rotation);
 		get<2>(tmp_translation) += 0.2 * cos(tmp_angle / 180 * 3.142);
 		get<0>(tmp_translation) += 0.2 * sin(tmp_angle / 180 * 3.142);
+
 		if (!checkBoundaryCollision(getEnemyTankBound(tmp_translation)) && !checkTankCollision(getPlayerTankBound(get_player_translation()), getEnemyTankBound(tmp_translation)))
 		{
 			tmp_wheel_angle = enemy->getWheelAngle();
 			tmp_wheel_angle.first -= 3;
 			tmp_wheel_angle.second -= 3;
 			enemy->setWheelAngle(tmp_wheel_angle);
+
 			enemy_translation = tmp_translation;
 		}
 		break;
+
 	case 2: // rotate right
 		tmp_rotation = enemy_rotation;
 		get<0>(tmp_rotation) += 0.5;
+
 		tmp_wheel_angle = enemy->getWheelAngle();
 		tmp_wheel_angle.first -= 3;
 		tmp_wheel_angle.second += 3;
 		enemy->setWheelAngle(tmp_wheel_angle);
+
 		enemy_rotation = tmp_rotation;
 		break;
+
 	case 3: // rotate left
 		tmp_rotation = enemy_rotation;
 		get<0>(tmp_rotation) -= 0.5;
+
 		tmp_wheel_angle = enemy->getWheelAngle();
 		tmp_wheel_angle.first += 3;
 		tmp_wheel_angle.second -= 3;
 		enemy->setWheelAngle(tmp_wheel_angle);
+
 		enemy_rotation = tmp_rotation;
 		break;
+
 	case 6: // barrel up
 		if (barrel_angle - 0.5 >= -30.)
 			barrel_angle -= 0.5;
+
 		enemy->setBarrel(barrel_angle);
 		break;
+
 	case 7: // barrel down
 		if (barrel_angle + 0.5 <= 0)
 			barrel_angle += 0.5;
+
 		enemy->setBarrel(barrel_angle);
 		break;
+
 	case 8: // head left
 		if (head_angle + 1. <= 90.)
 			head_angle += 1.;
+
 		enemy->setHead(head_angle);
 		break;
+
 	case 9: // head right
 		if (head_angle - 1. >= -90.)
 			head_angle -= 1.;
+
 		enemy->setHead(head_angle);
 		break;
+
 	case 10: // bullet speed up
-		if (speed + 0.0002 <= 0.01)
-			speed += 0.0002;
+		if (speed - 0.2 >= -2)
+			speed -= 0.2;
+
 		enemy->setBulletSpeed(speed);
 		break;
+
 	case 11: // bullet speed down
-		if (speed - 0.0002 >= 0.003)
-			speed -= 0.0002;
+		if (speed + 0.2 <= -0.2)
+			speed += 0.2;
+
 		enemy->setBulletSpeed(speed);
 		break;
+
 	default: // do nothing
 		break;
 	}

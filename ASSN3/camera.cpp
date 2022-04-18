@@ -95,17 +95,21 @@ void Camera::set_transform(glm::mat4 new_transform_tank, glm::mat4 new_transform
 {
 	transform_tank = new_transform_tank;
 	transform_barrel = new_transform_barrel;
+
 	eye_first = transform_barrel * glm::vec4(0, 5, 12, 1);
 	center_first = transform_barrel * glm::vec4(0, 5, -1, 1);
 	eye_third = transform_tank * glm::vec4(0, 14, 9, 1);
 	center_third = transform_tank * glm::vec4(0, 12, 5, 1);
+
 	switch (mode) {
 	case FIRST:
 		set_position(make_tuple(eye_first.x, eye_first.y, eye_first.z), make_tuple(center_first.x, center_first.y, center_first.z), make_tuple(0.0, 1.0, 0.0)); // need to edit as player position
 		break;
+
 	case TOP:
 		set_position(make_tuple(0.0, 13.0, 0.0), make_tuple(0.0, 1.0, 0.0), make_tuple(0.0, 0.0, -1.0));
 		break;
+
 	case THIRD:
 		set_position(make_tuple(eye_third.x, eye_third.y, eye_third.z), make_tuple(center_third.x, center_third.y, center_third.z), make_tuple(0.0, 1.0, 0.0)); // need to edit as player position
 		break;
@@ -120,10 +124,12 @@ void Camera::change_mode()
 		set_position(make_tuple(eye_first.x, eye_first.y, eye_first.z), make_tuple(center_first.x, center_first.y, center_first.z), make_tuple(0.0, 1.0, 0.0)); // need to edit as player position
 		mode = FIRST;
 		break;
+
 	case FIRST:
 		set_position(make_tuple(0.0, 13.0, 0.0), make_tuple(0.0, 1.0, 0.0), make_tuple(0.0, 0.0, -1.0));
 		mode = TOP;
 		break;
+
 	case TOP: 
 		set_position(make_tuple(eye_third.x, eye_third.y, eye_third.z), make_tuple(center_third.x, center_third.y, center_third.z), make_tuple(0.0, 1.0, 0.0)); // need to edit as player position
 		mode = THIRD;

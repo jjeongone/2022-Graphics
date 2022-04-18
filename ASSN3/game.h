@@ -85,8 +85,6 @@ public:
 	void autoMode();
 	bool isAuto();
 	void checkStatus();
-	bool checkRightCollision(float width, float height, float speed);
-	bool checkLeftCollision(float width, float height, float speed);
 	void enemyAction();
 	void recoil(float speed);
 	void setRenderMode();

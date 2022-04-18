@@ -26,7 +26,7 @@ private:
 
 	treenode<shape::Body> body_node;
 
-	float bullet_speed = 0.006;
+	float bullet_speed = 1;
 	float angle_radian = 30 / 180 * 3.142;
 	float head_angle = 0.;
 	float barrel_angle = 0.;
