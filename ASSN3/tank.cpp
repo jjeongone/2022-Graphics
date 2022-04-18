@@ -232,10 +232,10 @@ void Tank::recoil()
 {
 	if (is_recoil)
 	{
-		if (recoil_theta + 0.15 / bullet_speed < 3.142)
+		if (recoil_theta + 0.15 / abs(bullet_speed) < 3.142)
 		{
 			shootability = false;
-			recoil_theta += 0.15 / bullet_speed;
+			recoil_theta += 0.15 / abs(bullet_speed);
 		}
 		else
 		{
