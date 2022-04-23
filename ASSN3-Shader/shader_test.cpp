@@ -39,6 +39,9 @@ Game* game = new Game();
 void init(void) {
 	gameWorld.width = 600;
 	gameWorld.height = 600;
+
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glShadeModel(GL_FLAT);
 }
 
 void initShader(void) {
@@ -102,6 +105,10 @@ void initShader(void) {
 }
 
 void tempDisplay(void) {
+
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
 	float vertices[] = {
 		-0.5f, -0.5f, 0.0f, // left  
 		0.5f, -0.5f, 0.0f, // right 
@@ -118,16 +125,17 @@ void tempDisplay(void) {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	
+	
 	glUseProgram(shader_program);
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glBindVertexArray(0);
+	glFlush();
 }
 
 void display(void) {
