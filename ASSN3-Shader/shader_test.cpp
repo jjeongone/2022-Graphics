@@ -39,9 +39,6 @@ Game* game = new Game();
 void init(void) {
 	gameWorld.width = 600;
 	gameWorld.height = 600;
-
-	glClearColor(0.0, 0.0, 0.0, 0.0);
-	glShadeModel(GL_FLAT);
 }
 
 void initShader(void) {
@@ -115,16 +112,17 @@ void tempDisplay(void) {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glBindVertexArray(VAO);
-
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glUseProgram(shader_program);
@@ -170,17 +168,6 @@ void display(void) {
 	}
 
 	glFlush();
-}
-
-void reshape(int w, int h) {
-	glViewport(0, 0, w, h);
-	glMatrixMode(GL_PROJECTION);
-
-	WidthFactor = (GLfloat)w / (GLfloat)300;
-	HeightFactor = (GLfloat)h / (GLfloat)300;
-
-	glLoadIdentity();
-	glOrtho(-1.0*WidthFactor, 1.0*WidthFactor, -1.0*HeightFactor, 1.0*HeightFactor, -1.0, 1.0);
 }
 
 void idle() {
@@ -323,7 +310,6 @@ void keyboard(unsigned char key, int x, int y) {
 	glutPostRedisplay();
 }
 
-// not yet
 void specialKeyboard(int key, int x, int y) {
 	tuple<float, float, float> tmp_translation;
 	tuple<float, float, float, float> tmp_rotation;
