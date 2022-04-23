@@ -23,4 +23,5 @@ public:
 	std::vector < glm::vec3 > get_vertex();
 	std::vector < glm::vec2 > get_uv();
 	std::vector < glm::vec3 > get_normal();
+	std::vector <float> merge();
 };

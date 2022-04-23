@@ -84,3 +84,14 @@ std::vector<glm::vec3> Loader::get_normal()
 {
 	return normals;
 }
+
+std::vector<float> Loader::merge()
+{
+	vector<float> result;
+	for (int i = 0; i < vertices.size(); i++) {
+		result.push_back(vertices[i][0]);
+		result.push_back(vertices[i][1]);
+		result.push_back(vertices[i][2]);
+	}
+	return result;
+}
