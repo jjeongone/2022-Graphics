@@ -39,7 +39,7 @@
     <ClCompile Include="camera.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="test.cpp">
+    <ClCompile Include="shader_test.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -85,5 +85,13 @@
     <Object Include="model\bullet.obj">
       <Filter>리소스 파일\model</Filter>
     </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shader.vertex">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="shader.fragment">
+      <Filter>소스 파일</Filter>
+    </None>
   </ItemGroup>
 </Project>
