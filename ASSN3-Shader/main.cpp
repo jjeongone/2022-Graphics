@@ -24,6 +24,7 @@
 float WidthFactor;
 float HeightFactor;
 bool isBegin = false;
+unsigned int shader_program;
 
 static std::vector<Bullet> bulletList;
 
@@ -39,10 +40,103 @@ void init(void) {
 	gameWorld.width = 600;
 	gameWorld.height = 600;
 
-	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glShadeModel(GL_FLAT);
 }
 
+void initShader(void) {
+	/*init shader*/
+	std::ifstream vertex_shader_file("shader.vertex");
+	std::ifstream fragment_shader_file("shader.fragment");
+	std::stringstream raw_vertex_shader, raw_fragment_shader;
+	std::string vertex_shader_string, fragment_shader_string;
+
+	raw_vertex_shader << vertex_shader_file.rdbuf();
+	vertex_shader_string = raw_vertex_shader.str();
+	const char* vertex_shader_source = vertex_shader_string.c_str();
+
+	unsigned int vertex_shader;
+	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertex_shader, 1, &vertex_shader_source, NULL);
+	glCompileShader(vertex_shader);
+
+	int success;
+	char infoLog[512];
+	glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(vertex_shader, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+
+	raw_fragment_shader << fragment_shader_file.rdbuf();
+	fragment_shader_string = raw_fragment_shader.str();
+	const char* fragment_shader_source = fragment_shader_string.c_str();
+
+	unsigned int fragment_shader;
+	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragment_shader, 1, &fragment_shader_source, NULL);
+	glCompileShader(fragment_shader);
+
+	glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(fragment_shader, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::FRAGEMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+
+	shader_program = glCreateProgram();
+
+	glAttachShader(shader_program, vertex_shader);
+	glAttachShader(shader_program, fragment_shader);
+	glLinkProgram(shader_program);
+
+	glGetShaderiv(shader_program, GL_LINK_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(shader_program, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::LINK::LINKING_FAILED\n" << infoLog << std::endl;
+	}
+
+	//glUseProgram(shader_program);
+
+	glDeleteShader(vertex_shader);
+	glDeleteShader(fragment_shader);
+}
+
+void tempDisplay(void) {
+
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	float vertices[] = {
+		-0.5f, -0.5f, 0.0f, // left  
+		0.5f, -0.5f, 0.0f, // right 
+		0.0f,  0.5f, 0.0f  // top   
+	};
+
+	unsigned int VAO, VBO;
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+
+	glUseProgram(shader_program);
+	glBindVertexArray(VAO);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glBindVertexArray(0);
+	glFlush();
+}
 
 void display(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -71,7 +165,7 @@ void display(void) {
 			}
 			glDisable(GL_POLYGON_OFFSET_FILL);
 		}
-		
+
 		break;
 	case WIN:
 		game->printWin();
@@ -82,17 +176,6 @@ void display(void) {
 	}
 
 	glFlush();
-}
-
-void reshape(int w, int h) {
-	glViewport(0, 0, w, h);
-	glMatrixMode(GL_PROJECTION);
-
-	WidthFactor = (GLfloat)w / (GLfloat)300; 
-	HeightFactor = (GLfloat)h / (GLfloat)300;
-
-	glLoadIdentity();
-	glOrtho(-1.0*WidthFactor, 1.0*WidthFactor, -1.0*HeightFactor, 1.0*HeightFactor, -1.0, 1.0);
 }
 
 void idle() {
@@ -189,7 +272,7 @@ void keyboard(unsigned char key, int x, int y) {
 
 	case 'q': // bullet speed down
 		if (speed - 0.2 >= 0.2)
-			speed -= 0.2;  
+			speed -= 0.2;
 
 		game->getPlayer()->setBulletSpeed(speed);
 		break;
@@ -235,7 +318,6 @@ void keyboard(unsigned char key, int x, int y) {
 	glutPostRedisplay();
 }
 
-// not yet
 void specialKeyboard(int key, int x, int y) {
 	tuple<float, float, float> tmp_translation;
 	tuple<float, float, float, float> tmp_rotation;
@@ -243,7 +325,7 @@ void specialKeyboard(int key, int x, int y) {
 	pair<float, float> tmp_wheel_angle;
 
 	switch (key) {
-	case GLUT_KEY_UP: 
+	case GLUT_KEY_UP:
 		tmp_translation = game->get_player_translation();
 		tmp_angle = get<0>(game->get_player_rotation());
 
@@ -315,7 +397,7 @@ int main(int argc, char** argv) {
 	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(gameWorld.width, gameWorld.height);
 	glutCreateWindow("DimSum");
-	glutDisplayFunc(display);
+	glutDisplayFunc(tempDisplay);
 	glutIdleFunc(idle);
 	glutTimerFunc(1000, actionTimer, 1);
 	glutTimerFunc(3000, shootTimer, 1);
@@ -325,5 +407,8 @@ int main(int argc, char** argv) {
 
 	glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
 	glewInit();
+
+	initShader();
+
 	glutMainLoop();
 }
