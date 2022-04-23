@@ -89,9 +89,9 @@ std::vector<float> Loader::merge()
 {
 	vector<float> result;
 	for (int i = 0; i < vertices.size(); i++) {
-		result.push_back(vertices[i][0]);
-		result.push_back(vertices[i][1]);
-		result.push_back(vertices[i][2]);
+		result.push_back(vertices[i].x);
+		result.push_back(vertices[i].y);
+		result.push_back(vertices[i].z);
 	}
 	return result;
 }
