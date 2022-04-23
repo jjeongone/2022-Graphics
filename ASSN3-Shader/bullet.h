@@ -30,6 +30,8 @@ private:
 	float bullet_position = -16;
 	Loader* bullet = new Loader("./model/bullet.obj");
 	std::vector < glm::vec3 > bullet_vertices = bullet->get_vertex();
+
+	unsigned int VAO, VBO;
 public:
 	Bullet();
 	Bullet(tuple<float, float, float>, tuple<float, float, float>, tuple<float, float, float, float>, float, float, float);

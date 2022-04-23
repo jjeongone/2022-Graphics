@@ -56,8 +56,8 @@ void Bullet::move() {
 
 void Bullet::draw_bullet(bool fill) {
 	cout << fill << endl;
-	glPushMatrix();
-	glTranslatef(x, y, z);
+	
+	//glTranslatef(x, y, z);
 	if (fill)
 		glColor3f(0.8f, 0.8f, 0.8f);
 	else
@@ -71,7 +71,6 @@ void Bullet::draw_bullet(bool fill) {
 		glVertex3f(bullet_vertices[i].x, bullet_vertices[i].y, bullet_vertices[i].z);
 		glEnd();
 	}
-	glPopMatrix();
 }
 
 void Bullet::changeSpeed() {
