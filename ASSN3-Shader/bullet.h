@@ -17,6 +17,8 @@
 
 #define GRAVITY 0.02
 
+extern unsigned int shader_program;
+
 
 class Bullet {
 private:
@@ -29,7 +31,7 @@ private:
 	float speed = 1;
 	float bullet_position = -16;
 	Loader* bullet = new Loader("./model/bullet.obj");
-	std::vector < glm::vec3 > bullet_vertices = bullet->get_vertex();
+	std::vector < float > bullet_vertices = bullet->merge();
 
 	unsigned int VAO, VBO;
 public:

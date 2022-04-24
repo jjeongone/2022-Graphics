@@ -104,48 +104,12 @@ void initShader(void) {
 	glDeleteShader(fragment_shader);
 }
 
-void temp(void) {
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-
-	Loader* barrel = new Loader("./model/centauro/source/wheel.obj");
-	vector<glm::vec3> barrel_vertices = barrel->get_vertex();
-	glColor3f(0.0f, 0.0f, 0.0f);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	for (int i = 0; i < barrel_vertices.size(); i++) {
-		glBegin(GL_TRIANGLES);
-		glVertex3f(barrel_vertices[i].x, barrel_vertices[i].y, barrel_vertices[i].z);
-		i++;
-		glVertex3f(barrel_vertices[i].x, barrel_vertices[i].y, barrel_vertices[i].z);
-		i++;
-		glVertex3f(barrel_vertices[i].x, barrel_vertices[i].y, barrel_vertices[i].z);
-		glEnd();
-	}
-
-	glColor3f(0.8f, 0.8f, 0.8f);
-	glPolygonMode(GL_FRONT, GL_FILL);
-	glEnable(GL_POLYGON_OFFSET_FILL);
-	glPolygonOffset(1.0, 5.0);
-	for (int i = 0; i < barrel_vertices.size(); i++) {
-		glBegin(GL_TRIANGLES);
-		glVertex3f(barrel_vertices[i].x, barrel_vertices[i].y, barrel_vertices[i].z);
-		i++;
-		glVertex3f(barrel_vertices[i].x, barrel_vertices[i].y, barrel_vertices[i].z);
-		i++;
-		glVertex3f(barrel_vertices[i].x, barrel_vertices[i].y, barrel_vertices[i].z);
-		glEnd();
-	}
-	glDisable(GL_POLYGON_OFFSET_FILL);
-	glFlush();
-}
-
 void tempDisplay(void) {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 
-	Loader* bullet = new Loader("./model/centauro/source/wheel.obj");
+	Loader* bullet = new Loader("./model/centauro/source/barrel.obj");
 	std::vector < float > bullet_vertices = bullet->merge();
 
 	/*use shader*/
@@ -155,7 +119,7 @@ void tempDisplay(void) {
 	int vertex_camera_location = glGetUniformLocation(shader_program, "camera");
 
 	/*set camera*/
-	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 10.0f);
 	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::mat4 camera = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
@@ -452,7 +416,7 @@ int main(int argc, char** argv) {
 	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(gameWorld.width, gameWorld.height);
 	glutCreateWindow("DimSum");
-	glutDisplayFunc(temp);
+	glutDisplayFunc(tempDisplay);
 	glutIdleFunc(idle);
 	glutTimerFunc(1000, actionTimer, 1);
 	glutTimerFunc(3000, shootTimer, 1);
