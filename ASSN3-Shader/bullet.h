@@ -43,6 +43,7 @@ public:
 	void move();
 	void changeSpeed();
 	bool isExplode(Tank* player, pair<glm::vec3, glm::vec3>, Tank* enemy, pair<glm::vec3, glm::vec3>);
+	void setShader();
 };
 
 #endif

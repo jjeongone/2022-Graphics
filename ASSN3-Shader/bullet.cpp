@@ -110,3 +110,18 @@ bool Bullet::isExplode(Tank* player, pair<glm::vec3, glm::vec3> player_bound, Ta
 	}
 	return false;
 }
+
+void Bullet::setShader()
+{
+	glUseProgram(shader_program);
+
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * bullet_vertices.size(), &bullet_vertices[0], GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	glBindVertexArray(0);
+}
