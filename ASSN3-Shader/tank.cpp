@@ -119,6 +119,7 @@ void Tank::draw_tank(bool fill)
 	}
 	
 	display(&body_node);
+	//head.draw();
 }
 
 template<class T>
