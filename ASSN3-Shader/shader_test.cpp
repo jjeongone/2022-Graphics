@@ -105,22 +105,26 @@ void initShader(void) {
 }
 
 void tempDisplay(void) {
-
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
 
-	float vertices[] = {
-		-0.5f, -0.5f, 0.0f, // left  
-		0.5f, -0.5f, 0.0f, // right 
-		0.0f,  0.5f, 0.0f  // top   
-	};
+	Loader* bullet = new Loader("./model/bullet.obj");
+	std::vector < float > bullet_vertices = bullet->merge();
+
+	/*use shader*/
+	glUseProgram(shader_program);
+
+	/*change color*/
+	int vertex_color_location = glGetUniformLocation(shader_program, "color");
+	glUniform4f(vertex_color_location, 0.5f, 0.5f, 0.5f, 1.0f);
 
 	unsigned int VAO, VBO;
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 3 * bullet_vertices.size(), &bullet_vertices[0], GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -128,13 +132,21 @@ void tempDisplay(void) {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	
-	
-	glUseProgram(shader_program);
+	glPolygonMode(GL_FRONT, GL_LINE);
+	// glUseProgram(shader_program);
 	glBindVertexArray(VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_TRIANGLES, 0, bullet_vertices.size()/3);
 	glBindVertexArray(0);
+
+	glEnable(GL_POLYGON_OFFSET_FILL);
+	glPolygonOffset(1.0, 5.0);
+	glPolygonMode(GL_FRONT, GL_FILL);
+	// glUseProgram(shader_program);
+	glBindVertexArray(VAO);
+	glDrawArrays(GL_TRIANGLES, 0, bullet_vertices.size() / 9);
+	glBindVertexArray(0);
+	glDisable(GL_POLYGON_OFFSET_FILL);
+
 	glFlush();
 }
 
