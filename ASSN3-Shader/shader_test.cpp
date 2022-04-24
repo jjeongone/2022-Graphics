@@ -104,46 +104,89 @@ void initShader(void) {
 	glDeleteShader(fragment_shader);
 }
 
+void temp(void) {
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+
+	Loader* barrel = new Loader("./model/centauro/source/wheel.obj");
+	vector<glm::vec3> barrel_vertices = barrel->get_vertex();
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	for (int i = 0; i < barrel_vertices.size(); i++) {
+		glBegin(GL_TRIANGLES);
+		glVertex3f(barrel_vertices[i].x, barrel_vertices[i].y, barrel_vertices[i].z);
+		i++;
+		glVertex3f(barrel_vertices[i].x, barrel_vertices[i].y, barrel_vertices[i].z);
+		i++;
+		glVertex3f(barrel_vertices[i].x, barrel_vertices[i].y, barrel_vertices[i].z);
+		glEnd();
+	}
+
+	glColor3f(0.8f, 0.8f, 0.8f);
+	glPolygonMode(GL_FRONT, GL_FILL);
+	glEnable(GL_POLYGON_OFFSET_FILL);
+	glPolygonOffset(1.0, 5.0);
+	for (int i = 0; i < barrel_vertices.size(); i++) {
+		glBegin(GL_TRIANGLES);
+		glVertex3f(barrel_vertices[i].x, barrel_vertices[i].y, barrel_vertices[i].z);
+		i++;
+		glVertex3f(barrel_vertices[i].x, barrel_vertices[i].y, barrel_vertices[i].z);
+		i++;
+		glVertex3f(barrel_vertices[i].x, barrel_vertices[i].y, barrel_vertices[i].z);
+		glEnd();
+	}
+	glDisable(GL_POLYGON_OFFSET_FILL);
+	glFlush();
+}
+
 void tempDisplay(void) {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 
-	Loader* bullet = new Loader("./model/bullet.obj");
+	Loader* bullet = new Loader("./model/centauro/source/wheel.obj");
 	std::vector < float > bullet_vertices = bullet->merge();
 
 	/*use shader*/
 	glUseProgram(shader_program);
 
-	/*change color*/
 	int vertex_color_location = glGetUniformLocation(shader_program, "color");
-	glUniform4f(vertex_color_location, 0.5f, 0.5f, 0.5f, 1.0f);
+	int vertex_camera_location = glGetUniformLocation(shader_program, "camera");
 
+	/*set camera*/
+	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::mat4 camera = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+	glUniformMatrix4fv(vertex_camera_location, 1, GL_FALSE, glm::value_ptr(camera));
+
+	/*set VAO -> each class*/
 	unsigned int VAO, VBO;
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, 3 * bullet_vertices.size(), &bullet_vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * bullet_vertices.size(), &bullet_vertices[0], GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	glPolygonMode(GL_FRONT, GL_LINE);
-	// glUseProgram(shader_program);
+	// draw line
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glUniform4f(vertex_color_location, 0.0f, 0.0f, 0.0f, 1.0f);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(VAO);
-	glDrawArrays(GL_TRIANGLES, 0, bullet_vertices.size()/3);
+	glDrawArrays(GL_TRIANGLES, 0, bullet_vertices.size());
 	glBindVertexArray(0);
-
+	
+	// hidden line removal
+	glPolygonMode(GL_FRONT, GL_FILL);
+	glUniform4f(vertex_color_location, 0.8f, 0.8f, 0.8f, 1.0f);
 	glEnable(GL_POLYGON_OFFSET_FILL);
 	glPolygonOffset(1.0, 5.0);
-	glPolygonMode(GL_FRONT, GL_FILL);
-	// glUseProgram(shader_program);
 	glBindVertexArray(VAO);
-	glDrawArrays(GL_TRIANGLES, 0, bullet_vertices.size() / 9);
+	glDrawArrays(GL_TRIANGLES, 0, bullet_vertices.size() / 3);
 	glBindVertexArray(0);
 	glDisable(GL_POLYGON_OFFSET_FILL);
 
@@ -409,7 +452,7 @@ int main(int argc, char** argv) {
 	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(gameWorld.width, gameWorld.height);
 	glutCreateWindow("DimSum");
-	glutDisplayFunc(tempDisplay);
+	glutDisplayFunc(temp);
 	glutIdleFunc(idle);
 	glutTimerFunc(1000, actionTimer, 1);
 	glutTimerFunc(3000, shootTimer, 1);
