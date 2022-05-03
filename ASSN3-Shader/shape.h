@@ -31,20 +31,7 @@ namespace shape {
 	public:
 		unsigned int VAO, VBO;
 
-		Body()
-		{
-			glUseProgram(shader_program);
-
-			glGenVertexArrays(1, &VAO);
-			glGenBuffers(1, &VBO);
-			glBindVertexArray(VAO);
-			glBindBuffer(GL_ARRAY_BUFFER, VBO);
-			glBufferData(GL_ARRAY_BUFFER, 3 * body_vertices_merge.size(), &body_vertices_merge[0], GL_STATIC_DRAW);
-
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-			glEnableVertexAttribArray(0);
-			glBindVertexArray(0);
-		}
+		void setShader();
 		void draw();
 	};
 
@@ -56,20 +43,7 @@ namespace shape {
 		unsigned int VAO, VBO;
 
 	public:
-		Head()
-		{
-			glUseProgram(shader_program);
-
-			glGenVertexArrays(1, &VAO);
-			glGenBuffers(1, &VBO);
-			glBindVertexArray(VAO);
-			glBindBuffer(GL_ARRAY_BUFFER, VBO);
-			glBufferData(GL_ARRAY_BUFFER, 3 * head_vertices_merge.size(), &head_vertices_merge[0], GL_STATIC_DRAW);
-
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-			glEnableVertexAttribArray(0);
-			glBindVertexArray(0);
-		}
+		void setShader();
 		void draw();
 	};
 
@@ -81,20 +55,8 @@ namespace shape {
 
 	public:
 		unsigned int VAO, VBO;
-		Wheel()
-		{
-			glUseProgram(shader_program);
 
-			glGenVertexArrays(1, &VAO);
-			glGenBuffers(1, &VBO);
-			glBindVertexArray(VAO);
-			glBindBuffer(GL_ARRAY_BUFFER, VBO);
-			glBufferData(GL_ARRAY_BUFFER, 3 * wheel_vertices_merge.size(), &wheel_vertices_merge[0], GL_STATIC_DRAW);
-
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-			glEnableVertexAttribArray(0);
-			glBindVertexArray(0);
-		}
+		void setShader();
 		void draw();
 	};
 
@@ -106,20 +68,8 @@ namespace shape {
 
 	public:
 		unsigned int VAO, VBO;
-		WheelRight()
-		{
-			glUseProgram(shader_program);
 
-			glGenVertexArrays(1, &VAO);
-			glGenBuffers(1, &VBO);
-			glBindVertexArray(VAO);
-			glBindBuffer(GL_ARRAY_BUFFER, VBO);
-			glBufferData(GL_ARRAY_BUFFER, 3 * wheel_vertices_merge.size(), &wheel_vertices_merge[0], GL_STATIC_DRAW);
-
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-			glEnableVertexAttribArray(0);
-			glBindVertexArray(0);
-		}
+		void setShader();
 		void draw();
 	};
 
@@ -131,20 +81,7 @@ namespace shape {
 
 	public:
 		unsigned int VAO, VBO;
-		Barrel()
-		{
-			//glUseProgram(shader_program);
-
-			//glGenVertexArrays(1, &VAO);
-			//glGenBuffers(1, &VBO);
-			//glBindVertexArray(VAO);
-			//glBindBuffer(GL_ARRAY_BUFFER, VBO);
-			//glBufferData(GL_ARRAY_BUFFER, 3 * barrel_vertices_merge.size(), &barrel_vertices_merge[0], GL_STATIC_DRAW);
-
-			//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-			//glEnableVertexAttribArray(0);
-			//glBindVertexArray(0);
-		}
+		void setShader();
 		void draw();
 	};
 

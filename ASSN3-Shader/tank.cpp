@@ -130,9 +130,9 @@ void Tank::display(treenode<T>* node)
 		return;
 	}
 
-	glPushMatrix();
-	glTranslatef(get<0>(node->translate), get<1>(node->translate), get<2>(node->translate));
-	glRotatef(get<0>(node->rotate), get<1>(node->rotate), get<2>(node->rotate), get<3>(node->rotate));
+	//glPushMatrix();
+	//glTranslatef(get<0>(node->translate), get<1>(node->translate), get<2>(node->translate));
+	//glRotatef(get<0>(node->rotate), get<1>(node->rotate), get<2>(node->rotate), get<3>(node->rotate));
 	
 
 	if (node->child != nullptr)
@@ -140,7 +140,7 @@ void Tank::display(treenode<T>* node)
 		display(node->child);
 	}
 	node->draw(*(node->part));
-	glPopMatrix();
+	//glPopMatrix();
 
 	if (node->sibling != nullptr)
 	{

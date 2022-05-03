@@ -1,6 +1,25 @@
 #include <GL/glew.h>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include "shape.h"
 
+
+void shape::Body::setShader()
+{
+	glUseProgram(shader_program);
+
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * body_vertices_merge.size(), &body_vertices_merge[0], GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	glBindVertexArray(0);
+}
 
 void shape::Body::draw()
 {
@@ -50,10 +69,7 @@ void shape::Body::draw()
 	//	glUniform4f(glGetUniformLocation(shader_program, "color"), get<0>(colorRGB), get<1>(colorRGB), get<2>(colorRGB), 1.0f);
 
 	//glBindVertexArray(0);
-
-	glUseProgram(shader_program);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(VAO);
+	setShader();
 
 	if (fill) {
 		glPolygonMode(GL_FRONT, GL_FILL);
@@ -64,12 +80,29 @@ void shape::Body::draw()
 		glBindVertexArray(0);
 		glDisable(GL_POLYGON_OFFSET_FILL);
 	}
-	else {
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glUniform4f(glGetUniformLocation(shader_program, "color"), get<0>(colorRGB), get<1>(colorRGB), get<2>(colorRGB), 1.0f);
-		glDrawArrays(GL_TRIANGLES, 0, body_vertices_merge.size() / 3);
-		glBindVertexArray(0);
-	}
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glUniform4f(glGetUniformLocation(shader_program, "color"), 0, 0, 0, 1.0f);
+	glBindVertexArray(VAO);
+	glDrawArrays(GL_TRIANGLES, 0, body_vertices_merge.size() / 3);
+	glBindVertexArray(0);
+
+	glFlush();
+}
+
+void shape::Head::setShader()
+{
+	glUseProgram(shader_program);
+
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * head_vertices_merge.size(), &head_vertices_merge[0], GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	glBindVertexArray(0);
 }
 
 void shape::Head::draw()
@@ -129,6 +162,21 @@ void shape::Head::draw()
 
 	//glBindVertexArray(0);
 	
+}
+
+void shape::Barrel::setShader()
+{
+	glUseProgram(shader_program);
+
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * barrel_vertices_merge.size(), &barrel_vertices_merge[0], GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	glBindVertexArray(0);
 }
 
 void shape::Barrel::draw()
@@ -201,6 +249,22 @@ void shape::Barrel::draw()
 	//	glDrawArrays(GL_TRIANGLES, 0, bullet_vertices.size() / 3);
 	//	glBindVertexArray(0);
 	//}
+}
+
+void shape::Wheel::setShader()
+{
+	glUseProgram(shader_program);
+
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * wheel_vertices_merge.size(), &wheel_vertices_merge[0], GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glBindVertexArray(0);
 }
 
 void shape::Wheel::draw()
@@ -338,6 +402,21 @@ void shape::Plane::draw_plane(bool fill)
 void shape::Shape::set_color(tuple<float, float, float> color)
 {
 	colorRGB = color;
+}
+
+void shape::WheelRight::setShader()
+{
+	glUseProgram(shader_program);
+
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * wheel_vertices_merge.size(), &wheel_vertices_merge[0], GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	glBindVertexArray(0);
 }
 
 void shape::WheelRight::draw()
