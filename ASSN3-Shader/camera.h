@@ -7,6 +7,8 @@
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+extern unsigned int shader_program;
+
 enum view_mode {
 	THIRD = 0,
 	FIRST = 1,
@@ -19,6 +21,7 @@ private:
 	float left, right, front, back;
 	tuple<float, float, float> eye;
 	tuple<float, float, float> center;
+	tuple<float, float, float> up;
 
 	glm::vec3 eye_first;
 	glm::vec3 center_first;
@@ -28,8 +31,7 @@ private:
 
 	glm::mat4 transform_tank;
 	glm::mat4 transform_barrel;
-
-	tuple<float, float, float> up;
+	
 	view_mode mode;
 
 public:

@@ -105,54 +105,26 @@ void initShader(void) {
 }
 
 void tempDisplay(void) {
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
-
-	Loader* bullet = new Loader("./model/centauro/source/barrel.obj");
-	std::vector < float > bullet_vertices = bullet->merge();
 
 	/*use shader*/
 	glUseProgram(shader_program);
 
-	int vertex_color_location = glGetUniformLocation(shader_program, "color");
-	int vertex_camera_location = glGetUniformLocation(shader_program, "camera");
+	Camera *camera = new Camera();
+	GLint vertex_model_location = glGetUniformLocation(shader_program, "model");
 
-	/*set camera*/
-	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 10.0f);
-	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-	glm::mat4 camera = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-	glUniformMatrix4fv(vertex_camera_location, 1, GL_FALSE, glm::value_ptr(camera));
+	camera->look_at();
 
-	/*set VAO -> each class*/
-	unsigned int VAO, VBO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * bullet_vertices.size(), &bullet_vertices[0], GL_STATIC_DRAW);
+	glm::mat4 model(1.0f);
+	glUniformMatrix4fv(vertex_model_location, 1, GL_FALSE, glm::value_ptr(model));
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
+	shape::Body new_body;
+	new_body.draw();
 
-	// draw line
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glUniform4f(vertex_color_location, 0.0f, 0.0f, 0.0f, 1.0f);
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(VAO);
-	glDrawArrays(GL_TRIANGLES, 0, bullet_vertices.size());
-	glBindVertexArray(0);
-	
-	// hidden line removal
-	glPolygonMode(GL_FRONT, GL_FILL);
-	glUniform4f(vertex_color_location, 0.8f, 0.8f, 0.8f, 1.0f);
-	glEnable(GL_POLYGON_OFFSET_FILL);
-	glPolygonOffset(1.0, 5.0);
-	glBindVertexArray(VAO);
-	glDrawArrays(GL_TRIANGLES, 0, bullet_vertices.size() / 3);
-	glBindVertexArray(0);
-	glDisable(GL_POLYGON_OFFSET_FILL);
+	Bullet new_bullet;
+	new_bullet.draw_bullet(false);
+	new_bullet.draw_bullet(true);
 
 	glFlush();
 }

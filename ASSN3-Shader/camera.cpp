@@ -22,16 +22,22 @@ Camera::Camera(tuple<float, float, float> e, tuple<float, float, float> c, tuple
 
 void Camera::look_at()
 {
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	if (mode == TOP)
-		glOrtho(-100, 100, -100, 100, front, back);
-	else
-		glFrustum(-left, left, -right, right, front, back);
+	GLint vertex_camera_location = glGetUniformLocation(shader_program, "camera");
+	GLint vertex_projection_location = glGetUniformLocation(shader_program, "projection");
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	gluLookAt(get<0>(eye), get<1>(eye), get<2>(eye), get<0>(center), get<1>(center), get<2>(center), get<0>(up), get<1>(up), get<2>(up));
+	glm::mat4 projection;
+	glm::vec3 cameraPos = glm::vec3(get<0>(eye), get<1>(eye), get<2>(eye));
+	glm::vec3 cameraFront = glm::vec3(get<0>(center), get<1>(center), get<2>(center));
+	glm::vec3 cameraUp = glm::vec3(get<0>(up), get<1>(up), get<2>(up));
+	glm::mat4 camera = glm::lookAt(cameraPos, cameraFront, cameraUp);
+
+	if (mode == TOP)
+		projection = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, front, back);
+	else
+		projection = glm::frustum(-left, left, -right, right, front, back);
+
+	glUniformMatrix4fv(vertex_projection_location, 1, GL_FALSE, glm::value_ptr(projection));
+	glUniformMatrix4fv(vertex_camera_location, 1, GL_FALSE, glm::value_ptr(camera));
 }
 
 
