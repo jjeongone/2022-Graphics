@@ -6,6 +6,7 @@
 #include <glm/gtx/string_cast.hpp>
 #include <GL/glut.h>
 #include <vector>
+#include <stack>
 #include <tuple>
 #include "shape.h"
 #include "bullet.h"
@@ -26,6 +27,8 @@ float HeightFactor;
 bool isBegin = false;
 unsigned int shader_program;
 
+std::stack<glm::mat4> model_view;
+glm::mat4 model_view_matrix;
 static std::vector<Bullet> bulletList;
 
 typedef struct world {
@@ -42,6 +45,7 @@ void init(void) {
 
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glShadeModel(GL_FLAT);
+	model_view_matrix = glm::mat4(1.0f);
 }
 
 void initShader(void) {
@@ -105,36 +109,59 @@ void initShader(void) {
 }
 
 void tempDisplay(void) {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
 
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	/*use shader*/
+	/*glUseProgram(shader_program);
 
-	float vertices[] = {
-		-0.5f, -0.5f, 0.0f, // left  
-		0.5f, -0.5f, 0.0f, // right 
-		0.0f,  0.5f, 0.0f  // top   
-	};
+	Camera *camera = new Camera();
+	GLint vertex_model_location = glGetUniformLocation(shader_program, "model");
 
-	unsigned int VAO, VBO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	camera->look_at();
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
+	glm::mat4 model(1.0f);
+	glUniformMatrix4fv(vertex_model_location, 1, GL_FALSE, glm::value_ptr(model));
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	shape::Body new_body;
+	new_body.draw();
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	Bullet new_bullet;
+	new_bullet.draw_bullet(false);
+	new_bullet.draw_bullet(true);*/
+	switch (game->getStatus()) {
+	case MENU:
+		game->printTitle();
+		break;
+	case PLAYING:
+		//game->camera->look_at();
+		game->display();
 
+		// draw bullet
+		glEnable(GL_DEPTH_TEST);
+		glPolygonMode(GL_FRONT, GL_LINE);
+		for (auto& elem : bulletList) {
+			elem.draw_bullet(false);
+		}
 
-	glUseProgram(shader_program);
-	glBindVertexArray(VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
-	glBindVertexArray(0);
+		if (game->getRenderMode()) {
+			glPolygonMode(GL_FRONT, GL_FILL);
+			glEnable(GL_POLYGON_OFFSET_FILL);
+			glPolygonOffset(1.0, 5.0);
+			for (auto& elem : bulletList) {
+				elem.draw_bullet(true);
+			}
+			glDisable(GL_POLYGON_OFFSET_FILL);
+		}
+
+		break;
+	case WIN:
+		game->printWin();
+		break;
+	case GAMEOVER:
+		game->printGameOver();
+		break;
+	}
 	glFlush();
 }
 
