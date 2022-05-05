@@ -13,12 +13,17 @@
 #include <vector>
 #include <cstdlib> 
 #include <ctime>
+#include <stack>
 
 #include "tank.h"
 #include "camera.h"
 
 #define X_POSITION 3.0
 #define GROUND -1.0
+
+extern glm::mat4 model_view_matrix;
+extern std::stack<glm::mat4> model_view;
+extern unsigned int shader_program;
 
 enum mode {
 	NORMAL = 0,

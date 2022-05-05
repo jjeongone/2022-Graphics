@@ -7,6 +7,7 @@
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+extern glm::mat4 model_view_matrix;
 extern unsigned int shader_program;
 
 enum view_mode {

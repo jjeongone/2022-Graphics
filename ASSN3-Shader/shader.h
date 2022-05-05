@@ -51,7 +51,6 @@ public:
         // 2. compile shaders
         unsigned int vertex, fragment;
         // vertex shader
-        GLenum error = glewInit();
         vertex = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertex, 1, &vShaderCode, NULL);
         glCompileShader(vertex);

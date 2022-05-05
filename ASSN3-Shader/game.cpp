@@ -151,6 +151,7 @@ void Game::drawWorld(bool fill)
 	enemy_node.rotate = enemy_rotation;
 	player_node.sibling = &enemy_node;
 
+	model_view_matrix = glm::mat4(1.0f);
 	display(&ground_node, fill);
 }
 
@@ -161,18 +162,23 @@ void Game::display(treenode<T>* node, bool fill)
 	{
 		return;
 	}
+	model_view.push(model_view_matrix);
+	model_view_matrix = glm::translate(model_view_matrix, glm::vec3(get<0>(node->translate), get<1>(node->translate), get<2>(node->translate)));
+	model_view_matrix = glm::rotate(model_view_matrix, glm::radians(get<1>(node->rotate)), glm::vec3(get<1>(node->rotate), get<2>(node->rotate), get<3>(node->rotate)));
+	glUseProgram(shader_program);
+	//glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_FALSE, glm::value_ptr(model_view_matrix));
 
-	glPushMatrix();
-	
-	glTranslatef(get<0>(node->translate), get<1>(node->translate), get<2>(node->translate));
-	glRotatef(get<0>(node->rotate), get<1>(node->rotate), get<2>(node->rotate), get<3>(node->rotate));
-	
 	if (node->child != nullptr)
 	{
 		display(node->child, fill);
 	}
 	node->draw(*(node->part), fill);
-	glPopMatrix();
+
+	model_view.pop();
+	if (!model_view.empty())
+		model_view_matrix = model_view.top();
+	else
+		model_view_matrix = glm::mat4(1.0f);
 
 	if (node->sibling != nullptr)
 	{

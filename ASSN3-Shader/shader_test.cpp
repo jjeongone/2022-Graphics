@@ -6,6 +6,7 @@
 #include <glm/gtx/string_cast.hpp>
 #include <GL/glut.h>
 #include <vector>
+#include <stack>
 #include <tuple>
 #include "shape.h"
 #include "bullet.h"
@@ -26,6 +27,8 @@ float HeightFactor;
 bool isBegin = false;
 unsigned int shader_program;
 
+std::stack<glm::mat4> model_view;
+glm::mat4 model_view_matrix;
 static std::vector<Bullet> bulletList;
 
 typedef struct world {
@@ -42,6 +45,7 @@ void init(void) {
 
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glShadeModel(GL_FLAT);
+	model_view_matrix = glm::mat4(1.0f);
 }
 
 void initShader(void) {
@@ -109,7 +113,7 @@ void tempDisplay(void) {
 	glEnable(GL_DEPTH_TEST);
 
 	/*use shader*/
-	glUseProgram(shader_program);
+	/*glUseProgram(shader_program);
 
 	Camera *camera = new Camera();
 	GLint vertex_model_location = glGetUniformLocation(shader_program, "model");
@@ -124,8 +128,40 @@ void tempDisplay(void) {
 
 	Bullet new_bullet;
 	new_bullet.draw_bullet(false);
-	new_bullet.draw_bullet(true);
+	new_bullet.draw_bullet(true);*/
+	switch (game->getStatus()) {
+	case MENU:
+		game->printTitle();
+		break;
+	case PLAYING:
+		//game->camera->look_at();
+		game->display();
 
+		// draw bullet
+		glEnable(GL_DEPTH_TEST);
+		glPolygonMode(GL_FRONT, GL_LINE);
+		for (auto& elem : bulletList) {
+			elem.draw_bullet(false);
+		}
+
+		if (game->getRenderMode()) {
+			glPolygonMode(GL_FRONT, GL_FILL);
+			glEnable(GL_POLYGON_OFFSET_FILL);
+			glPolygonOffset(1.0, 5.0);
+			for (auto& elem : bulletList) {
+				elem.draw_bullet(true);
+			}
+			glDisable(GL_POLYGON_OFFSET_FILL);
+		}
+
+		break;
+	case WIN:
+		game->printWin();
+		break;
+	case GAMEOVER:
+		game->printGameOver();
+		break;
+	}
 	glFlush();
 }
 

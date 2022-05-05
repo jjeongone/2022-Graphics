@@ -2,9 +2,18 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <GL/freeglut.h>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <vector>
+#include <stack>
 #include <functional>
 #include "shape.h"
+
+extern unsigned int shader_program;
+extern stack<glm::mat4> model_view;
+extern glm::mat4 model_view_matrix;
 
 class Tank {
 private:
@@ -44,6 +53,8 @@ private:
 
 	tuple<float, float, float> barrelPosition = make_tuple(0.f, 0.f, 0.f);
 	tuple<float, float, float, float> barrelOrientation = make_tuple(0., 0., 0., 0.);
+	
+	glm::mat4 temp_model_view;
 
 public: 
 	float size;
