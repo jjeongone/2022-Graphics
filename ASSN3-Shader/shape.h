@@ -90,8 +90,11 @@ namespace shape {
 		float gap;
 		float length;
 		float depth;
+		vector<float> vertices;
 	public:
+		unsigned int VAO, VBO;
 		void set_condition(float l, float g, float d);
+		void setShader();
 		void draw_plane(bool fill);
 	};
 }
