@@ -69,6 +69,11 @@ void Bullet::move() {
 void Bullet::draw_bullet(bool fill) {
 	setShader();
 
+	model_view.push(model_view_matrix);
+	model_view_matrix = glm::translate(model_view_matrix, glm::vec3(x, y, z));
+	glUseProgram(shader_program);
+	glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_FALSE, glm::value_ptr(model_view_matrix));
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(VAO);
 
@@ -87,6 +92,11 @@ void Bullet::draw_bullet(bool fill) {
 		glDrawArrays(GL_TRIANGLES, 0, bullet_vertices.size()/3);
 		glBindVertexArray(0);
 	}
+
+	model_view_matrix = model_view.top();
+	glUseProgram(shader_program);
+	glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_FALSE, glm::value_ptr(model_view_matrix));
+	model_view.pop();
 }
 
 void Bullet::changeSpeed() {

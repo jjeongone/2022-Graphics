@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <cmath>
+#include <stack>
 #include <vector>
 #include <utility>
 #include <tuple>
@@ -18,6 +19,8 @@
 #define GRAVITY 0.02
 
 extern unsigned int shader_program;
+extern stack<glm::mat4> model_view;
+extern glm::mat4 model_view_matrix;
 
 
 class Bullet {

@@ -135,7 +135,7 @@ void Tank::display(treenode<T>* node)
 
 	model_view.push(model_view_matrix);
 	model_view_matrix = glm::translate(model_view_matrix, glm::vec3(get<0>(node->translate), get<1>(node->translate), get<2>(node->translate)));
-	model_view_matrix = glm::rotate(model_view_matrix, glm::radians(get<1>(node->rotate)), glm::vec3(get<1>(node->rotate), get<2>(node->rotate), get<3>(node->rotate)));
+	model_view_matrix = glm::rotate(model_view_matrix, glm::radians(get<0>(node->rotate)), glm::vec3(get<1>(node->rotate), get<2>(node->rotate), get<3>(node->rotate)));
 	glUseProgram(shader_program);
 	glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_FALSE, glm::value_ptr(model_view_matrix));
 	//glTranslatef(get<0>(node->translate), get<1>(node->translate), get<2>(node->translate));
@@ -148,11 +148,11 @@ void Tank::display(treenode<T>* node)
 	}
 	node->draw(*(node->part));
 
+	model_view_matrix = model_view.top();
+	glUseProgram(shader_program);
+	glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_FALSE, glm::value_ptr(model_view_matrix));
 	model_view.pop();
-	if (!model_view.empty())
-		model_view_matrix = model_view.top();
-	else
-		model_view_matrix = glm::mat4(1.0f);
+
 	//glPopMatrix();
 
 	if (node->sibling != nullptr)
