@@ -33,8 +33,8 @@ private:
 	float head_angle, barrel_angle;
 	float speed = 1;
 	float bullet_position = -16;
-	Loader* bullet = new Loader("./model/bullet.obj");
-	std::vector < float > bullet_vertices = bullet->merge();
+	Loader bullet = Loader("./model/bullet.obj");
+	std::vector < float > bullet_vertices = bullet.merge();
 
 	unsigned int VAO, VBO;
 public:

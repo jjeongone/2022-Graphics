@@ -212,7 +212,9 @@ void idle() {
 		(*iter).changeSpeed();
 
 		if ((*iter).isExplode(game->getPlayer(), game->getPlayerTankBound(game->get_player_translation()), game->getEnemy(), game->getEnemyTankBound(game->get_enemy_translation()))) {
+			//Bullet* tmp = &(*iter);
 			iter = bulletList.erase(iter);
+			//delete tmp;
 		}
 
 		else {
