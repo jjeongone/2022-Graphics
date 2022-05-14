@@ -26,6 +26,7 @@ float WidthFactor;
 float HeightFactor;
 bool isBegin = false;
 unsigned int shader_program;
+std::vector<unsigned int> shaderList;
 
 std::stack<glm::mat4> model_view;
 glm::mat4 model_view_matrix;
@@ -48,16 +49,16 @@ void init(void) {
 	model_view_matrix = glm::mat4(1.0f);
 }
 
-void initShader(void) {
+void initShaderFun(string name) {
 	/*init shader*/
-	std::ifstream vertex_shader_file("shader.vertex");
-	std::ifstream fragment_shader_file("shader.fragment");
+	std::ifstream vertex_shader_file(name+".vertex");
+	std::ifstream fragment_shader_file(name+".fragment");
 	std::stringstream raw_vertex_shader, raw_fragment_shader;
 	std::string vertex_shader_string, fragment_shader_string;
 
 	raw_vertex_shader << vertex_shader_file.rdbuf();
 	vertex_shader_string = raw_vertex_shader.str();
-	const char * vertex_shader_source = vertex_shader_string.c_str();
+	const char* vertex_shader_source = vertex_shader_string.c_str();
 
 	unsigned int vertex_shader;
 	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
@@ -75,7 +76,7 @@ void initShader(void) {
 
 	raw_fragment_shader << fragment_shader_file.rdbuf();
 	fragment_shader_string = raw_fragment_shader.str();
-	const char * fragment_shader_source = fragment_shader_string.c_str();
+	const char* fragment_shader_source = fragment_shader_string.c_str();
 
 	unsigned int fragment_shader;
 	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -88,24 +89,33 @@ void initShader(void) {
 		glGetShaderInfoLog(fragment_shader, 512, NULL, infoLog);
 		std::cout << "ERROR::SHADER::FRAGEMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
-	
-	shader_program = glCreateProgram();
 
-	glAttachShader(shader_program, vertex_shader);
-	glAttachShader(shader_program, fragment_shader);
-	glLinkProgram(shader_program);
+	unsigned int temp_shader_program;
+	temp_shader_program = glCreateProgram();
 
-	glGetShaderiv(shader_program, GL_LINK_STATUS, &success);
+	glAttachShader(temp_shader_program, vertex_shader);
+	glAttachShader(temp_shader_program, fragment_shader);
+	glLinkProgram(temp_shader_program);
+
+	glGetShaderiv(temp_shader_program, GL_LINK_STATUS, &success);
 	if (!success)
 	{
-		glGetShaderInfoLog(shader_program, 512, NULL, infoLog);
+		glGetShaderInfoLog(temp_shader_program, 512, NULL, infoLog);
 		std::cout << "ERROR::SHADER::LINK::LINKING_FAILED\n" << infoLog << std::endl;
 	}
 
-	//glUseProgram(shader_program);
-
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);
+
+	shaderList.push_back(temp_shader_program);
+}
+
+void initShader(void) {
+	initShaderFun("shader");
+	initShaderFun("gouraud_shader");
+	initShaderFun("phong_shader");
+
+	shader_program = shaderList[1];
 }
 
 void tempDisplay(void) {
@@ -212,7 +222,9 @@ void idle() {
 		(*iter).changeSpeed();
 
 		if ((*iter).isExplode(game->getPlayer(), game->getPlayerTankBound(game->get_player_translation()), game->getEnemy(), game->getEnemyTankBound(game->get_enemy_translation()))) {
+			//Bullet* tmp = &(*iter);
 			iter = bulletList.erase(iter);
+			//delete tmp;
 		}
 
 		else {
@@ -326,6 +338,9 @@ void keyboard(unsigned char key, int x, int y) {
 
 	case 'A': // auto mode
 		game->autoMode();
+		break;
+
+	case 'x': // shading toggle
 		break;
 
 	case ENTER:
