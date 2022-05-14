@@ -92,6 +92,11 @@ std::vector<float> Loader::merge()
 		result.push_back(vertices[i].x);
 		result.push_back(vertices[i].y);
 		result.push_back(vertices[i].z);
+		result.push_back(normals[i].x);
+		result.push_back(normals[i].y);
+		result.push_back(normals[i].z);
+		result.push_back(uvs[i].x);
+		result.push_back(uvs[i].y);
 	}
 	return result;
 }
