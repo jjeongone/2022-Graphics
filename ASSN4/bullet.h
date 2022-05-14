@@ -1,5 +1,4 @@
-#ifndef BULLET_H
-#define BULLET_H
+#pragma once
 
 #include <iostream>
 #include <cmath>
@@ -48,5 +47,3 @@ public:
 	bool isExplode(Tank* player, pair<glm::vec3, glm::vec3>, Tank* enemy, pair<glm::vec3, glm::vec3>);
 	void setShader();
 };
-
-#endif

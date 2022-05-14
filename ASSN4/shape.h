@@ -8,6 +8,7 @@
 //#include "shader.h"
 #include "loader.h"
 
+
 using namespace std;
 extern unsigned int shader_program;
 
@@ -20,7 +21,13 @@ namespace shape {
 		pair<float, float> translationXY;
 		tuple<float, float, float> coordinate3D;	// left-bottom point
 		bool fill = false;
+
+		int width, height, nrChannels;
+		unsigned char* data;
+
+		unsigned int texture;
 		void set_color(tuple<float, float, float> color);
+		Shape();
 	};
 	
 	class Body : public Shape {
@@ -28,6 +35,7 @@ namespace shape {
 		Loader body = Loader("./model/centauro/source/body.obj");
 		vector<glm::vec3> body_vertices = body.get_vertex();
 		vector<float> body_vertices_merge = body.merge();
+
 	public:
 		unsigned int VAO, VBO;
 
@@ -40,6 +48,7 @@ namespace shape {
 		Loader head = Loader("./model/centauro/source/head.obj");
 		vector<glm::vec3> head_vertices = head.get_vertex();
 		vector<float> head_vertices_merge = head.merge();
+
 		unsigned int VAO, VBO;
 
 	public:
@@ -53,6 +62,7 @@ namespace shape {
 		vector<glm::vec3> wheel_vertices = wheel.get_vertex();
 		vector<float> wheel_vertices_merge = wheel.merge();
 
+
 	public:
 		unsigned int VAO, VBO;
 
@@ -65,6 +75,7 @@ namespace shape {
 		Loader wheel_right = Loader("./model/centauro/source/wheel_right.obj");
 		vector<glm::vec3> wheel_vertices = wheel_right.get_vertex();
 		vector<float> wheel_vertices_merge = wheel_right.merge();
+
 
 	public:
 		unsigned int VAO, VBO;

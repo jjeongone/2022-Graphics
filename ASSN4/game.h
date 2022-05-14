@@ -1,5 +1,4 @@
-#ifndef GMAE_H
-#define GAME_H
+#pragma once
 
 #include <iostream>
 #include <GL/glew.h>
@@ -117,5 +116,3 @@ public:
 	bool checkTankCollision(pair<glm::vec3, glm::vec3> playerBound, pair<glm::vec3, glm::vec3> enemyBound);
 	bool checkBoundaryCollision(pair<glm::vec3, glm::vec3> bound);
 };
-
-#endif // !GAME_H
