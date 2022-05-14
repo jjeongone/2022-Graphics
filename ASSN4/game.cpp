@@ -167,7 +167,7 @@ void Game::display(treenode<T>* node, bool fill)
 	if (!(get<1>(node->rotate) == 0 && get<2>(node->rotate) == 0 && get<3>(node->rotate) == 0))
 		model_view_matrix = glm::rotate(model_view_matrix, glm::radians(get<0>(node->rotate)), glm::vec3(get<1>(node->rotate), get<2>(node->rotate), get<3>(node->rotate)));
 	glUseProgram(shader_program);
-	glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_FALSE, glm::value_ptr(model_view_matrix));
+	glUniformMatrix4fv(glGetUniformLocation(shader_program, "Model"), 1, GL_FALSE, glm::value_ptr(model_view_matrix));
 
 	if (node->child != nullptr)
 	{
@@ -177,7 +177,7 @@ void Game::display(treenode<T>* node, bool fill)
 
 	model_view_matrix = model_view.top();
 	glUseProgram(shader_program);
-	glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_FALSE, glm::value_ptr(model_view_matrix));
+	glUniformMatrix4fv(glGetUniformLocation(shader_program, "Model"), 1, GL_FALSE, glm::value_ptr(model_view_matrix));
 	model_view.pop();
 
 	if (node->sibling != nullptr)

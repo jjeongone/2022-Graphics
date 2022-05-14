@@ -7,17 +7,20 @@ out vec3 fN;
 out vec3 fE;
 out vec3 fL;
 
-uniform mat4 ModelView;
+uniform mat4 Camera;
+unifrom mat4 Model;
 uniform vec4 LightPosition;
 uniform mat4 Projection;
 
 void main()
 {
+	mat4 ModelView = Camera * Model;
+
 	fN = vNormal;
 	fE = -vPosition.xyz;
 	fL = LightPosition.xyz;
 
-	if(LightPosition.w! = 0.0) {
+	if(LightPosition.w != 0.0) {
 		fL = LightPosition.xyz - vPosition.xyz;
 	}
 

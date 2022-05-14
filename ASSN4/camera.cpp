@@ -22,8 +22,8 @@ Camera::Camera(tuple<float, float, float> e, tuple<float, float, float> c, tuple
 
 void Camera::look_at()
 {
-	GLint vertex_camera_location = glGetUniformLocation(shader_program, "camera");
-	GLint vertex_projection_location = glGetUniformLocation(shader_program, "projection");
+	GLint vertex_camera_location = glGetUniformLocation(shader_program, "Camera");
+	GLint vertex_projection_location = glGetUniformLocation(shader_program, "Projection");
 
 	glm::mat4 projection;
 	glm::vec3 cameraPos = glm::vec3(get<0>(eye), get<1>(eye), get<2>(eye));
