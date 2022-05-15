@@ -2,20 +2,23 @@
 
 layout (location = 0) in vec3 vPosition;
 layout (location = 1) in vec3 vNormal;
+layout (location = 2) in vec2 vTexCoord;
 
 out vec3 fN;
 out vec3 fE;
 out vec3 fL;
+out vec4 vertexColor;
+out vec2 texCoord;
 
 uniform mat4 Camera;
-unifrom mat4 Model;
+uniform mat4 Model;
 uniform vec4 LightPosition;
 uniform mat4 Projection;
+uniform vec4 Color;
 
 void main()
 {
 	mat4 ModelView = Camera * Model;
-
 	fN = vNormal;
 	fE = -vPosition.xyz;
 	fL = LightPosition.xyz;
@@ -24,5 +27,7 @@ void main()
 		fL = LightPosition.xyz - vPosition.xyz;
 	}
 
-	gl_Position = Projection * ModelView * vPosition;
+	gl_Position = Projection * ModelView * vec4(vPosition, 1.0);
+	vertexColor = Color;
+	texCoord = vTexCoord;
 }

@@ -72,14 +72,14 @@ void Bullet::draw_bullet(bool fill) {
 	model_view.push(model_view_matrix);
 	model_view_matrix = glm::translate(model_view_matrix, glm::vec3(x, y, z));
 	glUseProgram(shader_program);
-	glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_FALSE, glm::value_ptr(model_view_matrix));
+	glUniformMatrix4fv(glGetUniformLocation(shader_program, "Model"), 1, GL_FALSE, glm::value_ptr(model_view_matrix));
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(VAO);
 
 	if (fill) {
 		glPolygonMode(GL_FRONT, GL_FILL);
-		glUniform4f(glGetUniformLocation(shader_program, "color"), 0.8f, 0.8f, 0.8f, 1.0f);
+		glUniform4f(glGetUniformLocation(shader_program, "Color"), 0.2f, 0.2f, 0.2f, 1.0f);
 		glEnable(GL_POLYGON_OFFSET_FILL);
 		glPolygonOffset(1.0, 5.0);
 		glDrawArrays(GL_TRIANGLES, 0, bullet_vertices.size()/3);
@@ -88,14 +88,14 @@ void Bullet::draw_bullet(bool fill) {
 	}
 	else {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glUniform4f(glGetUniformLocation(shader_program, "color"), 0.0f, 0.0f, 0.0f, 1.0f);
+		glUniform4f(glGetUniformLocation(shader_program, "Color"), 0.0f, 0.0f, 0.0f, 1.0f);
 		glDrawArrays(GL_TRIANGLES, 0, bullet_vertices.size()/3);
 		glBindVertexArray(0);
 	}
 
 	model_view_matrix = model_view.top();
 	glUseProgram(shader_program);
-	glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_FALSE, glm::value_ptr(model_view_matrix));
+	glUniformMatrix4fv(glGetUniformLocation(shader_program, "Model"), 1, GL_FALSE, glm::value_ptr(model_view_matrix));
 	model_view.pop();
 }
 
@@ -141,4 +141,9 @@ void Bullet::setShader()
 	glEnableVertexAttribArray(2);
 
 	glBindVertexArray(0);
+}
+
+glm::vec3 Bullet::getPosition()
+{
+	return glm::vec3(x, y, z);
 }

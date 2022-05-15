@@ -2,9 +2,9 @@
 
 Camera::Camera()
 {
-	eye = make_tuple(7.0, 9.0, 0.0); // need to edit as player position
-	center = make_tuple(0.0, 9.0, 0.0);
-	up = make_tuple(0.0, 1.0, 0.0);
+	eye = make_tuple(1.0, 3.0, 1.0); // need to edit as player position
+	center = make_tuple(0.0, 1.0, 0.0);
+	up = make_tuple(0.0, 0.0, -1.0);
 	left = 1.5;
 	right = 1.5;
 	front = 1;

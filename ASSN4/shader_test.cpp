@@ -115,63 +115,26 @@ void initShader(void) {
 	initShaderFun("gouraud_shader");
 	initShaderFun("phong_shader");
 
-	shader_program = shaderList[1];
+	shader_program = shaderList[2];
 }
 
 void tempDisplay(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 
-	/*use shader*/
-	/*glUseProgram(shader_program);
+	Camera* temp_camera = new Camera();
+	temp_camera->look_at();
 
-	Camera *camera = new Camera();
-	GLint vertex_model_location = glGetUniformLocation(shader_program, "model");
-
-	camera->look_at();
-
-	glm::mat4 model(1.0f);
-	glUniformMatrix4fv(vertex_model_location, 1, GL_FALSE, glm::value_ptr(model));
-
-	shape::Body new_body;
-	new_body.draw();
+	glUniform4f(glGetUniformLocation(shader_program, "LightPosition"), 0.0, 2.0, 0.0, 1.0f);
+	glUniform4f(glGetUniformLocation(shader_program, "AmbientProduct"), 0.9, 0.9, 0.9, 1.0f);
+	glUniform4f(glGetUniformLocation(shader_program, "DiffuseProduct"), 0.9, 0.9, 0.9, 1.0f);
+	glUniform4f(glGetUniformLocation(shader_program, "SpecularProduct"), 1.0, 1.0, 1.0, 1.0f);
+	glUniform1f(glGetUniformLocation(shader_program, "Shininess"), 128.0f);
 
 	Bullet new_bullet;
-	new_bullet.draw_bullet(false);
-	new_bullet.draw_bullet(true);*/
-	switch (game->getStatus()) {
-	case MENU:
-		game->printTitle();
-		break;
-	case PLAYING:
-		//game->camera->look_at();
-		game->display();
+	//new_bullet.draw_bullet(false);
+	new_bullet.draw_bullet(true);
 
-		// draw bullet
-		glEnable(GL_DEPTH_TEST);
-		glPolygonMode(GL_FRONT, GL_LINE);
-		for (auto& elem : bulletList) {
-			elem.draw_bullet(false);
-		}
-
-		if (game->getRenderMode()) {
-			glPolygonMode(GL_FRONT, GL_FILL);
-			glEnable(GL_POLYGON_OFFSET_FILL);
-			glPolygonOffset(1.0, 5.0);
-			for (auto& elem : bulletList) {
-				elem.draw_bullet(true);
-			}
-			glDisable(GL_POLYGON_OFFSET_FILL);
-		}
-
-		break;
-	case WIN:
-		game->printWin();
-		break;
-	case GAMEOVER:
-		game->printGameOver();
-		break;
-	}
 	glFlush();
 }
 
