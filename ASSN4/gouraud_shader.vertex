@@ -20,7 +20,7 @@ void main()
 	mat4 ModelView = Camera * Model;
 	vec3 pos = (ModelView * vec4(vPosition, 1.0)).xyz;
 
-	vec3 L = normalize(LightPosition.xyz - pos);
+	vec3 L = normalize((Camera * vec4(LightPosition.xyz, 1.0)).xyz - pos);
 	vec3 E = normalize(-pos);
 	vec3 H = normalize(L+E);
 

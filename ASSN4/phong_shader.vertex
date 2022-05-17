@@ -19,12 +19,13 @@ uniform vec4 Color;
 void main()
 {
 	mat4 ModelView = Camera * Model;
-	fN = vNormal;
-	fE = -vPosition.xyz;
-	fL = LightPosition.xyz;
+	fN = normalize((Camera * Model * vec4(vNormal, 0.0)).xyz);
+	fE = -(Camera * Model * vec4(vPosition, 1.0)).xyz;
 
 	if(LightPosition.w != 0.0) {
-		fL = LightPosition.xyz - vPosition.xyz;
+		fL = (Camera * vec4(LightPosition.xyz, 1.0)).xyz + fE;
+	} else {
+		fL = (Camera * LightPosition).xyz;
 	}
 
 	gl_Position = Projection * ModelView * vec4(vPosition, 1.0);
