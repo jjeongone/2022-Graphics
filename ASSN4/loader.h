@@ -12,9 +12,6 @@ using namespace std;
 class Loader{
 private:
 	std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
-	std::vector< glm::vec3 > temp_vertices;
-	std::vector< glm::vec2 > temp_uvs;
-	std::vector< glm::vec3 > temp_normals;
 	std::vector < glm::vec3 > vertices;
 	std::vector < glm::vec2 > uvs;
 	std::vector < glm::vec3 > normals;
