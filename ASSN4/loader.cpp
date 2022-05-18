@@ -15,10 +15,19 @@ vector<int> split(string s, char d) {
 
 Loader::Loader(const char * path)
 {
-	
+	std::vector< glm::vec3 > temp_vertices;
+	std::vector< glm::vec2 > temp_uvs;
+	std::vector< glm::vec3 > temp_normals;
 	ifstream file(path);
 	if (file.is_open()) {
 		string line_header;
+		temp_vertices.clear();
+		temp_uvs.clear();
+		temp_normals.clear();
+		vertexIndices.clear();
+		uvIndices.clear();
+		normalIndices.clear();
+
 		while (!file.eof()) {
 			file >> line_header;
 			if (line_header.compare("v") == 0) {
@@ -35,7 +44,6 @@ Loader::Loader(const char * path)
 				glm::vec3 normal;
 				file >> normal.x >> normal.y >> normal.z;
 				temp_normals.push_back(normal);
-
 			}
 			else if (line_header.compare("f") == 0) {
 				for (int i = 0; i < 3; i++) {

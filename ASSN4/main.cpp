@@ -15,6 +15,20 @@
 #include "loader.h"
 #include "camera.h"
 
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
+
+#ifdef _DEBUG
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+// Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
+// allocations to be of _CLIENT_BLOCK type
+#else
+#define DBG_NEW new
+#endif
+
+
 // To recognize spacebar input
 #define SPACEBAR 32
 #define ENTER 13
@@ -26,10 +40,18 @@ float WidthFactor;
 float HeightFactor;
 bool isBegin = false;
 unsigned int shader_program;
+std::vector<unsigned int> shaderList;
 
 std::stack<glm::mat4> model_view;
 glm::mat4 model_view_matrix;
 static std::vector<Bullet> bulletList;
+
+enum shading {
+	gouraud = 0,
+	phong = 1
+};
+
+shading gameShading;
 
 typedef struct world {
 	float width;
@@ -48,10 +70,10 @@ void init(void) {
 	model_view_matrix = glm::mat4(1.0f);
 }
 
-void initShader(void) {
+void initShaderFun(string name) {
 	/*init shader*/
-	std::ifstream vertex_shader_file("shader.vertex");
-	std::ifstream fragment_shader_file("shader.fragment");
+	std::ifstream vertex_shader_file(name+".vertex");
+	std::ifstream fragment_shader_file(name+".fragment");
 	std::stringstream raw_vertex_shader, raw_fragment_shader;
 	std::string vertex_shader_string, fragment_shader_string;
 
@@ -89,16 +111,16 @@ void initShader(void) {
 		std::cout << "ERROR::SHADER::FRAGEMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
 
-	shader_program = glCreateProgram();
+	unsigned int temp_shader_program;
+	temp_shader_program = glCreateProgram();
+	glAttachShader(temp_shader_program, vertex_shader);
+	glAttachShader(temp_shader_program, fragment_shader);
+	glLinkProgram(temp_shader_program);
 
-	glAttachShader(shader_program, vertex_shader);
-	glAttachShader(shader_program, fragment_shader);
-	glLinkProgram(shader_program);
-
-	glGetShaderiv(shader_program, GL_LINK_STATUS, &success);
+	glGetShaderiv(temp_shader_program, GL_LINK_STATUS, &success);
 	if (!success)
 	{
-		glGetShaderInfoLog(shader_program, 512, NULL, infoLog);
+		glGetShaderInfoLog(temp_shader_program, 512, NULL, infoLog);
 		std::cout << "ERROR::SHADER::LINK::LINKING_FAILED\n" << infoLog << std::endl;
 	}
 
@@ -106,6 +128,16 @@ void initShader(void) {
 
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);
+
+	shaderList.push_back(temp_shader_program);
+}
+
+void initShader(void) {
+	initShaderFun("gouraud_shader");
+	initShaderFun("phong_shader");
+
+	gameShading = gouraud;
+	shader_program = shaderList[gameShading];
 }
 
 void tempDisplay(void) {
@@ -118,8 +150,8 @@ void tempDisplay(void) {
 	Camera *camera = new Camera();
 	GLint vertex_model_location = glGetUniformLocation(shader_program, "model");
 
-	camera->look_at();
 
+	camera->look_at();
 	glm::mat4 model(1.0f);
 	glUniformMatrix4fv(vertex_model_location, 1, GL_FALSE, glm::value_ptr(model));
 
@@ -141,7 +173,7 @@ void tempDisplay(void) {
 		glEnable(GL_DEPTH_TEST);
 		glPolygonMode(GL_FRONT, GL_LINE);
 		for (auto& elem : bulletList) {
-			elem.draw_bullet(false);
+			elem.draw_bullet(false, game->getLight());
 		}
 
 		if (game->getRenderMode()) {
@@ -149,7 +181,7 @@ void tempDisplay(void) {
 			glEnable(GL_POLYGON_OFFSET_FILL);
 			glPolygonOffset(1.0, 5.0);
 			for (auto& elem : bulletList) {
-				elem.draw_bullet(true);
+				elem.draw_bullet(true, game->getLight());
 			}
 			glDisable(GL_POLYGON_OFFSET_FILL);
 		}
@@ -180,7 +212,7 @@ void display(void) {
 		glEnable(GL_DEPTH_TEST);
 		glPolygonMode(GL_FRONT, GL_LINE);
 		for (auto& elem : bulletList) {
-			elem.draw_bullet(false);
+			elem.draw_bullet(false, game->getLight());
 		}
 
 		if (game->getRenderMode()) {
@@ -188,7 +220,7 @@ void display(void) {
 			glEnable(GL_POLYGON_OFFSET_FILL);
 			glPolygonOffset(1.0, 5.0);
 			for (auto& elem : bulletList) {
-				elem.draw_bullet(true);
+				elem.draw_bullet(true, game->getLight());
 			}
 			glDisable(GL_POLYGON_OFFSET_FILL);
 		}
@@ -255,6 +287,11 @@ void shootTimer(int value) {
 	}
 
 	glutTimerFunc(3000, shootTimer, 1);
+}
+
+void lightTimer(int value) {
+	game->getLight()->move();
+	glutTimerFunc(1000, lightTimer, 1);
 }
 
 
@@ -328,6 +365,16 @@ void keyboard(unsigned char key, int x, int y) {
 
 	case 'A': // auto mode
 		game->autoMode();
+		break;
+
+	case 'x': // shading toggle
+		if (gameShading == gouraud) {
+			gameShading = phong;
+		}
+		else {
+			gameShading = gouraud;
+		}
+		shader_program = shaderList[gameShading];
 		break;
 
 	case ENTER:
@@ -419,6 +466,8 @@ void specialKeyboard(int key, int x, int y) {
 
 
 int main(int argc, char** argv) {
+	_CrtSetBreakAlloc(167);
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	init();
 
 	glutInit(&argc, argv);
@@ -430,6 +479,7 @@ int main(int argc, char** argv) {
 	glutIdleFunc(idle);
 	glutTimerFunc(1000, actionTimer, 1);
 	glutTimerFunc(3000, shootTimer, 1);
+	glutTimerFunc(10000, lightTimer, 1);
 
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialKeyboard);
@@ -440,4 +490,5 @@ int main(int argc, char** argv) {
 	initShader();
 
 	glutMainLoop();
+	//_CrtDumpMemoryLeaks();
 }
