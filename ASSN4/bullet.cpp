@@ -4,6 +4,8 @@ Bullet::Bullet() {
 	x = 0.0f;
 	y = 0.0f;
 	z = 0.0f;
+
+	light = new light::PointLight(glm::vec3(x, y+2.0f, z), glm::vec3(0.9, 0.9, 0.9), glm::vec3(0.9, 0.9, 0.9), glm::vec3(1.0, 1.0, 1.0), 128.0);
 }
 
 
@@ -33,6 +35,8 @@ Bullet::Bullet(tuple<float, float, float> coordinate, tuple<float, float, float>
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 	glBindVertexArray(0);
+
+	light = new light::PointLight(glm::vec3(x, y + 2.0f, z), glm::vec3(0.9, 0.9, 0.9), glm::vec3(0.9, 0.9, 0.9), glm::vec3(1.0, 1.0, 1.0), 128.0);
 }
 
 std::tuple<float, float, float> Bullet::position() {
@@ -69,10 +73,21 @@ void Bullet::move() {
 void Bullet::draw_bullet(bool fill) {
 	setShader();
 
+	glm::vec3 light_position = light->getPosition();
+	glm::vec3 ambiend = light->getAmbient();
+	glm::vec3 diffuse = light->getDiffuse();
+	glm::vec3 specular = light->getSpecular();
+	float shininess = light->getShininess();
+
 	model_view.push(model_view_matrix);
 	model_view_matrix = glm::translate(model_view_matrix, glm::vec3(x, y, z));
 	glUseProgram(shader_program);
 	glUniformMatrix4fv(glGetUniformLocation(shader_program, "Model"), 1, GL_FALSE, glm::value_ptr(model_view_matrix));
+	glUniform4f(glGetUniformLocation(shader_program, "LightPosition"), light_position.x, light_position.y, light_position.z, 1.0f);
+	glUniform4f(glGetUniformLocation(shader_program, "AmbientProduct"), ambiend.x, ambiend.y, ambiend.z, 1.0f);
+	glUniform4f(glGetUniformLocation(shader_program, "DiffuseProduct"), diffuse.x, diffuse.y, diffuse.z, 1.0f);
+	glUniform4f(glGetUniformLocation(shader_program, "SpecularProduct"), specular.x, specular.y, specular.z, 1.0f);
+	glUniform1f(glGetUniformLocation(shader_program, "Shininess"), shininess);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(VAO);

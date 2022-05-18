@@ -14,6 +14,7 @@
 #include <tuple>
 
 #include "tank.h"
+#include "Light.h"
 
 #define GRAVITY 0.02
 
@@ -32,10 +33,12 @@ private:
 	float head_angle, barrel_angle;
 	float speed = 1;
 	float bullet_position = -16;
-	Loader bullet = Loader("./model/bullet.obj");
+	Loader bullet = Loader("./model/sphere.obj");
 	std::vector < float > bullet_vertices = bullet.merge();
 
 	unsigned int VAO, VBO;
+
+	light::PointLight *light;
 public:
 	Bullet();
 	Bullet(tuple<float, float, float>, tuple<float, float, float>, tuple<float, float, float, float>, float, float, float);
