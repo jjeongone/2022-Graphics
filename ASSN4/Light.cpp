@@ -70,7 +70,7 @@ void light::DirectionalLight::move()
 		y_speed = -y_speed;
 		x_speed = -x_speed;
 	}
-	else if (position.x <= 180) {
+	else if (position.x <= -180) {
 		y_speed = -y_speed;
 		x_speed = -x_speed;
 	}

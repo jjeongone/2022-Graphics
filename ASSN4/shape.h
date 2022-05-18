@@ -24,7 +24,7 @@ namespace shape {
 		bool fill = false;
 
 
-		unsigned int texture;
+		unsigned int texture, texture_2;
 		void set_color(tuple<float, float, float> color);
 	};
 	

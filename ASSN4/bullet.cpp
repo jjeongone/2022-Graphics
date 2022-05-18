@@ -1,5 +1,8 @@
 #include "bullet.h"
 
+extern int width, height;
+extern unsigned char* texture_data;
+
 Bullet::Bullet() {
 	x = 0.0f;
 	y = 0.0f;
@@ -105,6 +108,8 @@ void Bullet::draw_bullet(bool fill, light::DirectionalLight* gameLight) {
 	glUniform1f(glGetUniformLocation(shader_program, "PointShininess"), shininess);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, texture);
 	glBindVertexArray(VAO);
 
 	if (fill) {
@@ -170,7 +175,26 @@ void Bullet::setShader()
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 
-	glBindVertexArray(0);
+	//glBindVertexArray(0);
+
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	// set the texture wrapping/filtering options (on the currently bound texture object)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// load and generate the texture
+
+	if (texture_data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture_data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
 }
 
 glm::vec3 Bullet::getPosition()

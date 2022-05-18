@@ -37,6 +37,7 @@ private:
 	std::vector < float > bullet_vertices = bullet.merge();
 
 	unsigned int VAO, VBO;
+	unsigned int texture;
 
 	light::PointLight *light;
 public:

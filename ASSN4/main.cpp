@@ -137,6 +137,7 @@ void initShader(void) {
 	initShaderFun("phong_shader");
 
 	gameShading = gouraud;
+	glUniform1i(glGetUniformLocation(shaderList[1], "normal_on"), 0);
 	shader_program = shaderList[gameShading];
 }
 
@@ -299,6 +300,7 @@ void keyboard(unsigned char key, int x, int y) {
 	float barrel_angle = game->getPlayer()->getBarrelAngle();
 	float head_angle = game->getPlayer()->getHeadAngle();
 	float speed = game->getPlayer()->getBulletSpeed();
+	int toggle_normal = 0;
 
 	switch (key) {
 	case 'w': // barrel up
@@ -360,7 +362,8 @@ void keyboard(unsigned char key, int x, int y) {
 		break;
 
 	case 'n': // normal mode
-		game->changeMode(NORMAL);
+		toggle_normal = !toggle_normal;
+		glUniform1i(glGetUniformLocation(shader_program, "normal_on"), toggle_normal);
 		break;
 
 	case 'A': // auto mode

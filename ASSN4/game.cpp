@@ -40,7 +40,7 @@ Game::Game()
 	boundary.set_color(make_tuple(0.0f, 0.25f, 1.0f));
 	boundary.set_condition(60.0f, 10.0f, 0.0f);
 
-	light = new light::DirectionalLight(glm::vec3(0.7, 0.7, 0.7), glm::vec3(0.7, 0.7, 0.7), glm::vec3(0.4, 0.4, 0.4), 2.0);
+	light = new light::DirectionalLight(glm::vec3(1., 1., 1.), glm::vec3(0.7, 0.7, 0.7), glm::vec3(0.4, 0.4, 0.4), 32.0);
 }
 
 mode Game::getMode()

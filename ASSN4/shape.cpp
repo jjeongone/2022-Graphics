@@ -11,6 +11,8 @@ int width, height, nrChannels;
 unsigned char* texture_data = stbi_load("./model/centauro/textures/MaterialBaseColor.png", &width, &height, &nrChannels, 0);
 int width_ground, height_ground, nrChannels_ground;
 unsigned char* texture_ground = stbi_load("./model/Ground_Dirt_009_BaseColor.jpg", &width_ground, &height_ground, &nrChannels_ground, 0);
+int width_normal, height_normal, nrChannels_normal;
+unsigned char* texture_normal = stbi_load("./model/Ground_Dirt_009_Normal.jpg", &width_normal, &height_normal, &nrChannels_normal, 0);
 
 unsigned int loadTexture(char const* path)
 {
@@ -92,6 +94,11 @@ void shape::Body::setShader()
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture_data);
 		glGenerateMipmap(GL_TEXTURE_2D);
+		glUseProgram(shader_program);
+		glUniform1i(glGetUniformLocation(shader_program, "ourTexture"), 0);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
 	}
 	else
 	{
@@ -172,6 +179,11 @@ void shape::Head::setShader()
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture_data);
 		glGenerateMipmap(GL_TEXTURE_2D);
+		glUseProgram(shader_program);
+		glUniform1i(glGetUniformLocation(shader_program, "ourTexture"), 0);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
 	}
 	else
 	{
@@ -252,6 +264,11 @@ void shape::Barrel::setShader()
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture_data);
 		glGenerateMipmap(GL_TEXTURE_2D);
+		glUseProgram(shader_program);
+		glUniform1i(glGetUniformLocation(shader_program, "ourTexture"), 0);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
 	}
 	else
 	{
@@ -333,6 +350,11 @@ void shape::Wheel::setShader()
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture_data);
 		glGenerateMipmap(GL_TEXTURE_2D);
+		glUseProgram(shader_program);
+		glUniform1i(glGetUniformLocation(shader_program, "ourTexture"), 0);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
 	}
 	else
 	{
@@ -383,38 +405,56 @@ void shape::Plane::setShader()
 			vertices.push_back(i + gap);
 			vertices.push_back(depth);
 			vertices.push_back(j);
-			vertices.push_back((i + gap + length) / (2 * length));
-			vertices.push_back((j + length) / (2 * length));
+			vertices.push_back(0.);
+			vertices.push_back(1.);
+			vertices.push_back(0.);
+			vertices.push_back(1.);
+			vertices.push_back(0.);
 
 			vertices.push_back(i);
 			vertices.push_back(depth);
 			vertices.push_back(j);
-			vertices.push_back((i + length) / (2 * length));
-			vertices.push_back((j + length) / (2 * length));
+			vertices.push_back(0.);
+			vertices.push_back(1.);
+			vertices.push_back(0.);
+			vertices.push_back(0.);
+			vertices.push_back(0.);
 
 			vertices.push_back(i);
 			vertices.push_back(depth);
 			vertices.push_back(j + gap);
-			vertices.push_back((i + length) / (2 * length));
-			vertices.push_back((j + gap + length) / (2 * length));
+			vertices.push_back(0.);
+			vertices.push_back(1.);
+			vertices.push_back(0.);
+			vertices.push_back(0.);
+			vertices.push_back(1.);
 
 			vertices.push_back(i + gap);
 			vertices.push_back(depth);
 			vertices.push_back(j);
-			vertices.push_back((i + gap + length) / (2 * length));
-			vertices.push_back((j + length) / (2 * length));
+			vertices.push_back(0.);
+			vertices.push_back(1.);
+			vertices.push_back(0.);
+			vertices.push_back(1.);
+			vertices.push_back(0.);
 
 			vertices.push_back(i);
 			vertices.push_back(depth);
 			vertices.push_back(j + gap);
-			vertices.push_back((i + length) / (2 * length));
-			vertices.push_back((j + gap + length) / (2 * length));
+			vertices.push_back(0.);
+			vertices.push_back(1.);
+			vertices.push_back(0.);
+			vertices.push_back(0.);
+			vertices.push_back(1.);
 
 			vertices.push_back(i + gap);
 			vertices.push_back(depth);
 			vertices.push_back(j + gap);
-			vertices.push_back((i + gap + length) / (2 * length));
-			vertices.push_back((j + gap + length) / (2 * length));
+			vertices.push_back(0.);
+			vertices.push_back(1.);
+			vertices.push_back(0.);
+			vertices.push_back(1.);
+			vertices.push_back(1.);
 		}
 	}
 
@@ -426,10 +466,12 @@ void shape::Plane::setShader()
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	//glBindVertexArray(0);
 
@@ -442,10 +484,29 @@ void shape::Plane::setShader()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// load and generate the texture
 
-	if (texture_data)
+	if (texture_ground)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture_ground);
 		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glGenTextures(1, &texture_2);
+		glBindTexture(GL_TEXTURE_2D, texture_2);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture_normal);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glUseProgram(shader_program);
+		glUniform1i(glGetUniformLocation(shader_program, "ourTexture"), 0);
+		glUniform1i(glGetUniformLocation(shader_program, "ourTextureNormal"), 1);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texture_2);
+
 	}
 	else
 	{
@@ -533,6 +594,11 @@ void shape::WheelRight::setShader()
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture_data);
 		glGenerateMipmap(GL_TEXTURE_2D);
+		glUseProgram(shader_program);
+		glUniform1i(glGetUniformLocation(shader_program, "ourTexture"), 0);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
 	}
 	else
 	{
