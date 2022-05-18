@@ -9,11 +9,11 @@ out vec2 texCoord;
 uniform mat4 Camera;
 uniform mat4 Projection;
 uniform mat4 Model;
-uniform vec4 color;
+uniform vec4 Color;
 
 void main()
 {
     gl_Position =  Projection * Camera * Model * vec4(vPosition, 1.0);
-	vertexColor = color;
+	vertexColor = Color;
 	texCoord = vTexCoord;
 }

@@ -16,6 +16,7 @@
 
 #include "tank.h"
 #include "camera.h"
+#include "Light.h"
 
 #define X_POSITION 3.0
 #define GROUND -1.0
@@ -68,6 +69,8 @@ private:
 
 	treenode<shape::Plane> ground_node;
 
+	light::DirectionalLight* light;
+
 public:
 	Game();
 	enum mode getMode();
@@ -115,4 +118,6 @@ public:
 	Camera* camera = new Camera();
 	bool checkTankCollision(pair<glm::vec3, glm::vec3> playerBound, pair<glm::vec3, glm::vec3> enemyBound);
 	bool checkBoundaryCollision(pair<glm::vec3, glm::vec3> bound);
+
+	light::DirectionalLight* getLight();
 };

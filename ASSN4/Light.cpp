@@ -46,13 +46,14 @@ float light::Light::getShininess()
 
 light::DirectionalLight::DirectionalLight(glm::vec3 a, glm::vec3 d, glm::vec3 s, float shine)
 {
+	position = glm::vec3(-180.0f, 0.0f, 90.0f);
 	ambient = a;
 	diffuse = d;
 	specular = s;
 	shininess = shine;
 
-	x_speed = 5.0;
-	y_speed = 8.0;
+	x_speed = 10.0;
+	y_speed = 15.0;
 	
 	y_max = 80.0;
 }
@@ -61,11 +62,16 @@ void light::DirectionalLight::move()
 {
 	position.x = position.x + x_speed;
 	position.y = position.y + y_speed;
-	if ((position.y >= 80 && x_speed > 0) || position.y >= 80 && x_speed < 0) {
+
+	if (position.x == 0) {
 		y_speed = -y_speed;
 	}
-
-	if ((position.y == 0 && x_speed > 0) || (position.y == 0 && x_speed < 0)) {
+	else if (position.x >= 180) {
+		y_speed = -y_speed;
+		x_speed = -x_speed;
+	}
+	else if (position.x <= 180) {
+		y_speed = -y_speed;
 		x_speed = -x_speed;
 	}
 }

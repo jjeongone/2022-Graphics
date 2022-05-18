@@ -44,7 +44,7 @@ public:
 	Bullet(tuple<float, float, float>, tuple<float, float, float>, tuple<float, float, float, float>, float, float, float);
 	std::tuple<float,float, float> position();
 	glm::mat4 cal_transformation();
-	void draw_bullet(bool fill);
+	void draw_bullet(bool fill, light::DirectionalLight* gameLight);
 	void move();
 	void changeSpeed();
 	bool isExplode(Tank* player, pair<glm::vec3, glm::vec3>, Tank* enemy, pair<glm::vec3, glm::vec3>);

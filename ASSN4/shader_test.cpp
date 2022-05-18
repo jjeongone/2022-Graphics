@@ -32,6 +32,13 @@ std::stack<glm::mat4> model_view;
 glm::mat4 model_view_matrix;
 static std::vector<Bullet> bulletList;
 
+enum shading {
+	gouraud = 0,
+	phong = 1
+};
+
+shading gameShading;
+
 typedef struct world {
 	float width;
 	float height;
@@ -111,11 +118,11 @@ void initShaderFun(string name) {
 }
 
 void initShader(void) {
-	initShaderFun("shader");
 	initShaderFun("gouraud_shader");
 	initShaderFun("phong_shader");
 
-	shader_program = shaderList[2];
+	gameShading = gouraud;
+	shader_program = shaderList[gameShading];
 }
 
 void tempDisplay(void) {
@@ -125,15 +132,8 @@ void tempDisplay(void) {
 	Camera* temp_camera = new Camera();
 	temp_camera->look_at();
 
-	glUniform4f(glGetUniformLocation(shader_program, "LightPosition"), 0.0, 2.0, 0.0, 1.0f);
-	glUniform4f(glGetUniformLocation(shader_program, "AmbientProduct"), 0.9, 0.9, 0.9, 1.0f);
-	glUniform4f(glGetUniformLocation(shader_program, "DiffuseProduct"), 0.9, 0.9, 0.9, 1.0f);
-	glUniform4f(glGetUniformLocation(shader_program, "SpecularProduct"), 1.0, 1.0, 1.0, 1.0f);
-	glUniform1f(glGetUniformLocation(shader_program, "Shininess"), 128.0f);
-
 	Bullet new_bullet;
-	//new_bullet.draw_bullet(false);
-	new_bullet.draw_bullet(true);
+	new_bullet.draw_bullet(true, game->getLight());
 
 	glFlush();
 }
@@ -153,7 +153,7 @@ void display(void) {
 		glEnable(GL_DEPTH_TEST);
 		glPolygonMode(GL_FRONT, GL_LINE);
 		for (auto& elem : bulletList) {
-			elem.draw_bullet(false);
+			elem.draw_bullet(false, game->getLight());
 		}
 
 		if (game->getRenderMode()) {
@@ -161,7 +161,7 @@ void display(void) {
 			glEnable(GL_POLYGON_OFFSET_FILL);
 			glPolygonOffset(1.0, 5.0);
 			for (auto& elem : bulletList) {
-				elem.draw_bullet(true);
+				elem.draw_bullet(true, game->getLight());
 			}
 			glDisable(GL_POLYGON_OFFSET_FILL);
 		}
@@ -228,6 +228,11 @@ void shootTimer(int value) {
 	}
 
 	glutTimerFunc(3000, shootTimer, 1);
+}
+
+void lightTimer(int value) {
+	game->getLight()->move();
+	glutTimerFunc(1000, lightTimer, 1);
 }
 
 
@@ -304,6 +309,13 @@ void keyboard(unsigned char key, int x, int y) {
 		break;
 
 	case 'x': // shading toggle
+		if (gameShading == gouraud) {
+			gameShading = phong;
+		}
+		else {
+			gameShading = gouraud;
+		}
+		shader_program = shaderList[gameShading];
 		break;
 
 	case ENTER:
@@ -406,6 +418,7 @@ int main(int argc, char** argv) {
 	glutIdleFunc(idle);
 	glutTimerFunc(1000, actionTimer, 1);
 	glutTimerFunc(3000, shootTimer, 1);
+	glutTimerFunc(10000, lightTimer, 1);
 
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialKeyboard);

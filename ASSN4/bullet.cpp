@@ -5,7 +5,7 @@ Bullet::Bullet() {
 	y = 0.0f;
 	z = 0.0f;
 
-	light = new light::PointLight(glm::vec3(x, y+2.0f, z), glm::vec3(0.9, 0.9, 0.9), glm::vec3(0.9, 0.9, 0.9), glm::vec3(1.0, 1.0, 1.0), 128.0);
+	light = new light::PointLight(glm::vec3(x, y+2.0f, z), glm::vec3(0.9, 0.9, 0.9), glm::vec3(0.9, 0.9, 0.9), glm::vec3(1.0, 1.0, 1.0), 8.0);
 }
 
 
@@ -36,7 +36,7 @@ Bullet::Bullet(tuple<float, float, float> coordinate, tuple<float, float, float>
 	glEnableVertexAttribArray(0);
 	glBindVertexArray(0);
 
-	light = new light::PointLight(glm::vec3(x, y + 2.0f, z), glm::vec3(0.9, 0.9, 0.9), glm::vec3(0.9, 0.9, 0.9), glm::vec3(1.0, 1.0, 1.0), 128.0);
+	light = new light::PointLight(glm::vec3(x, y + 2.0f, z), glm::vec3(0.1, 0.1, 0.1), glm::vec3(0.9, 0.9, 0.9), glm::vec3(0.7, 0.7, 0.7), 16.0);
 }
 
 std::tuple<float, float, float> Bullet::position() {
@@ -68,9 +68,11 @@ void Bullet::move() {
 	x = bullet_pos.x;
 	y += y_speed;
 	z = bullet_pos.z;
+
+	light->setPosition(glm::vec3(x, y + 2.0, z));
 }
 
-void Bullet::draw_bullet(bool fill) {
+void Bullet::draw_bullet(bool fill, light::DirectionalLight* gameLight) {
 	setShader();
 
 	glm::vec3 light_position = light->getPosition();
@@ -79,15 +81,28 @@ void Bullet::draw_bullet(bool fill) {
 	glm::vec3 specular = light->getSpecular();
 	float shininess = light->getShininess();
 
+	glm::vec3 game_light_position = gameLight->getPosition();
+	glm::vec3 game_ambiend = gameLight->getAmbient();
+	glm::vec3 game_diffuse = gameLight->getDiffuse();
+	glm::vec3 game_specular = gameLight->getSpecular();
+	float game_shininess = gameLight->getShininess();
+
 	model_view.push(model_view_matrix);
 	model_view_matrix = glm::translate(model_view_matrix, glm::vec3(x, y, z));
 	glUseProgram(shader_program);
 	glUniformMatrix4fv(glGetUniformLocation(shader_program, "Model"), 1, GL_FALSE, glm::value_ptr(model_view_matrix));
-	glUniform4f(glGetUniformLocation(shader_program, "LightPosition"), light_position.x, light_position.y, light_position.z, 1.0f);
-	glUniform4f(glGetUniformLocation(shader_program, "AmbientProduct"), ambiend.x, ambiend.y, ambiend.z, 1.0f);
-	glUniform4f(glGetUniformLocation(shader_program, "DiffuseProduct"), diffuse.x, diffuse.y, diffuse.z, 1.0f);
-	glUniform4f(glGetUniformLocation(shader_program, "SpecularProduct"), specular.x, specular.y, specular.z, 1.0f);
-	glUniform1f(glGetUniformLocation(shader_program, "Shininess"), shininess);
+
+	glUniform4f(glGetUniformLocation(shader_program, "LightPosition"), game_light_position.x, game_light_position.y, game_light_position.z, 1.0f);
+	glUniform4f(glGetUniformLocation(shader_program, "AmbientProduct"), game_ambiend.x, game_ambiend.y, game_ambiend.z, 1.0f);
+	glUniform4f(glGetUniformLocation(shader_program, "DiffuseProduct"), game_diffuse.x, game_diffuse.y, game_diffuse.z, 1.0f);
+	glUniform4f(glGetUniformLocation(shader_program, "SpecularProduct"), game_specular.x, game_specular.y, game_specular.z, 1.0f);
+	glUniform1f(glGetUniformLocation(shader_program, "Shininess"), game_shininess);
+
+	glUniform4f(glGetUniformLocation(shader_program, "PointLightPosition"), light_position.x, light_position.y, light_position.z, 1.0f);
+	glUniform4f(glGetUniformLocation(shader_program, "PointAmbientProduct"), ambiend.x, ambiend.y, ambiend.z, 1.0f);
+	glUniform4f(glGetUniformLocation(shader_program, "PointDiffuseProduct"), diffuse.x, diffuse.y, diffuse.z, 1.0f);
+	glUniform4f(glGetUniformLocation(shader_program, "PointSpecularProduct"), specular.x, specular.y, specular.z, 1.0f);
+	glUniform1f(glGetUniformLocation(shader_program, "PointShininess"), shininess);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(VAO);

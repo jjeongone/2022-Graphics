@@ -39,6 +39,8 @@ Game::Game()
 
 	boundary.set_color(make_tuple(0.0f, 0.25f, 1.0f));
 	boundary.set_condition(60.0f, 10.0f, 0.0f);
+
+	light = new light::DirectionalLight(glm::vec3(0.7, 0.7, 0.7), glm::vec3(0.7, 0.7, 0.7), glm::vec3(0.4, 0.4, 0.4), 2.0);
 }
 
 mode Game::getMode()
@@ -158,6 +160,12 @@ void Game::drawWorld(bool fill)
 template<class T>
 void Game::display(treenode<T>* node, bool fill)
 {
+	glm::vec3 light_position = light->getPosition();
+	glm::vec3 ambiend = light->getAmbient();
+	glm::vec3 diffuse = light->getDiffuse();
+	glm::vec3 specular = light->getSpecular();
+	float shininess = light->getShininess();
+
 	if (node == nullptr)
 	{
 		return;
@@ -168,6 +176,18 @@ void Game::display(treenode<T>* node, bool fill)
 		model_view_matrix = glm::rotate(model_view_matrix, glm::radians(get<0>(node->rotate)), glm::vec3(get<1>(node->rotate), get<2>(node->rotate), get<3>(node->rotate)));
 	glUseProgram(shader_program);
 	glUniformMatrix4fv(glGetUniformLocation(shader_program, "Model"), 1, GL_FALSE, glm::value_ptr(model_view_matrix));
+
+	glUniform4f(glGetUniformLocation(shader_program, "LightPosition"), light_position.x, light_position.y, light_position.z, 1.0f);
+	glUniform4f(glGetUniformLocation(shader_program, "AmbientProduct"), ambiend.x, ambiend.y, ambiend.z, 1.0f);
+	glUniform4f(glGetUniformLocation(shader_program, "DiffuseProduct"), diffuse.x, diffuse.y, diffuse.z, 1.0f);
+	glUniform4f(glGetUniformLocation(shader_program, "SpecularProduct"), specular.x, specular.y, specular.z, 1.0f);
+	glUniform1f(glGetUniformLocation(shader_program, "Shininess"), shininess);
+
+	glUniform4f(glGetUniformLocation(shader_program, "PointLightPosition"), 0.0f, 0.0f, 0.0f, 1.0f);
+	glUniform4f(glGetUniformLocation(shader_program, "PointAmbientProduct"), 0.0f, 0.0f, 0.0f, 1.0f);
+	glUniform4f(glGetUniformLocation(shader_program, "PointDiffuseProduct"), 0.0f, 0.0f, 0.0f, 1.0f);
+	glUniform4f(glGetUniformLocation(shader_program, "PointSpecularProduct"), 0.0f, 0.0f, 0.0f, 1.0f);
+	glUniform1f(glGetUniformLocation(shader_program, "PointShininess"), 0.0f);
 
 	if (node->child != nullptr)
 	{
@@ -476,4 +496,9 @@ bool Game::checkBoundaryCollision(pair<glm::vec3, glm::vec3> bound)
 		return true;
 	else
 		return false;
+}
+
+light::DirectionalLight * Game::getLight()
+{
+	return light;
 }

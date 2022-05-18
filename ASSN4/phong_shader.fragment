@@ -2,18 +2,33 @@
 
 in vec3 fN;
 in vec3 fL;
+in vec3 fPL;
 in vec3 fE;
 in vec4 vertexColor;
 in vec2 texCoord;
 out vec4 FragColor;
 
 uniform vec4 AmbientProduct, DiffuseProduct, SpecularProduct;
-uniform mat4 ModelView;
-uniform vec4 LightPosition;
 uniform float Shininess;
+
+uniform vec4 PointAmbientProduct, PointDiffuseProduct, PointSpecularProduct;
+uniform float PointShininess;
+
+uniform mat4 ModelView;
 uniform sampler2D texture;
 
+vec4 calculate_phong_shading (vec3 fN, vec3 fE, vec3 fL, vec4 AmbientProduct, vec4 DiffuseProduct, vec4 SpecularProduct, float Shininess);
+
+
 void main()
+{
+	vec4 DirectionalLight = calculate_phong_shading(fN, fE, fL, AmbientProduct, DiffuseProduct, SpecularProduct, Shininess);
+	vec4 PointLight = calculate_phong_shading(fN, fE, fPL, PointAmbientProduct, PointDiffuseProduct, PointSpecularProduct, PointShininess);
+
+	FragColor = (DirectionalLight + PointLight) * vertexColor;
+}
+
+vec4 calculate_phong_shading (vec3 fN, vec3 fE, vec3 fL, vec4 AmbientProduct, vec4 DiffuseProduct, vec4 SpecularProduct, float Shininess)
 {
 	vec3 N = normalize(fN);
 	vec3 E = normalize(fE);
@@ -31,5 +46,5 @@ void main()
 	if (dot(L,N) < 0.0)
 		specular = vec4(0.0, 0.0, 0.0, 1.0);
 
-	FragColor = (ambient + diffuse + specular) * vertexColor;
+	return (ambient + diffuse + specular);
 }
